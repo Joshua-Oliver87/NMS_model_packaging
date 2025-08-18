@@ -1,0 +1,14 @@
+"soilID";"soilTexture";"soilFC";"soilWP";"soilAWC"
+1;"Coarse Sand";1.2;0.55;0.65
+2;"Fine Sand";1.5;0.7;0.8
+3;"Loamy Sand";2.2;1.2;1.0
+4;"Sandy Loam";2.7;1.3;1.4
+5;"Fine Sandy Loam";3.4;1.6;1.8
+6;"Sandy Clay Loam";4.0;2.0;2.0
+7;"Loam";4.0;1.8;2.2
+8;"Silt Loam";4.3;2.0;2.3
+9;"Silty Clay Loam";4.6;2.8;1.8
+10;"Clay Loam";4.8;3.0;1.8
+11;"Silty Clay";4.8;3.2;1.6
+12;"Clay";4.8;3.4;1.4
+13;"Peat Mucks";5.0;2.6;2.4

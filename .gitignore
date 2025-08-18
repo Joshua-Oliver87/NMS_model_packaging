@@ -24,12 +24,7 @@ Thumbs.db
 .idea/
 
 # ----- Big data/binaries (skip if you truly need them) -----
-*.zip
-*.7z
 *.gz
-*.tar
-*.tar.gz
-*.csv
 *.parquet
 
 .env
