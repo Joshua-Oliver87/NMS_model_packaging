@@ -1,0 +1,38 @@
+﻿name: Release on tag
+
+on:
+  push:
+    tags: [ "v*" ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Clean & build
+        run: |
+          rm -rf build dist ./*.egg-info */*.egg-info
+          python -m pip install --upgrade pip
+          pip install build
+          if [ -f pyproject.toml ]; then
+            python -m build --wheel --sdist
+          else
+            python setup.py sdist bdist_wheel
+          fi
+
+      - name: Create GitHub Release & upload wheel
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
