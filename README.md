@@ -1,2 +1,2 @@
-# NMS_model_pipeline
-For making CI/CD pipeline for NMS model packaging
+# NMS_model_packaging
+For storing latest code used in NMS package
