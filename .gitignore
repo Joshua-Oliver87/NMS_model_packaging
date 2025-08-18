@@ -31,3 +31,6 @@ Thumbs.db
 *.tar.gz
 *.csv
 *.parquet
+
+.env
+.env.*
