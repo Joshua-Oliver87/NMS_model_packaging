@@ -14,25 +14,18 @@ jobs:
         with:
           python-version: "3.11"
           cache: "pip"
+          cache-dependency-path: pyproject.toml   # now it exists
 
       - name: Clean previous builds
-        run: |
-          rm -rf build dist ./*.egg-info */*.egg-info
+        run: rm -rf build dist ./*.egg-info */*.egg-info
 
       - name: Install build tooling
         run: |
           python -m pip install --upgrade pip
           pip install build
 
-      - name: Build wheel
-        run: |
-          if [ -f pyproject.toml ]; then
-            python -m build --wheel
-          elif [ -f setup.py ]; then
-            python setup.py sdist bdist_wheel
-          else
-            echo "No pyproject.toml or setup.py found"; exit 1
-          fi
+      - name: Build wheel (PEP 517)
+        run: python -m build --wheel
 
       - name: Smoke-test install
         run: |
