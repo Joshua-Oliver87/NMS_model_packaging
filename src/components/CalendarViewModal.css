@@ -1,0 +1,22 @@
+/* CalendarViewModal.css */
+.customCalendarStyles .fc-toolbar-title {
+    /* The Month/Day/Week view title color */
+    color: #a60f2d !important;
+  }
+  
+  .customCalendarStyles .fc-button {
+    /* The header buttons (prev, next, today) background and text */
+    background-color: #a60f2d !important;
+    border-color: #a60f2d !important;
+    color: #fff !important;
+  }
+  
+  .customCalendarStyles .fc-button:hover,
+  .customCalendarStyles .fc-button:focus,
+  .customCalendarStyles .fc-button:active {
+    /* Slightly darker shade on hover/focus/active states */
+    background-color: #8c0924 !important;
+    border-color: #8c0924 !important;
+    box-shadow: none !important; /* Remove any focus outline */
+  }
+  

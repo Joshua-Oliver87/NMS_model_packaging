@@ -1,0 +1,33 @@
+﻿# ----- Python -----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+env/
+venv/
+build/
+dist/
+
+# ----- Node/Web -----
+node_modules/
+.cache/
+dist/
+build/
+
+# ----- Logs & OS -----
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ----- Big data/binaries (skip if you truly need them) -----
+*.zip
+*.7z
+*.gz
+*.tar
+*.tar.gz
+*.csv
+*.parquet

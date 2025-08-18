@@ -1,0 +1,1438 @@
+[33mcommit dcce73cf0f5dc7a97dd86e3b1cf1675eb3596b71[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Apr 15 10:27:54 2025 -0700
+
+    Initial soil conditions
+
+[33mcommit 699eb740fb3f907e8bef4417ab0053ae0bf8f5f6[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Apr 14 16:46:26 2025 -0700
+
+    Made some changes to heading on maincontent  cards
+
+[33mcommit 05c9da13d749bb9fa2cf8b0fb490cf4b71667875[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Apr 14 10:58:47 2025 -0700
+
+     fixed weather station dropdown
+
+[33mcommit 57b885ecdb994a98c6a195906a91b4a663833880[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sun Apr 13 14:23:04 2025 -0700
+
+    Put the nearest weather station dropdown in maincontent.js
+
+[33mcommit 6d734da10a2ff4c61a873911e2dd919dcdcee864[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sat Apr 12 10:14:54 2025 -0700
+
+    Making new changes
+
+[33mcommit c3e21f73367c240fc5139b7d540f25ca26437842[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sat Apr 12 10:05:30 2025 -0700
+
+    Making water source save to csv correctly
+
+[33mcommit 9b85b23b7712c71e8395650594c4a6200e494242[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Fri Apr 11 19:51:18 2025 -0700
+
+    Changing how data gets saved to tester.csv
+
+[33mcommit 5e0d987842db4871f57add0ed6245d1d013a7de6[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Fri Apr 11 15:11:13 2025 -0700
+
+    Changed parameter name
+
+[33mcommit 2db2d93ceffda7ccf54402e9730a51bed4d2ee99[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Fri Apr 11 14:50:02 2025 -0700
+
+    Reverting back
+
+[33mcommit e3b8ab1da08ec06bdca01ef0dbe08715b204518c[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Fri Apr 11 14:37:36 2025 -0700
+
+    Changed append-csvs route
+
+[33mcommit ecb2856260330fa9e505ef7cfc4168d8c35784d1[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Apr 11 14:15:18 2025 -0700
+
+    Changed dailyweather.js headers
+
+[33mcommit 974bee16ad6307423e31188dceb85ea20c3e85de[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Apr 11 13:09:20 2025 -0700
+
+     changed weatherdaily.js mapping.
+
+[33mcommit 265d2f49de1196b190b4a4c6c6a74fd4309d4e31[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Apr 11 13:01:21 2025 -0700
+
+    Changed weatherdaily.js api query to normalised data added ETR
+
+[33mcommit d5d1a1ff6849e7e11fb31f94439fc714bd931122[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Apr 11 12:49:25 2025 -0700
+
+     changed weatherdaily.js mapping
+
+[33mcommit c8b4b78f290a934889dbac00994be8378ede32b4[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Apr 11 12:18:14 2025 -0700
+
+    Changed csv for weather data
+
+[33mcommit bae91f3e08558256d3cff0233400fc62a10c316d[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Apr 11 12:01:52 2025 -0700
+
+    Changed weatherdaily.js api query to normalised data
+
+[33mcommit 6c21e922b40d53a3e0591b10091044be56ef1bcf[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Apr 11 11:50:01 2025 -0700
+
+    Changed weatherdaily.js api query
+
+[33mcommit 7b2fe5e5d2f4b0a4e3c568e990fb532b940dfe45[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Apr 11 09:46:09 2025 -0700
+
+    Changed weatherdaily.js api
+
+[33mcommit 00ddaa5e1b3b81810039758a7964c87019abbc1a[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Apr 10 19:47:35 2025 -0700
+
+    Added nearest weather stations to drawfarm.js page
+
+[33mcommit 93b01b0dd7bcc34eaf9a3ed2849d47f25f1e6dac[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Apr 9 18:59:33 2025 -0700
+
+    Added customised dates in simulation output
+
+[33mcommit 7608054b2afeeb2ab19ce0301717fa5cf4b9c19a[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Apr 9 11:16:43 2025 -0700
+
+     Fixed bugs with completed tasks
+
+[33mcommit ad8d85fbd777997a49b68b906595ea6643946a45[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Apr 9 11:12:37 2025 -0700
+
+    Fixed bugs with completed tasks dates
+
+[33mcommit 8b2008d530a9b4bd5d7602ac7df014976f5eb906[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Apr 7 10:39:57 2025 -0700
+
+    Changed /validate-user-session to POST method
+
+[33mcommit 9620fa1c32a768fc66f0c00d75e215f59a8eab01[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Apr 7 10:25:15 2025 -0700
+
+     Fix the simulation output tables dates
+
+[33mcommit 0a31bf8cf74767e77fb18e36c1fbaabf16dc18a2[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Apr 6 11:41:21 2025 -0700
+
+    Change with first doy
+
+[33mcommit c92b1b357f0d9fb5147142046fe147c4822524a9[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Sat Apr 5 17:18:59 2025 -0700
+
+    Fixed delete farms and fertilizer saving
+
+[33mcommit 454be07fb39acc0699612678549c7edce6b7873c[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sat Apr 5 16:13:38 2025 -0700
+
+    Fixed writeCSV route finally
+
+[33mcommit 0e902d22291e53c45c903117b4eefd587a64a03b[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sat Apr 5 16:01:01 2025 -0700
+
+    Trying simple change for writeCsv route
+
+[33mcommit 2b04cc4fcacca9bee51c5d9fb5887fec13198245[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sat Apr 5 15:39:34 2025 -0700
+
+    Reverted back
+
+[33mcommit 97b11a8cdfafe2ef008e69df84b8a17b4cb78e16[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Fri Apr 4 14:49:44 2025 -0700
+
+    Modified save route for debugging
+
+[33mcommit 417629c0008d66c405641cc235c18d77d0d64e7e[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Fri Apr 4 14:43:16 2025 -0700
+
+    Making quick debugging change
+
+[33mcommit 000f80abcecd3bd24f65ca2edef02392eb4f56ea[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Apr 4 12:32:26 2025 -0700
+
+     Added new writecsv route and changed handleSave
+
+[33mcommit d88ffd8f58e706ca881c2cb2c50f2c7024bd6d8b[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Apr 4 12:22:51 2025 -0700
+
+     Added new writecsv route
+
+[33mcommit 8b55fac9e56e0dd9048ace1b7f55256f67d4390c[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Apr 4 12:09:00 2025 -0700
+
+     Added writecsv route
+
+[33mcommit 8e0361effd42ece0443e6089cc5ee169796ccbb5[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Apr 3 15:09:33 2025 -0700
+
+     Rendered simulation output table
+
+[33mcommit f22186485ec1198557853f1a949f47f609374b80[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Apr 3 14:23:33 2025 -0700
+
+     Changed the headings of charts in simulation output
+
+[33mcommit 601d4a4aaff418b381d06c5c60bf36348f616d32[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Thu Apr 3 09:30:29 2025 -0700
+
+    Changed Simulation Output
+
+[33mcommit 1777024bc1f90fe0b20c290ef14058d6e526efd7[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Wed Apr 2 16:28:07 2025 -0700
+
+    Added tables to simulation output
+
+[33mcommit d7ab41fd93ca82e3d7a44958e60050918f6de73e[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Tue Apr 1 17:43:58 2025 -0700
+
+    Handling dates and doy's
+
+[33mcommit e6e8b1534c4437b44c161cd16db093e86f847ba8[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Tue Apr 1 17:29:55 2025 -0700
+
+    Changed plantingdata.js
+
+[33mcommit b7b6c8c4b11feacc1e10839eb1eb30fa93cea3e3[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Tue Apr 1 16:00:50 2025 -0700
+
+    MainTool_Merge
+
+[33mcommit f1cd8acc502449eedf4894f42d5ebeefd85beb3c[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Tue Apr 1 11:15:28 2025 -0700
+
+    Added a text at the landing page for user navigating
+
+[33mcommit dd9fd287ee023a17c1c4b69e9b4b3696e1437750[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Tue Apr 1 09:48:08 2025 -0700
+
+    Improvements and fixed the seasonal output chat for 'in'
+
+[33mcommit 6cec2e7dfe5f6e65352ee5daf84ae512a13406e7[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Mon Mar 31 11:38:38 2025 -0700
+
+    Fixed Deleting Block without a refresh and few improvements
+
+[33mcommit 07fb65b8f723293881155e9bbd9b821f7c329280[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Fri Mar 28 15:18:16 2025 -0700
+
+    Made improvements and Styling Changes
+
+[33mcommit 21f7630037cddf52fc864b046fe91cd82977b860[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Mar 28 09:01:36 2025 -0700
+
+    resolve issue with fertilizer and watersource saving
+
+[33mcommit 4d38f750fc3dd99b773585dd051e460ff94c22c6[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Mar 27 11:37:00 2025 -0700
+
+    Fixed charts in simulation output and fixed farms refresh
+
+[33mcommit bd08f5ec737b6e566de2b0c001ca6b6377b68e4a[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Mar 27 11:33:55 2025 -0700
+
+    Fixed charts in simulation output
+
+[33mcommit 3dfb7cb1886e59b6aa54204327b76141a29bffaa[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Mar 27 09:22:44 2025 -0700
+
+     add charts to the simulation output
+
+[33mcommit 754d53acc0fb6ac1cbc0b638e27e6a3c7a994a86[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 26 15:45:50 2025 -0700
+
+     made changes to soiltable updates
+
+[33mcommit 35a042318d35555709b967665cf3230b0353697b[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 26 09:17:19 2025 -0700
+
+     Resolved bugs in soiltable api
+
+[33mcommit 8b0329640c31dd57c02e294fae51ab390c82e697[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 25 17:06:56 2025 -0700
+
+    changed routes in soiltable.jsx
+
+[33mcommit c5beb4605e12e58f2d9294d78919c7a90129c821[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 25 17:02:30 2025 -0700
+
+    Changed the date range
+
+[33mcommit d36aacdee5cab365af658eceaa8aa12078cad1b0[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 25 16:48:52 2025 -0700
+
+     changed the date range of simulation output
+
+[33mcommit 1d0cf42ef52501644ee2151a50246675205c0170[m
+Author: root <root@ip-172-31-8-233.us-west-2.compute.internal>
+Date:   Tue Mar 25 19:06:59 2025 +0000
+
+    Changed CORS origins
+
+[33mcommit 8cf6573a8ce87bbd23149a0ad8e4cc6a1db545fc[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 25 09:18:45 2025 -0700
+
+     changed assigned user api
+
+[33mcommit 65b19719d0f2ded62b8debaf8b4fe8fdcf62f4be[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 16:23:08 2025 -0700
+
+     assigned users test
+
+[33mcommit 2d62c913462ba0fb3bd817d3267184bf4e57cf4a[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 15:36:25 2025 -0700
+
+     changed query
+
+[33mcommit 87a63feb9fc8098936bfd8be27a2725cd296de3f[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 14:54:33 2025 -0700
+
+    added logs backend get assigned users..
+
+[33mcommit d89cce1f1d9398ca85e3a051fd03c32910b9d246[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 14:44:28 2025 -0700
+
+    added logs backend get assigned users.
+
+[33mcommit 59cd0799d3dfc6892bb9407f48ca68354196233b[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 14:26:53 2025 -0700
+
+    added logs backend.
+
+[33mcommit 2f9db74e3e302a2e6f45e49c6aa27ab7c7437087[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 14:09:54 2025 -0700
+
+    added logs backend
+
+[33mcommit 485d0c757caea4c964fa93389897b4f621e3dd25[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 12:50:09 2025 -0700
+
+     added backend logs for get assigned users.
+
+[33mcommit ff1c85ce3495078c69d85dac306619491afd100b[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 11:44:56 2025 -0700
+
+     added backend logs for get assigned users
+
+[33mcommit bd79877dfc6a1dbdaf70595c1ba5dc223906b9aa[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 11:35:26 2025 -0700
+
+     added backend for get assigned users
+
+[33mcommit 780d0289cc3ebe7c553a36f6b6379c31a123850c[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 11:06:59 2025 -0700
+
+    fixed assign users API ,executelorawanquery function added.
+
+[33mcommit 0dedc29d2dc7429b9a4cb86b7313ee8223bcab6b[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 10:46:27 2025 -0700
+
+    fixed assign users API ,executelorawanquery function added
+
+[33mcommit 4a5c0a92440e5f28e9c014fbbca66db451531d90[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 10:24:17 2025 -0700
+
+    edited dbconnection
+
+[33mcommit 3880b8b1ae1bcd982a3a29d248f8318c07e0628f[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 10:12:45 2025 -0700
+
+    fixed assign users API ad added logs.
+
+[33mcommit efa7526f23a8871714a1697df837664720ef2b4d[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 10:08:29 2025 -0700
+
+    fixed assign users API ad added logs
+
+[33mcommit 8b3bc9c558c652840a0e6679ec47695c167d6cbc[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 09:59:38 2025 -0700
+
+    fixed assign users API.
+
+[33mcommit 8730a482e27d16092497f9fafbb2edb2c473f80f[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 24 09:47:56 2025 -0700
+
+    fixed assign users API
+
+[33mcommit 7743750e677380c96ba53485324ca3409d1a75d2[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sun Mar 23 22:00:04 2025 -0700
+
+     edited assign users backend and server.js
+
+[33mcommit 8357e301a9da76e238fef06eaf098ccc7a41af68[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sun Mar 23 21:53:16 2025 -0700
+
+     edited assign users backend bug
+
+[33mcommit b228d38e7fbe14173de9c0a42f7204c71673f8cb[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sun Mar 23 21:27:10 2025 -0700
+
+     edited assign users backend..
+
+[33mcommit fce556423c559201dddcfef5c4f0273742143803[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sun Mar 23 21:05:36 2025 -0700
+
+     edited assign users backend.
+
+[33mcommit bcfc2024f24ac81e0a5a552b99ae679bcbd2c75d[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sun Mar 23 20:56:45 2025 -0700
+
+     edited assign users backend
+
+[33mcommit 5319a2892d0731ac5dd7769bcaa4d608baae32db[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sun Mar 23 17:34:09 2025 -0700
+
+     fixed bugs in login.js
+
+[33mcommit 89e75cf1213c81c485f3a2150cb32414264532e0[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sun Mar 23 14:20:13 2025 -0700
+
+     Added assigned user API to saveblock.js
+
+[33mcommit 548a092e3d6313726f71a8b48ca863a3dd19a798[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sun Mar 23 14:00:17 2025 -0700
+
+     added lorawan db to dbconnection.js
+
+[33mcommit 40b77f60c568d0cdce1045cb3d0cc860cec9943a[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sun Mar 23 12:25:33 2025 -0700
+
+    added search username in login.js
+
+[33mcommit 7335afd1ced2eeb0c587fdc58a1255c9717354ff[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sat Mar 22 15:19:24 2025 -0700
+
+     Added assigned users in add block
+
+[33mcommit 551cb5a2c850847132f1572db78380d4b8442b3d[m
+Merge: d03de5d341 d543fe2dd8
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sat Mar 22 15:00:35 2025 -0700
+
+    Merge branch 'master' of https://git-codecommit.us-west-2.amazonaws.com/v1/repos/awn_nms
+
+[33mcommit d543fe2dd85c36b9a0583d98a862321fdf48ee65[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Fri Mar 21 15:19:23 2025 -0700
+
+    Fixed the Fertilizer List saving issue, ETData Issue and Styling
+
+[33mcommit 676001358c5db677acd5c13f917bed9be2a92c34[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Fri Mar 21 09:07:26 2025 -0700
+
+    Fixed Weather Toggle, Simulation Outputs graphs and Styling of the website
+
+[33mcommit d03de5d3419a68f95c7886c0633e69e4b4e7839b[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 19 19:00:56 2025 -0700
+
+     added saveweatherstations
+
+[33mcommit e286faa37b328d5ffff29d0672292d99f7d40e61[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 19 18:49:39 2025 -0700
+
+     changed saveblock.js
+
+[33mcommit 3bee33edf85e4e71d9cce24abda51cdf09702e4e[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 19 17:45:37 2025 -0700
+
+     Changed routes in saveblock
+
+[33mcommit 8fa2e9e7fb024fbe9c22f30be322b97318f6acaa[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 18 13:14:32 2025 -0700
+
+     fixed styling.
+
+[33mcommit 9f0534990c3c224f2c5b24b5ab751b942d42506c[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 18 11:53:03 2025 -0700
+
+     fixed styling
+
+[33mcommit 88bd43a1aab0cef166186be85be210ca5fc732ad[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 17 19:50:56 2025 -0700
+
+     Fixed farm refresh
+
+[33mcommit 36805bce770b9ba42ff6db3de54c8b471bba4aa2[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Mar 14 15:48:16 2025 -0700
+
+     Added snackbar messages
+
+[33mcommit 77538005bb31704cf6678c57b81b944176f22fdc[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Mar 14 15:32:41 2025 -0700
+
+    Added messages in snackbar in DrawFarm and DrawBlock
+
+[33mcommit 143bdf44bb25d77d69c2300ee354e8dccd5e2995[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Mar 14 11:12:46 2025 -0700
+
+    Made some improvements as per the feedbacks
+
+[33mcommit 117dbbc9bd005e2c0bf0c2a9104494d39aa79988[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Mar 14 10:37:58 2025 -0700
+
+    Made some improvements as per the feedbacks
+
+[33mcommit 2ea3ff9bcd23b8c5a7d6cec4b5012e9591d23366[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 12 16:30:20 2025 -0700
+
+     Added some messages for the user to select a block
+
+[33mcommit b1ab150517dd751031298f4cbd534c1d5faf9879[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 12 15:27:25 2025 -0700
+
+     Made sure that Remeber me is working
+
+[33mcommit eb88255a7d96b20e5c00ea69332a59767950ae52[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 12 13:15:01 2025 -0700
+
+    User can now login by pressing enter and removed the checkbox for disclaimer.
+
+[33mcommit a9980fa08808841d49cd731ed01dd0d8d44f3fd4[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 12 13:08:48 2025 -0700
+
+    User can now login by pressing enter and removed the checkbox for disclaimer
+
+[33mcommit e27f0114a6929a486a46a819f4200780ca8c176d[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 12 11:20:53 2025 -0700
+
+     Added add farm button to farms Dropdown
+
+[33mcommit 280c397daed96f72dbcdc8765571906ab9b6d5f6[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 12 10:44:22 2025 -0700
+
+    fixed errors in fetch_soil_data.py
+
+[33mcommit 15b2fa50e0600db23b21d290448645d1a598bdc7[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 12 10:35:31 2025 -0700
+
+    Fixed database error for adding blocks
+
+[33mcommit 5021ae536659841b1dc6fcce12610d0ca7c01952[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 20:16:10 2025 -0700
+
+     Changed env variables to Dev(Working fine)
+
+[33mcommit c89606345471ff88e449c5759e37b8d46ec5e952[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 20:10:59 2025 -0700
+
+     Changed env variables to prod
+
+[33mcommit ddd88b180508c28b5cb0aa0ea372d4eec15e29ca[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 19:54:05 2025 -0700
+
+    fixed errors in drawblock
+
+[33mcommit f2f5167a42d0666f7c693be4946363c0f2e45707[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 16:57:06 2025 -0700
+
+     Changed env variables
+
+[33mcommit efc9f44967af04ec67f052648c1df717bdf30a3a[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 16:45:13 2025 -0700
+
+    working code
+
+[33mcommit b63b1fb7076ca56007e5ea1a92eb77e86959c091[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 16:38:00 2025 -0700
+
+     changed the .env
+
+[33mcommit 6f6c4ff25af2fda19f9e4b3fb7937b404f152a03[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 16:10:26 2025 -0700
+
+    removed baseurl.
+
+[33mcommit 768738fc707a7f2bc12c11154cc464107b7141ab[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 16:06:19 2025 -0700
+
+    removed baseurl
+
+[33mcommit 1f005cb9a5afc8b6995064ee4838fc2e5a48c1af[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 15:55:23 2025 -0700
+
+     changed fallback ip
+
+[33mcommit 62a66884ac2e6c4bb36498af84a42fcf878beeb1[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 13:06:17 2025 -0700
+
+    Changed to python 3 in spawn
+
+[33mcommit 4b6aca3af8b0ada960af8e6ffe265ea7d9df25c4[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 12:56:04 2025 -0700
+
+    Removed error with the database connection
+
+[33mcommit 21d212f2ce23fb0b07073fb49f307dc69551ddd7[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 12:31:35 2025 -0700
+
+    Removed Database Error
+
+[33mcommit 46ced74c605434a89938f0cf36ff5f54a344e064[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Mar 11 11:35:33 2025 -0700
+
+     Removed database error while adding a block
+
+[33mcommit 42822347afde11c07d8851f02735d0841444bbb4[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Mar 6 12:38:29 2025 -0800
+
+     fixed error with saving water source on prod
+
+[33mcommit f42d0b962e1151fece188be52ca4822afed17199[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Mar 6 12:12:06 2025 -0800
+
+    Working code on prod
+
+[33mcommit 5a57885566e89b9d146499e1fd28cf41b94113da[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Mar 6 08:51:48 2025 -0800
+
+    fixed python code error
+
+[33mcommit 6733ff42e2b4a47d351d147b3f72ceb600e96679[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Mar 6 08:00:15 2025 -0800
+
+    Changed tester.csv
+
+[33mcommit e539da4a287bc23c6837a8945a0c3089df2a706d[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 5 22:32:52 2025 -0800
+
+    Changed Error in url for login in server.js
+
+[33mcommit 2af437b6a76dd1f300dec2e6b17a36b6e65ad6fe[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 5 22:20:27 2025 -0800
+
+    Changed Prod URL in .env
+
+[33mcommit cccb07869ffccefa1c3a796a32214463b3c643d7[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 5 22:10:09 2025 -0800
+
+    Fixed errors in .env
+
+[33mcommit 2dcdfe6019f881f9856f8279744797a7b9515f03[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 5 21:57:40 2025 -0800
+
+    Changed the URL of login.js
+
+[33mcommit 8319e9b43be5a897faf90aef4a657edeed4dfb3d[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 5 21:42:56 2025 -0800
+
+    Fixed errors in server.js
+
+[33mcommit 84ee31f5723f5d35371a5b00acfbeb377b5d4e66[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 5 20:52:09 2025 -0800
+
+    Changed server.js
+
+[33mcommit dbd88a439d121d6790d464cda3c859fadf39d916[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 5 20:21:58 2025 -0800
+
+    Changed .env
+
+[33mcommit c744049808968c20047218cc18df9816f4fbd675[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 5 20:01:42 2025 -0800
+
+    Changed the server.js for prod
+
+[33mcommit d73a44d62127bea6f86a2741179f33c2b03d6db5[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Mar 5 19:29:52 2025 -0800
+
+    Changed the Base URL to prod
+
+[33mcommit 4b54edfb3c85ff65e1184629e113e7dbef72c111[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Mar 3 19:55:18 2025 -0800
+
+    Fixed the bugs with simulation data
+
+[33mcommit ed75b1fcb7f73e28610415252084412215ef8fb8[m[33m ([m[1;31morigin/temp-branch[m[33m)[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Mon Mar 3 10:52:36 2025 -0800
+
+    Handling budget data
+
+[33mcommit f9e5428529b63feaa8963399365b8349d651be42[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 21:35:50 2025 -0800
+
+    Reverted handleBudgetData
+
+[33mcommit 3e7cea86b0f9c4db1f83b95a3e8b4c2955559cf6[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 20:44:38 2025 -0800
+
+    irrigation_selections.csv gets updated automatically
+
+[33mcommit b9e78686698ec89b34d19695c3d64036bd8934b8[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 20:40:54 2025 -0800
+
+    Hopefully last try to get irrigation dates to update correctly
+
+[33mcommit 2e36ec3fc5ebecc4181863365c59eb90bc906d00[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 20:28:18 2025 -0800
+
+    Trying to get past irrigation dates to update correctly
+
+[33mcommit b91f852e4b1d71b716264e67c8502385f63baec7[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 20:11:35 2025 -0800
+
+    Trying to get past irrigation dates to update correctly
+
+[33mcommit e63947f1c714165d62fad2ca9d47edead0dddf3b[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 20:04:30 2025 -0800
+
+    Trying to fix budget data displaying
+
+[33mcommit 8f8d5becf41a0dd6c10475022c53baf58181a140[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 19:58:30 2025 -0800
+
+    Trying to fix budget data displaying
+
+[33mcommit 74f5c01f1a901ea696f271e4d091f9b7d687369f[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 19:40:47 2025 -0800
+
+    Trying to fix budget data displaying
+
+[33mcommit bb12a74d8c79af49bf69cd8800dce0a6320fe744[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 19:33:36 2025 -0800
+
+    Trying to fix budget data displaying
+
+[33mcommit c19cd0683f312e26fb74fb25ce0005fb9fb9139a[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 19:27:49 2025 -0800
+
+    Trying to fix budget data displaying
+
+[33mcommit 91650f3c11c952860d7a10f9b6655935c04cc85d[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 19:20:16 2025 -0800
+
+    More changes to auto irrigation again
+
+[33mcommit 144c302eafc218c7b079c418d90ceb410aaa78a0[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 19:12:12 2025 -0800
+
+    More changes to auto irrigation again
+
+[33mcommit 156e5ef34f85a0fbd1062ea313f7e5a44dbe99f3[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 19:08:27 2025 -0800
+
+    More changes to auto irrigation again
+
+[33mcommit caf2033513f259914d7b4f745677d8fd0d9d0131[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 19:02:21 2025 -0800
+
+    More changes to auto irrigation
+
+[33mcommit 93ea38e02ce24b4570b25efd36336eae86b6e256[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 18:51:27 2025 -0800
+
+    Changes to auto irrigation param route
+
+[33mcommit bd02b60e944068e27a241aa2273136fe647c29b6[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 18:40:00 2025 -0800
+
+    Changing tester.csv
+
+[33mcommit 5000b0bb9f17d01a421c7fea92a55f0fbc3c8e0f[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 18:29:34 2025 -0800
+
+    Avoiding name error in model
+
+[33mcommit fd88a5ec5727efa10872654b3559edebe340f5c7[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 18:19:20 2025 -0800
+
+    small touch ups to irrigationpy.js
+
+[33mcommit c53f18df9be26f3dc0bafadbada7cf64445e0ab2[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 18:18:29 2025 -0800
+
+    Hopefully final changes to plantingdata.js
+
+[33mcommit 1e42c4439daacfd0fbb8b43bd5a7191ce5725638[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 18:02:58 2025 -0800
+
+    Updated writeAutoIrrigationParams function
+
+[33mcommit f0fb546e978c92014f707170d70fc70c3c45bcd6[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 17:41:59 2025 -0800
+
+    Testing even more changes for auto irrigation params
+
+[33mcommit 4088c4e3f1ba523be510b7e7d399c17f6a164717[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 17:15:14 2025 -0800
+
+    Testing changes for auto irrigation params
+
+[33mcommit a4a50b0d8e966928449fc50a64c3f3e2c89267ef[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sun Mar 2 15:10:15 2025 -0800
+
+    Made slight changes to csv files
+
+[33mcommit b574307cfe64013fe0fda61a32f9265d4cbae8fd[m[33m ([m[1;31morigin/getInputParameters[m[33m)[m
+Merge: 9d0de1ad30 8ed2ff41b4
+Author: root <root@ip-172-31-8-233.us-west-2.compute.internal>
+Date:   Sun Mar 2 22:57:31 2025 +0000
+
+    Attempting merge with master branch and getInputParameters
+
+[33mcommit 8ed2ff41b4e57ec5b45e7d3e2175944bf06a93ba[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Sun Mar 2 12:16:23 2025 -0800
+
+    Added message to user if he enters date before planting date
+
+[33mcommit 9d0de1ad3012a9b17ec5cd0d177c30480031b3bf[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Sat Mar 1 07:45:42 2025 -0800
+
+    defined SelectedCrop
+
+[33mcommit 1ecb133bb4bae62b40dfbe5600329e1933507751[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Fri Feb 28 20:51:00 2025 -0800
+
+    Display warning if selected irrigtion date is before planting doy
+
+[33mcommit 74375018223a4325ee5598e15e3c8994f4626ca1[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Fri Feb 28 17:19:55 2025 -0800
+
+    Had to change api.js to not use localhost
+
+[33mcommit a2f926d0a9ad1d47d7a45142bb36fd920bf2e153[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Feb 28 15:27:02 2025 -0800
+
+    Fixed Irrigationpy.js
+
+[33mcommit 99d499339092b0521dcf5a130d52a5b4b04189a6[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Fri Feb 28 12:24:19 2025 -0800
+
+    Fixed issues with displaying budget data after running model
+
+[33mcommit 779923ddc9922b59f5f4b7d9e34149db20966051[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Feb 28 12:05:32 2025 -0800
+
+    Added Simulation output charts
+
+[33mcommit 7d146904c2313d270996492c1a7d70c02860eb74[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Fri Feb 28 11:43:49 2025 -0800
+
+    Updated routes and how irrigation parameters save
+
+[33mcommit 2bcf6eb0983159ef917e846466402e5c3b17d39f[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Thu Feb 27 19:10:41 2025 -0800
+
+    Updated PlantinginfoModel.jsx
+
+[33mcommit 4066bc2ee64a328280dcadcf5278b6f6b90804ed[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Wed Feb 26 15:37:42 2025 -0800
+
+    Made change so past irrigation dates arent required for model to run
+
+[33mcommit 13e31ae355778bb0d76aa1915fb3fe3083a3b20f[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Wed Feb 26 14:15:01 2025 -0800
+
+    Updated model with Ming's new code
+
+[33mcommit 3fefba448e7b94499ffb7855bcafd1362e369b3b[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Wed Feb 26 13:02:39 2025 -0800
+
+    Fixed routes. Pretty solid checkpoint as of this commit
+
+[33mcommit 771944d3fc78adc7b4cceded97995e674229e3a0[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Wed Feb 26 11:05:39 2025 -0800
+
+    Saving changes to updatewatersource.js
+
+[33mcommit 6805d0b021d0e355b4d67a409a74237baecf993f[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Wed Feb 26 10:11:40 2025 -0800
+
+    Made more changes to myblocks.js
+
+[33mcommit 4fafd89ada2049400900b1fa5d615425312805fd[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Wed Feb 26 09:04:47 2025 -0800
+
+    Saving changes to pull master code
+
+[33mcommit 81877b3837c6e3cf3880aba9d085e35506ba3313[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Feb 25 15:52:03 2025 -0800
+
+    Removed My farms and added that functionality in the edit farm button.
+
+[33mcommit 4696bf2a23ec65f6111b39c6d4e2efac3de80faf[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Tue Feb 25 15:07:42 2025 -0800
+
+    Temporarily saving local changes to pull master code
+
+[33mcommit c362577b736d64a24d44c6e77529de3f2536d0ad[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Feb 25 14:40:59 2025 -0800
+
+    Added the delete farm functionality
+
+[33mcommit 0e5f813ebc505f76a7956472d1a7fb84b39b0e35[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Feb 25 10:17:50 2025 -0800
+
+    added frontend for charts in simulation output
+
+[33mcommit 08da587fdc56abc81bba971edc6fff4c7f66c013[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Feb 25 10:05:55 2025 -0800
+
+    added frontend for charts in simulation output
+
+[33mcommit 0dd8465115c89cec2206b4f2068cffdd6f375e75[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Mon Feb 24 17:58:13 2025 -0800
+
+    Just added whole testing folder instead of singular file to prevent future issues
+
+[33mcommit bfbed1a513d664b36e73d9261410663a55224af8[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Mon Feb 24 17:50:29 2025 -0800
+
+    Updated test file
+
+[33mcommit f6df3f225684fd471b88858e03f2bcd02a49449a[m
+Author: Oliver <joshua.oliver@wsu.edu>
+Date:   Mon Feb 24 17:34:57 2025 -0800
+
+    Made changes to apiUtil to call calculate routes more modularly
+
+[33mcommit db0bec1c8048c29f6e84070c7ca7207330a9d5b9[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Sun Feb 23 16:43:10 2025 -0800
+
+    Fixed bugs
+
+[33mcommit 06424aa60cb41c322ec41b3c2a21665c80bb8430[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Sun Feb 23 16:29:56 2025 -0800
+
+    Done with MetricEnglish Units
+
+[33mcommit 78928b2ba073e6a63c030f7b52855de4f50c3918[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Feb 21 16:51:09 2025 -0800
+
+    Added the signup API and added AWS SES code
+
+[33mcommit 89ee359769296e4313376c2e0319b2bc046e101c[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Feb 21 10:04:59 2025 -0800
+
+    Added the Profile Settings and fixed the login Page and fixed some bugs in it
+
+[33mcommit ea7e3c1f03b31860c3909e8c758eb98e9036f994[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Feb 21 10:00:01 2025 -0800
+
+    Added the Profile Settings and fixed the login Page
+
+[33mcommit e7b00816aa4bee41540929ae72d4e972c4c5c9bf[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Fri Feb 21 09:22:25 2025 -0800
+
+    Added the Profile Settings and fixed the login Page
+
+[33mcommit 5711d59864e4d42f176b1480f3c35f35f92c7e58[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Wed Feb 19 19:56:03 2025 -0800
+
+    Changed the units as per the user selection
+
+[33mcommit be8d3d9d68b185818f06de86022ba7fa2347a746[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Wed Feb 19 15:28:06 2025 -0800
+
+    Added farm focus button at edit block level
+
+[33mcommit 528bbe782fb50749dd4a2b664e57266bdf46001a[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Wed Feb 19 14:25:58 2025 -0800
+
+    Fixed few issues
+
+[33mcommit d9bf2e1b26de564e727be9895a16e2dce7c2874b[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Wed Feb 19 13:51:24 2025 -0800
+
+    Fixed few issues
+
+[33mcommit 66f5f4f5614357cdbceb816290c7a7cacc5b0344[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Wed Feb 19 12:57:07 2025 -0800
+
+    Added Validations and styling to the dialog boxes
+
+[33mcommit 511d48916ef07f43e3f53bfccec71c9141a257b8[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Fri Feb 14 16:25:43 2025 -0800
+
+    Added Soil Sample interface
+
+[33mcommit 56f66e0a348ba47a911d96ebe1ea6beb71c5e505[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Feb 12 11:14:27 2025 -0800
+
+    added completed tasks for the specific user
+
+[33mcommit 99808d86596bd8601a7b45c0b947e661a36c06cf[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Feb 12 10:51:50 2025 -0800
+
+    added completed tasks for the specific user
+
+[33mcommit 67939055fb7d478ca7ab1c8babc8a8fee3e7f886[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Feb 10 15:03:55 2025 -0800
+
+    Fixed some errors in server.js
+
+[33mcommit 15a44417e53cdd749b7eb9ce50c031d8b5175eed[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Feb 10 14:39:56 2025 -0800
+
+    Fixed some errors in server.js
+
+[33mcommit 1fe7feef972a4f9f9ddd8a92876c0675d385180c[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Feb 10 09:39:26 2025 -0800
+
+    Added the graphical representation of GDD and ET data
+
+[33mcommit 8d26cb599abab0278625c90165193e723bc75376[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Feb 10 09:20:24 2025 -0800
+
+    Added the graphical representation of GDD and ET data
+
+[33mcommit af0ca000669d75b73dd5416230b35314715519f1[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Feb 5 10:21:40 2025 -0800
+
+    Fixed the error with adding the block
+
+[33mcommit b7cc7a447e12e07dc87685e198db4594daecd3ef[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Feb 4 09:40:27 2025 -0800
+
+    Made changes to the Navbar buttons
+
+[33mcommit 5f616d1df6d2949fca1d3a9dcd629185d75a8c94[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Feb 3 11:46:12 2025 -0800
+
+    Fixed errors with some API routes
+
+[33mcommit f96ec573a09d326b8b27bff0bfb73248424c21af[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Feb 3 11:02:32 2025 -0800
+
+    Fixed server port errors
+
+[33mcommit 3a566cf0b60d77a5439051649eebda4a9b4a6a33[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Feb 3 10:19:23 2025 -0800
+
+    Added the Summary Output and the Seasonal Output
+
+[33mcommit 827464ee0b6449c2ad03ea6911778b4169df4baa[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Jan 30 17:01:32 2025 -0800
+
+    Added the frontend for Simulation output
+
+[33mcommit 581165b75e17dc5aa98b9e3590c4767c23efd44e[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Jan 30 17:00:20 2025 -0800
+
+    Added the frontend for Simulation Output and Seasonal output
+
+[33mcommit ac56a6f66b5dcb8aa3336b24998009872ea70447[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Jan 30 16:14:03 2025 -0800
+
+    Added the frontend for Simulation Output and Seasonal output
+
+[33mcommit 603272bebff206dab54c1ec3c04bdf1983d93e17[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Thu Jan 30 15:01:53 2025 -0800
+
+    Added GDDDataModal import in TaskButton
+
+[33mcommit eb7710d9c6920bf015789d40b700d8f4c4223ce5[m
+Merge: e37eccf6c6 37da2f8cc3
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Thu Jan 30 15:00:05 2025 -0800
+
+    Fixed bugs in ET Data and created GDD Api and frontend.
+
+[33mcommit e37eccf6c6a8857db913043afe27353d465d6362[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Thu Jan 30 14:43:03 2025 -0800
+
+    Fixed bugs in ET Data and created GDD Api and frontend.
+
+[33mcommit 37da2f8cc3cd33bcdbd6364e3e7776af9b66a36e[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Thu Jan 30 11:37:37 2025 -0800
+
+    Fixed the errors in irrigationpy.js API
+
+[33mcommit e97291161329d7b8f5eb0401c7957cb25e6dd6c5[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Wed Jan 29 17:25:23 2025 -0800
+
+    Created API for executing the mainTool_Merge_with_ISM_parameters.py file
+
+[33mcommit 89c0eb2ed2c4812e3de66026c51cd44b863f8a17[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Wed Jan 29 15:59:49 2025 -0800
+
+    Fixed few bugs in ET Data, Changed the profile button to icon and few styling changes
+
+[33mcommit ea40deef3000aa171a2e7114ab4da2c22df69254[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Wed Jan 29 09:17:41 2025 -0800
+
+    Fixed api calling errors at ET Data and at Creating Block level
+
+[33mcommit 19a125f73b167c8b9a18fada53e9db540c4075b5[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Tue Jan 28 19:22:50 2025 -0800
+
+    fixed bugs
+
+[33mcommit 4b4eedf9cfe4f4f7b4ad36c8ff4670fcd85c3c45[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Tue Jan 28 19:11:45 2025 -0800
+
+    fixed bugs
+
+[33mcommit 6fdabfa66c4e6f6f63e8cb4c00b52bd6a88e22ce[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Tue Jan 28 16:12:35 2025 -0800
+
+    Done with Fertilization Dialog Box for Python module
+
+[33mcommit dfdb3ce0aa23b08ca85a27465f16ce72c2897041[m
+Author: Venkata Badam <venkata.badam@wsu.edu>
+Date:   Tue Jan 28 15:36:02 2025 -0800
+
+    Done with Irrigation Dialog Box for Python module
+
+[33mcommit 36188dc8cf317d33cccebb2787b47317f8df3967[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Jan 28 13:45:19 2025 -0800
+
+    Fixed routes of the APIs
+
+[33mcommit 9281ecebf20d45d38d19a782850620e84b2728cf[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Jan 28 12:54:28 2025 -0800
+
+    Fixed routes of the APIs
+
+[33mcommit 636aae8014773e2c1fb4bebf9f86c734f0ecfd60[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Jan 28 12:48:09 2025 -0800
+
+    Fixed routes of the APIs
+
+[33mcommit 9a5ffc5b77106086d8155d7467cdb5058c85a7ce[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Jan 28 12:21:49 2025 -0800
+
+    Fixed routes of the APIs
+
+[33mcommit a6f1f1fb2509b5ba89b9164f98fd9eb4f604a564[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Jan 28 12:02:22 2025 -0800
+
+    Fixed routes of the APIs
+
+[33mcommit 0b01174855de78e9fc1a0aefb147c319fe4189db[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Jan 28 11:38:53 2025 -0800
+
+    Fixed API routes bugs
+
+[33mcommit c798345a6b55c6e847e4433258fc22f5c5477282[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Jan 28 11:19:00 2025 -0800
+
+    Fixed code
+
+[33mcommit ce1eebd642e5391582763c9c710f3d682ba6ad4e[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Jan 28 11:10:16 2025 -0800
+
+    Fixed code
+
+[33mcommit 94713078e1f3dacb1e107d3c17bfacc55a0b7fb9[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Jan 28 11:00:22 2025 -0800
+
+    Fixed code
+
+[33mcommit daa99bfe0253f1f339dcef1dbaed1bd89acea744[m[33m ([m[1;32msean[m[33m)[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Tue Jan 28 10:22:40 2025 -0800
+
+    Fixed code
+
+[33mcommit 60fd904ed5abec50f21a837758b534aec3b4ef23[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 16:59:33 2025 -0800
+
+    Fixed code
+
+[33mcommit c0aad65bada7e35db726c8c9db437aa6981ef151[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 16:30:47 2025 -0800
+
+    Fixed  errors
+
+[33mcommit 3e7960322be8a18f31c3e87966c7c4c6fd67c689[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 16:24:10 2025 -0800
+
+    Fixed  errors
+
+[33mcommit 22f8df5f0f1019c3b174954ee17232f60bcfe739[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 16:19:44 2025 -0800
+
+    Fixed  errors
+
+[33mcommit 7842d913d9dc1ef190ac5046cc710568cdb42a0d[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 14:55:30 2025 -0800
+
+    Fixed some errors
+
+[33mcommit b9e4ba1b01b7b3f8160cdb339f5da571b7f131a7[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 14:42:42 2025 -0800
+
+    changed the port to 80
+
+[33mcommit 6cbd9673563e6b295342ff3b599a64aec7eec435[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 14:37:33 2025 -0800
+
+    changed the port to 80
+
+[33mcommit 52bb2e6766e29d4dbb8c2d3ee5aeb96775420fa1[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 12:37:41 2025 -0800
+
+    changed the port to 80
+
+[33mcommit d234968ad8c61cbb128a02484c66838947ca3e7e[m
+Merge: ce99c2327b 6c025aa069
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 12:30:47 2025 -0800
+
+    Merge branch 'master' of https://git-codecommit.us-west-2.amazonaws.com/v1/repos/awn_nms
+
+[33mcommit ce99c2327bbd559f6d60a6edc2380a9e466e8501[m
+Merge: e47b65be08 0f051151e7
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 12:30:11 2025 -0800
+
+    changed the port to 80
+
+[33mcommit 6c025aa0694dd8bc172adf97d26ddea1831d8c26[m
+Author: Venkata <venkata.badam@wsu.edu>
+Date:   Mon Jan 27 20:23:23 2025 +0000
+
+    Edited server.js
+
+[33mcommit e47b65be08b29ba8f3ec42ed7789bee549bb0dd4[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 12:17:51 2025 -0800
+
+    changed the port to 80
+
+[33mcommit 0f051151e784b12ca3ab7935134a4cabc0effc5e[m
+Author: Venkata <venkata.badam@wsu.edu>
+Date:   Mon Jan 27 20:13:14 2025 +0000
+
+    Changed the Server Port to 80.
+
+[33mcommit a6883fe52a1ab44c372cc5d9b70ba796db123ada[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 11:44:58 2025 -0800
+
+    test.sean
+
+[33mcommit 24399107f66568d10b13102ec4ab585223d614e0[m
+Author: supraja-at-936840387761 <supraja.peri@wsu.edu>
+Date:   Mon Jan 27 11:21:48 2025 -0800
+
+    Fixed the build error
