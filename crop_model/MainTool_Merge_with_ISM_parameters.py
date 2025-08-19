@@ -811,7 +811,9 @@ def run_simulation(json_data: dict) -> dict:
     Auto_Irrigation  = get_json_boolean(data_entry,'Auto_Irrigation')     #'Mingliang 7/20/2025  Should set True for estimating irrigation recommendation after TODAY.
     Seasonal_Scheduled_Fertilization = 0. #'Mingliang 7/20/2025
 
-    Begin_Crop_Senescence = False    #'Mingliang 6/21/2025
+    #Begin_Crop_Senescence = False    #'Mingliang 6/21/2025
+    End_Nitrogen_Dilution = False     #'Mingliang 6/21/2025'
+
     Potential_Biomass_At_Maturity = 0
 
 
@@ -1194,7 +1196,8 @@ def run_simulation(json_data: dict) -> dict:
         Available_N = 0.0
         #Crop_Number = ReadInputs.CropOrder(1)
         InitialSoilProfile(DOY,pBalance,pSoilState,pSoilModelLayer)
-        Begin_Crop_Senescence = False    #'Mingliang 6/21/2025
+        #Begin_Crop_Senescence = False    #'Mingliang 6/21/2025
+        End_Nitrogen_Dilution = False     #'Mingling 6/21/2025'
         Recommended_N_Fertilization = False
         N_Fert_Recommended_Amount = 0.
         #'Set up Crop Number 1
@@ -1219,7 +1222,7 @@ def run_simulation(json_data: dict) -> dict:
                 PotET(Day_Of_The_Year, True, Crop_Active, pCropState, CropParameters[1], pCS_Weather, pETState) #Calculations are for the potential crop and the crop is active
 
                 Biomass(Day_Of_The_Year, True, pCropState, CropParameters[1], pCS_Weather, pETState) #Calculate potential biomass for the entire season
-                Begin_Crop_Senescence = ReferencePlantNConcentration(Day_Of_The_Year, pCropState, CropParameters[1], CropGrowths[1], Begin_Crop_Senescence)
+                End_Nitrogen_Dilution = ReferencePlantNConcentration(Day_Of_The_Year, pCropState, CropParameters[1], CropGrowths[1], End_Nitrogen_Dilution)
                 Day_Of_The_Year += 1
                 if Day_Of_The_Year > 365: Day_Of_The_Year = 1
 
@@ -1231,7 +1234,8 @@ def run_simulation(json_data: dict) -> dict:
                 #for k,v in vars(CropParameters[1]).items():
                 #    print(f"   {k}: {v}")
             
-        Begin_Crop_Senescence = False
+        #Begin_Crop_Senescence = False
+        End_Nitrogen_Dilution = False
         if 2 in CropGrowths and DOY == CropGrowths[2].Emergence_DOY:
             #'Set up Crop Number 2
             if DOY == CropGrowths[2].Emergence_DOY:
@@ -1256,8 +1260,8 @@ def run_simulation(json_data: dict) -> dict:
                         CropParameters[2], pCS_Weather, pETState) #Calculations are for the potential crop and the crop is active
                     Biomass(Day_Of_The_Year, True, pCropState, CropParameters[2],
                             pCS_Weather, pETState) #Calculate potential biomass for the entire season
-                    Begin_Crop_Senescence = ReferencePlantNConcentration(Day_Of_The_Year, pCropState, 
-                                         CropParameters[2], CropGrowths[2], Begin_Crop_Senescence)
+                    End_Nitrogen_Dilution = ReferencePlantNConcentration(Day_Of_The_Year, pCropState, 
+                                         CropParameters[2], CropGrowths[2], End_Nitrogen_Dilution)
                     Day_Of_The_Year += 1
                     if Day_Of_The_Year > 365: Day_Of_The_Year = 1
 
