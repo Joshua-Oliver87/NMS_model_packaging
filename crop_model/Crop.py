@@ -59,7 +59,7 @@ def Biomass(DOY, Potential_Crop, pCropState, pCropParameter, pCS_Weather, pETSta
             pCropState.Cumulative_Crop_Biomass[DOY] = pCropState.Cumulative_Crop_Biomass[DOY - 1] + Actual_Crop_Biomass_Gain
         pCropState.Seasonal_Biomass += Actual_Crop_Biomass_Gain
 
-def ReferencePlantNConcentration(DOY, pCropState, pCropParameter, pCropGrowth, Begin_Crop_Senescence):
+def ReferencePlantNConcentration(DOY, pCropState, pCropParameter, pCropGrowth, End_Nitrogen_Dilution):
     #'Read input parameters
     N_Critical_Concentration_At_Emergence = pCropParameter.Critical_N_Concentration_Emergence
     N_Maximum_Concentration_At_Emergence = pCropParameter.Maximum_N_Concentration_Emergence
@@ -71,7 +71,8 @@ def ReferencePlantNConcentration(DOY, pCropState, pCropParameter, pCropGrowth, B
     Maximum_N_Concentration_At_Maturity = pCropParameter.Maximum_N_Concentration_Maturity
     Critical_N_Concentration_At_Maturity = pCropParameter.Critical_N_Concentration_Maturity
     Minimum_N_Concentration_At_Maturity = pCropParameter.Minimum_N_Concentration_Maturity
-    DOY_Begin_Decline = pCropGrowth.Beging_Senescence_DOY
+    #DOY_Begin_Decline = pCropGrowth.Beging_Senescence_DOY #'Mingliang 8/13/2025
+    DOY_End_Nitrogen_Dilution = pCropGrowth.Full_Canopy_DOY  #'Mingliang 8/13/2025
     Days_Elapsed = 0
     #'Start processing
     Amax = N_Maximum_Concentration_At_Emergence / math.pow(Biomass_To_Start_Dilution_Maximum_N_Concentration, Slope)
@@ -81,13 +82,13 @@ def ReferencePlantNConcentration(DOY, pCropState, pCropParameter, pCropGrowth, B
     Cumulative_Top_Biomass = pCropState.Cumulative_Potential_Crop_Biomass[DOY] * 10  #'Convert kg/m2 to Mg/ha
     #Begin_Crop_Senescence = False
     #global Begin_Crop_Senescence
-    if not Begin_Crop_Senescence:   #DOY <= DOY_Begin_Decline and Cumulative_Top_Biomass > 0:
+    if not End_Nitrogen_Dilution:   #DOY <= DOY_Begin_Decline and Cumulative_Top_Biomass > 0:
         tBiomass = math.pow(Cumulative_Top_Biomass, Slope)
         pCropState.Maximum_N_Concentration[DOY] = min(N_Maximum_Concentration_At_Emergence, Amax * tBiomass)
         pCropState.Critical_N_Concentration[DOY] = min(N_Critical_Concentration_At_Emergence, Acrit * tBiomass)
         pCropState.Minimum_N_Concentration[DOY] = min(N_Minimum_Concentration_At_Emergence, Amin * tBiomass)
-        if DOY == DOY_Begin_Decline:
-            Begin_Crop_Senescence = True  #'Mingliang 6/21/2025
+        if DOY == DOY_End_Nitrogen_Dilution: #'Mingliang 8/13/2025
+            End_Nitrogen_Dilution = True  #'Mingliang 8/13/2025
             pCropState.Maximum_Green_Canopy_Cover_Reached = True
             pCropState.DOY_Of_Transition = DOY
             
@@ -109,7 +110,7 @@ def ReferencePlantNConcentration(DOY, pCropState, pCropParameter, pCropGrowth, B
         pCropState.Critical_N_Concentration[DOY] = pCropState.Critical_N_Concentration_At_Transition - pCropState.Daily_Change_Critical_N_Concentration * (DOY - pCropState.DOY_Of_Transition)
         pCropState.Minimum_N_Concentration[DOY] = pCropState.Minimum_N_Concentration_At_Transition - pCropState.Daily_Change_Minimum_N_Concentration * (DOY - pCropState.DOY_Of_Transition)
         
-    return Begin_Crop_Senescence
+    return End_Nitrogen_Dilution
 
 def CanopyCover_OBSOLETE(DOY, pCropState, pCropParameter, pCropGrowth, pETState):
     DOY_Begin_Decline = pCropGrowth.Beging_Senescence_DOY
@@ -185,19 +186,31 @@ def NitrogenUptake(DOY, pCropState, pCropParameter, pCropGrowth, pETState, pSoil
     
     Available_N = 0.0
 
-    
+    yesterday_DOY = DOY - 1
+    if yesterday_DOY == 0: yesterday_DOY = 365
+        
     Water_Density = 1000 #'kg/m3
-    if DOY == 1:
-        Crop_N = pCropState.Crop_N_Mass[365] 
-    else: 
-        Crop_N = pCropState.Crop_N_Mass[DOY - 1]
+    Crop_N = pCropState.Crop_N_Mass[yesterday_DOY]
     #'Maximum_Daily_N_Uptake = ReadInputs.PotentialNUptake(Crop_Number) / 10000# 'Convert kg/ha/day to kg/m2/day
-    Cumulative_Top_Biomass = pCropState.Cumulative_Crop_Biomass[DOY] #'kg/m2
-    Today_Plant_N_Max = pCropState.Maximum_N_Concentration[DOY]
+    #'Mingliang 8/13/2025 Five lines deleted
+    #Cumulative_Top_Biomass = pCropState.Cumulative_Crop_Biomass[DOY] #'kg/m2
+    #Today_Plant_N_Max = pCropState.Maximum_N_Concentration[DOY]
     #COS LML 02252025 Surplus = max(0, Crop_N - Today_Plant_N_Max * Cumulative_Top_Biomass)
     #COS LML 02252025 Today_Crop_N_Demand = max(0, Cumulative_Top_Biomass * Today_Plant_N_Max - Crop_N - Surplus) #'Convert biomass from Mg/ha to kg/m2
-    Today_Crop_N_Demand = max(0, Cumulative_Top_Biomass * Today_Plant_N_Max - Crop_N) #'Convert biomass from Mg/ha to kg/m2
-    Today_Crop_N_Demand = min(pCropParameter.Maximum_Daily_N_Uptake_Rate, Today_Crop_N_Demand) #'Mingliang 7/19/2025 CROP PARAMETER WAS ADDED
+    #Today_Crop_N_Demand = max(0, Cumulative_Top_Biomass * Today_Plant_N_Max - Crop_N) #'Convert biomass from Mg/ha to kg/m2
+    #Today_Crop_N_Demand = min(pCropParameter.Maximum_Daily_N_Uptake_Rate, Today_Crop_N_Demand) #'Mingliang 7/19/2025 CROP PARAMETER WAS ADDED
+    
+    #'Mingliang 8/13/2025 BEGIN new section
+
+    Yesterday_Biomass = pCropState.Cumulative_Crop_Biomass[yesterday_DOY]
+    Today_Biomass = pCropState.Cumulative_Crop_Biomass[DOY]
+    Today_Plant_N_Max = pCropState.Maximum_N_Concentration[DOY]
+    Yesterday_Plant_N_Conc = pCropState.Crop_N_Concentration[yesterday_DOY]
+    Surplus_Or_Deficit = Yesterday_Biomass * (Yesterday_Plant_N_Conc - Today_Plant_N_Max)   #'Surplus: Positive sign, Deficit: Negative sign
+    Today_Crop_N_Demand = (Today_Biomass - Yesterday_Biomass) * Today_Plant_N_Max - Surplus_Or_Deficit
+    Today_Crop_N_Demand = max(0, Today_Crop_N_Demand)
+    Today_Crop_N_Demand = min(pCropParameter.Maximum_Daily_N_Uptake_Rate, Today_Crop_N_Demand)
+    #'Mingliang 8/13/2025 END new section
     
     Today_N_Uptake = 0.
     Today_NO3_N_Uptake = 0.
@@ -280,14 +293,15 @@ def NitrogenUptake(DOY, pCropState, pCropParameter, pCropGrowth, pETState, pSoil
     
     #'Mingliang 7/20/2025
     #'If N uptake is zero and the maximum N concentration is always decreasing, then there will be excess crop N that is lost as gas
-    if Today_N_Uptake == 0.:
-        Crop_N_Conc = Today_Plant_N_Max
-    else:
-        Crop_N_Conc = Crop_N / Cumulative_Top_Biomass
+    #if Today_N_Uptake == 0.:
+    #    Crop_N_Conc = Today_Plant_N_Max
+    #else:
+    #    Crop_N_Conc = Crop_N / Cumulative_Top_Biomass
+    Crop_N_Conc = Crop_N / Today_Biomass   #'Mingliang 8/13/2025
     
-    if Crop_N_Conc < 0: raise Exception("Crop_N_Conc < 0")
-    if not math.isclose(Crop_N_Conc, Today_Plant_N_Max, rel_tol=1e-9) and Crop_N_Conc > Today_Plant_N_Max:
-        raise Exception("Crop_N_Conc > Today_Plant_N_Max")
+    #if Crop_N_Conc < 0: raise Exception("Crop_N_Conc < 0")
+    #if Crop_N_Conc > Today_Plant_N_Max: raise Exception("Crop_N_Conc > Today_Plant_N_Max")
+
 
     #'Update variables
     pCropState.Crop_N_Mass[DOY] = Crop_N
@@ -384,10 +398,11 @@ def InitializeCrop(DOY,pCropState,pSoilFlux,pCropParameter,pETState):
     Depth_Of_Seed = pCropParameter.Seeding_Depth
     Root_Depth_At_Emergence = Depth_Of_Seed + pCropParameter.Initial_Root_Depth_From_Germinated_Seed
     pCropState.Root_Depth[DOY] = Root_Depth_At_Emergence
-    pCropState.Cumulative_Crop_Biomass[DOY - 1] = 0. #0.002
+    pCropState.Cumulative_Crop_Biomass[DOY - 1] = 0.002 #'OJO IMPROVE ON THIS
     pCropState.Seasonal_Biomass = pCropState.Cumulative_Crop_Biomass[DOY - 1]
     pCropState.Cumulative_Potential_Crop_Biomass[DOY - 1] = pCropState.Cumulative_Crop_Biomass[DOY - 1]
     pCropState.Crop_N_Mass[DOY - 1] = pCropState.Cumulative_Crop_Biomass[DOY - 1] * pCropParameter.Maximum_N_Concentration_Emergence
+    pCropState.Crop_N_Concentration[DOY - 1] = pCropParameter.Maximum_N_Concentration_Emergence #'Mingliang 8/13/2025
     pCropState.Cumulative_N_Uptake[DOY] = 0.
     pSoilFlux.Cumulative_Irrigation = 0.
     pSoilFlux.CumulativeFertilization = 0.

@@ -137,7 +137,7 @@ class SoilFlux:
     Cumulative_Mineralization_All_Layers = 0.0    #'Mingliang 6/21/2025
     
     Cumulative_Deep_Drainage = 0.
-    Cumulative_N_Leaching = 0.
+    Cumulative_N_Leaching = 0. #kg/m2
     Sum_N_Fertilization = 0.
     Cumulative_Irrigation = 0.                                                 #only account when crop is active
     Cumulative_Fertilization = 0.
@@ -604,13 +604,15 @@ def WaterAndNTransport(DOY, pSoilModelLayer, pSoilState, net_irrigations, WaterN
     
     if CropActive:
        pSoilFlux.Cumulative_Deep_Drainage += Cumulative_Pulse_Deep_Drainage #'mm
-       pSoilFlux.Cumulative_N_Leaching += Cumulative_Pulse_N_Leaching * 10000 #'Convert kg/m2 to kg/ha
+       pSoilFlux.Cumulative_N_Leaching += Cumulative_Pulse_N_Leaching 
        pSoilFlux.Cumulative_Irrigation += NID
        pSoilFlux.Cumulative_Fertilization += Nitrate_N_Fertilization + Ammonium_N_Fertilization
-       pSoilFlux.N_Leaching_Accumulated[DOY] = pSoilFlux.N_Leaching_Accumulated[Adj_DOY] + Cumulative_Pulse_N_Leaching * 10000 #'Convert kg/m2 to kg/ha     'Mingliang 4/23/2025
+       pSoilFlux.N_Leaching_Accumulated[DOY] = pSoilFlux.N_Leaching_Accumulated[Adj_DOY] + Cumulative_Pulse_N_Leaching
+    
+    print(f'N_Leaching_Accumulated(kg/ha):{pSoilFlux.N_Leaching_Accumulated[DOY]}')
     
     pSoilFlux.Simulation_Total_Deep_Drainage += Cumulative_Pulse_Deep_Drainage #'mm 06112025LML updated
-    pSoilFlux.Simulation_Total_N_Leaching += Cumulative_Pulse_N_Leaching * 10000 #'Convert kg/m2 to kg/ha 06112025LML updated
+    pSoilFlux.Simulation_Total_N_Leaching += Cumulative_Pulse_N_Leaching
     pSoilFlux.Simulation_Total_Irrigation += NID
     pSoilFlux.Simulation_Total_Fertilization += Nitrate_N_Fertilization + Ammonium_N_Fertilization
     
