@@ -1330,7 +1330,7 @@ def run_simulation(json_data: dict) -> dict:
                     CropGrowths[Crop_Number], pETState,
                     pSoilModelLayer, pSoilState,
                     Seasonal_Scheduled_Fertilization, pCS_Fertilization,
-                    Potential_Biomass_At_Maturity, False
+                    Potential_Biomass_At_Maturity, True
                 )
                 print("Recommended_N_Fertilization, N_Fert_Recommended_Amount-false", Recommended_N_Fertilization, N_Fert_Recommended_Amount)
 
