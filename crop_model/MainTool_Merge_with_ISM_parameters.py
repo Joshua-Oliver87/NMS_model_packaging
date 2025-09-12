@@ -26,7 +26,7 @@ import sys
 import os
 from datetime import datetime 
 
-today_doy = datetime.now().timetuple().tm_yday
+today_doy = 125
 
 
 def run_simulation(json_data: dict) -> dict:
