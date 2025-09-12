@@ -24,6 +24,10 @@ from .OrganicCandN import *
 import json
 import sys
 import os
+from datetime import datetime 
+
+today_doy = datetime.now().timetuple().tm_yday
+
 
 def run_simulation(json_data: dict) -> dict:
 
@@ -1307,12 +1311,25 @@ def run_simulation(json_data: dict) -> dict:
                             CropGrowths[Crop_Number], pETState, pSoilModelLayer, 
                             pSoilState)
             
-            Recommended_N_Fertilization, N_Fert_Recommended_Amount = \
-                FertilizerRecommendation(DOY, pCropState, CropParameters[Crop_Number], 
-                                    CropGrowths[Crop_Number], pETState, 
-                                    pSoilModelLayer, pSoilState, 
-                                    Seasonal_Scheduled_Fertilization, pCS_Fertilization, 
-                                    Potential_Biomass_At_Maturity, Auto_Fertilization)
+            if DOY > today_doy:
+                print("today_doy", today_doy)
+                Recommended_N_Fertilization, N_Fert_Recommended_Amount = FertilizerRecommendation(
+                    DOY, pCropState, CropParameters[Crop_Number],
+                    CropGrowths[Crop_Number], pETState,
+                    pSoilModelLayer, pSoilState,
+                    Seasonal_Scheduled_Fertilization, pCS_Fertilization,
+                    Potential_Biomass_At_Maturity, True
+                )
+            else:
+                print("today_doy", today_doy)
+                Recommended_N_Fertilization, N_Fert_Recommended_Amount = FertilizerRecommendation(
+                    DOY, pCropState, CropParameters[Crop_Number],
+                    CropGrowths[Crop_Number], pETState,
+                    pSoilModelLayer, pSoilState,
+                    Seasonal_Scheduled_Fertilization, pCS_Fertilization,
+                    Potential_Biomass_At_Maturity, False
+                )
+
             #'synchronize days after emergence (DAE) and day of the year (DOY)
             DOY_At_DAE[DAE] = DOY
             #DAE += 1
