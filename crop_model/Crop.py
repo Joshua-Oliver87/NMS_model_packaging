@@ -390,6 +390,7 @@ def FertilizerRecommendation(DOY, pCropState, pCropParameter,
             pCropState.Recommended_N_Fertilization = False
             pCropState.N_Fert_Recommended_Amount[DOY] = 0.
     #'Mingliang 7/23/2025 End of fertilization recommendation
+        print("pCropState", pCropState)
     return pCropState.Recommended_N_Fertilization, pCropState.N_Fert_Recommended_Amount[DOY]
 
 def InitializeCrop(DOY,pCropState,pSoilFlux,pCropParameter,pETState):

@@ -1311,7 +1311,7 @@ def run_simulation(json_data: dict) -> dict:
                             CropGrowths[Crop_Number], pETState, pSoilModelLayer, 
                             pSoilState)
             
-            if DOY > today_doy:
+            if DOY < today_doy:
                 print("today_doy-true", today_doy)
                 print("doy-true", DOY)
                 Recommended_N_Fertilization, N_Fert_Recommended_Amount = FertilizerRecommendation(
@@ -1330,7 +1330,7 @@ def run_simulation(json_data: dict) -> dict:
                     CropGrowths[Crop_Number], pETState,
                     pSoilModelLayer, pSoilState,
                     Seasonal_Scheduled_Fertilization, pCS_Fertilization,
-                    Potential_Biomass_At_Maturity, True
+                    Potential_Biomass_At_Maturity, False
                 )
                 print("Recommended_N_Fertilization, N_Fert_Recommended_Amount-false", Recommended_N_Fertilization, N_Fert_Recommended_Amount)
 
