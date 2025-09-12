@@ -1313,6 +1313,7 @@ def run_simulation(json_data: dict) -> dict:
             
             if DOY > today_doy:
                 print("today_doy", today_doy)
+                print("doy", DOY)
                 Recommended_N_Fertilization, N_Fert_Recommended_Amount = FertilizerRecommendation(
                     DOY, pCropState, CropParameters[Crop_Number],
                     CropGrowths[Crop_Number], pETState,
@@ -1320,8 +1321,9 @@ def run_simulation(json_data: dict) -> dict:
                     Seasonal_Scheduled_Fertilization, pCS_Fertilization,
                     Potential_Biomass_At_Maturity, True
                 )
+                print("Recommended_N_Fertilization, N_Fert_Recommended_Amount", Recommended_N_Fertilization, N_Fert_Recommended_Amount)
             else:
-                print("today_doy", today_doy)
+                #print("today_doy", today_doy)
                 Recommended_N_Fertilization, N_Fert_Recommended_Amount = FertilizerRecommendation(
                     DOY, pCropState, CropParameters[Crop_Number],
                     CropGrowths[Crop_Number], pETState,
