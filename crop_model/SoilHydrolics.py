@@ -316,7 +316,7 @@ def WC(WS, WP, AE, B):
     return WC
 def WP(WS, WC, AE, B):
     #'Calculate water potential from water content
-    if abs(WC) >= 1e-12: #06122025LML in case WC is close to zero
+    if WC >= 1e-12: #09182025 WC should be positive and not close to zero
         WP = AE * math.pow((WC / WS), (-B))
     else:
         WP = -1.e6  #06122025LML set a big negative number
@@ -897,14 +897,15 @@ def ActEvaporation(DOY,pSoilModelLayer,pSoilState,pETState, Crop_Active):
     #'Evaporation_Soil_Depth = Round(0.169 - 0.001 * Percent_Sand_Top_Layer, 2)
     Pot_Soil_Water_Evap = pETState.Potential_Soil_Water_Evaporation[DOY] * (1 - Residue_Fraction_Solar_Interception)
     
+    #09182025LML add min() in cases overly estimated evap
     if Water_Content_Top_layer > Permanent_Wilting_Point: 
-        pETState.Actual_Soil_Water_Evaporation[DOY] = Pot_Soil_Water_Evap  #'Soil evaporation in mm/day = kg/m2/day
+        pETState.Actual_Soil_Water_Evaporation[DOY] = min(Pot_Soil_Water_Evap,pSoilState.Water_Content[DOY][1])  #'Soil evaporation in mm/day = kg/m2/day
     elif Water_Content_Top_layer > Air_Dry_Water_Content:
-          pETState.Actual_Soil_Water_Evaporation[DOY] = Pot_Soil_Water_Evap * math.pow(((Water_Content_Top_layer - Air_Dry_Water_Content) \
-                 / (Permanent_Wilting_Point - Air_Dry_Water_Content)), 2)
+          pETState.Actual_Soil_Water_Evaporation[DOY] = min(Pot_Soil_Water_Evap * math.pow(((Water_Content_Top_layer - Air_Dry_Water_Content) \
+                 / (Permanent_Wilting_Point - Air_Dry_Water_Content)), 2),pSoilState.Water_Content[DOY][1])
     else:
           pETState.Actual_Soil_Water_Evaporation[DOY] = 0
-
+          
     #'Update water content and potential of top layer
     pSoilState.Water_Content[DOY][1] -= pETState.Actual_Soil_Water_Evaporation[DOY] / (pSoilModelLayer.Layer_Thickness[1] * WD)
     pETState.Cumulative_Soil_Water_Evaporation += pETState.Actual_Soil_Water_Evaporation[DOY]   #'Mingliang 4/17/2025

@@ -26,7 +26,7 @@ import sys
 import os
 from datetime import datetime 
 
-today_doy = 125
+today_doy = datetime.now().timetuple().tm_yday
 
 
 def run_simulation(json_data: dict) -> dict:
@@ -280,6 +280,9 @@ def run_simulation(json_data: dict) -> dict:
 
     def ReadFertilization(json_data, pCS_Fertilization, pCS_Min_Fertilizer, pCS_Organic_Fertilizer):
         fertilizations = json_data.get("fertilization", [])
+        # if fertilizations is null
+        if fertilizations == None:
+            return
         Seasonal_Scheduled_Fertilization = 0
         for fert in fertilizations:
             doy = int(fert["date"])
@@ -293,8 +296,6 @@ def run_simulation(json_data: dict) -> dict:
                     #pCS_Fertilization.Nitrate_Fraction[doy] = float(fert.get("nitrate_fraction", 0.0))
                     #pCS_Fertilization.Ammonium_Fraction[doy] = float(fert.get("ammonium_fraction", 0.0))
                     #pCS_Fertilization.Ammonia_Fraction[doy] = float(fert.get("ammonia_fraction", 0.0))
-
-                    
                     Nitrate_Fract = 0.
                     Ammonium_Fract = 0.
                     Ammonia_Fract = 0.
@@ -329,7 +330,9 @@ def run_simulation(json_data: dict) -> dict:
         return Seasonal_Scheduled_Fertilization
 
     def ReadMinFertilizer(json_data, pCS_Min_Fertilizer):
-        mineral_ferts = json_data.get("mineral_fertilizers", [])
+        mineral_ferts = json_data.get("fertilization", [])
+        if mineral_ferts == None:
+            return
         for fert in mineral_ferts:
             name = fert.get("fertilizer_name")
             if name and name not in pCS_Min_Fertilizer:
@@ -340,15 +343,24 @@ def run_simulation(json_data: dict) -> dict:
                 pCS_Min_Fertilizer[name].Ammonia_mass_percentage = float(fert.get("ammonia_fraction", 0.0))
 
     def ReadOrganicFertilizer(json_data, pCS_Organic_Fertilizer):
-        organic_ferts = json_data.get("organic_fertilizers", [])
+        organic_ferts = json_data.get("fertilization", [])
+        if organic_ferts == None:
+            return
         for fert in organic_ferts:
             name = fert.get("fertilizer_name")
             if name and name not in pCS_Organic_Fertilizer:
                 pCS_Organic_Fertilizer[name] = CS_Organic_Fertilizer()
                 pCS_Organic_Fertilizer[name].Organic_Fertilizer_Name = name
-                pCS_Organic_Fertilizer[name].Carbon_mass_percentage = float(fert.get("organic_fertilizer_c_fraction", 0.0))
-                pCS_Organic_Fertilizer[name].Nitrogen_mass_percentage = float(fert.get("organic_fertilizer_n_fraction", 0.0))
-                pCS_Organic_Fertilizer[name].HalfLife_days = float(fert.get("organic_fertilizer_half_life", 0.0))
+                #print(f'name:{name} {fert.get("organic_fertilizer_c_fraction", 0.0)}')
+                pCS_Organic_Fertilizer[name].Carbon_mass_percentage = 0.
+                pCS_Organic_Fertilizer[name].Nitrogen_mass_percentage = 0.
+                pCS_Organic_Fertilizer[name].HalfLife_days = 0.
+                if fert.get("organic_fertilizer_c_fraction", 0.0):
+                    pCS_Organic_Fertilizer[name].Carbon_mass_percentage = float(fert.get("organic_fertilizer_c_fraction", 0.0))
+                if fert.get("organic_fertilizer_n_fraction", 0.0):
+                    pCS_Organic_Fertilizer[name].Nitrogen_mass_percentage = float(fert.get("organic_fertilizer_n_fraction", 0.0))
+                if fert.get("organic_fertilizer_half_life", 0.0):
+                    pCS_Organic_Fertilizer[name].HalfLife_days = float(fert.get("organic_fertilizer_half_life", 0.0))
 
             
     def ReadNetIrrigation(json_data, Irrigation):
@@ -456,7 +468,6 @@ def run_simulation(json_data: dict) -> dict:
             Number_Initial_Conditions_Layers = 10 #06042025LML initialize a big number
 
         Thickness_Model_Layers = 0.1
-
         Thickness = {}
         Number_Of_Sublayers = {}
         Water = {}
@@ -512,7 +523,7 @@ def run_simulation(json_data: dict) -> dict:
             for j in range(k, L + 1):
                 pSoilModelLayer.Layer_Thickness[j] = Thickness[i] / Number_Of_Sublayers[i]
                 if j <= pSoilModelLayer.Number_Model_Layers:
-                    print(f"Layer {j} on DOY {DOY}: OM% = {pSoilModelLayer.Percent_Soil_Organic_Matter[j] / 100},")
+                    #print(f"Layer {j} on DOY {DOY}: OM% = {pSoilModelLayer.Percent_Soil_Organic_Matter[j] / 100},")
 
                     if Water[i] >= 0 and not pd.isna(Water[i]):
                         pSoilState.Water_Content[DOY][j] = min(pSoilModelLayer.FC_Water_Content[j], Water[i])
@@ -801,13 +812,25 @@ def run_simulation(json_data: dict) -> dict:
     Irrigation_Recommendation_Option = None # 'CWSI' 'Refill' 
     Irrigation_Recommendation_Parameter = None
 
-    data_entry = json_data[0]
+    data_entry = json_data #[0]
     # Farm and field description
-    Farm_Name = data_entry["farm_name"]
-    Field_Number = int(data_entry["field_number"])
-    Field_Name = data_entry["field_name"]
+    #Farm_Name = data_entry["farm_name"]
+    #Field_Number = int(data_entry["field_number"])
+    #Field_Name = data_entry["field_name"]
+    if "farm_name" in data_entry:
+        Farm_Name = data_entry["farm_name"]
+    else:
+        Farm_Name = "None"
+    if "field_name" in data_entry:
+        Field_Name = data_entry["field_name"]
+    else: 
+        Field_Name = "None"
+    if "field_number" in data_entry:
+        Field_Number = data_entry["field_number"]
+    else: 
+        Field_Number = 0
     Area = float(data_entry["area"])
-    Irrigation_Method = data_entry["irrigation_method"]
+    #Irrigation_Method = data_entry["irrigation_method"]
     Water_Source = int(data_entry["water_source"])
     Water_N_Conc = float(data_entry["water_n_concentration"])   #(mg/L)
 
@@ -901,7 +924,7 @@ def run_simulation(json_data: dict) -> dict:
     ReadMinFertilizer(data_entry,pCS_Min_Fertilizer)
     ReadOrganicFertilizer(data_entry,pCS_Organic_Fertilizer)
     InitFertilization(pCS_Fertilization)
-    ReadFertilization(data_entry,pCS_Fertilization, pCS_Min_Fertilizer, pCS_Organic_Fertilizer)
+    #ReadFertilization(data_entry,pCS_Fertilization, pCS_Min_Fertilizer, pCS_Organic_Fertilizer)
     Seasonal_Scheduled_Fertilization = ReadFertilization(data_entry,pCS_Fertilization,pCS_Min_Fertilizer,pCS_Organic_Fertilizer)
 
     #irrigation
@@ -1311,9 +1334,9 @@ def run_simulation(json_data: dict) -> dict:
                             CropGrowths[Crop_Number], pETState, pSoilModelLayer, 
                             pSoilState)
             
-            if DOY < today_doy:
-                print("today_doy-true", today_doy)
-                print("doy-true", DOY)
+            if DOY > today_doy:
+                #print("today_doy-true", today_doy)
+                #print("doy-true", DOY)
                 Recommended_N_Fertilization, N_Fert_Recommended_Amount = FertilizerRecommendation(
                     DOY, pCropState, CropParameters[Crop_Number],
                     CropGrowths[Crop_Number], pETState,
@@ -1321,10 +1344,10 @@ def run_simulation(json_data: dict) -> dict:
                     Seasonal_Scheduled_Fertilization, pCS_Fertilization,
                     Potential_Biomass_At_Maturity, True
                 )
-                print("Recommended_N_Fertilization, N_Fert_Recommended_Amount-true", Recommended_N_Fertilization, N_Fert_Recommended_Amount)
+                #print("Recommended_N_Fertilization, N_Fert_Recommended_Amount-true", Recommended_N_Fertilization, N_Fert_Recommended_Amount)
             else:
-                print("today_doy-false", today_doy)
-                print("doy-false", DOY)
+                #print("today_doy-false", today_doy)
+                #print("doy-false", DOY)
                 Recommended_N_Fertilization, N_Fert_Recommended_Amount = FertilizerRecommendation(
                     DOY, pCropState, CropParameters[Crop_Number],
                     CropGrowths[Crop_Number], pETState,
@@ -1332,7 +1355,7 @@ def run_simulation(json_data: dict) -> dict:
                     Seasonal_Scheduled_Fertilization, pCS_Fertilization,
                     Potential_Biomass_At_Maturity, False
                 )
-                print("Recommended_N_Fertilization, N_Fert_Recommended_Amount-false", Recommended_N_Fertilization, N_Fert_Recommended_Amount)
+                #print("Recommended_N_Fertilization, N_Fert_Recommended_Amount-false", Recommended_N_Fertilization, N_Fert_Recommended_Amount)
 
             #'synchronize days after emergence (DAE) and day of the year (DOY)
             DOY_At_DAE[DAE] = DOY
@@ -1438,7 +1461,6 @@ def run_simulation(json_data: dict) -> dict:
         else:
             Irrigation_Recommendation = 0.0
 
-
         #print(f'Irrigation_Recommendation:{Irrigation_Recommendation} ')    
         net_irrigation_today,fertilizer_today = \
             WaterAndNTransport(DOY, pSoilModelLayer, pSoilState, net_irrigations, 
@@ -1459,6 +1481,8 @@ def run_simulation(json_data: dict) -> dict:
                             Auto_Irrigation,
                             Recommended_N_Fertilization, 
                             N_Fert_Recommended_Amount)
+
+
         
         #output managements
         if net_irrigation_today >= 1e-12 or fertilizer_today >=1e-12:
