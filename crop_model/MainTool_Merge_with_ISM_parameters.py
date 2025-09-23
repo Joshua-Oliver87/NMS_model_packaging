@@ -154,40 +154,43 @@ def run_simulation(json_data: dict) -> dict:
         except ValueError:
             return False
 
-    def ReadSoilHorizonParamegters(json_data, pSoilHorizon):
+    def ReadSoilHorizonParamegters(json_data, pSoilHorizen):
         soil_horizons = json_data.get("soil_horizons", [])
-        pSoilHorizon.Number_Of_Horizons = len(soil_horizons)
+        pSoilHorizen.Number_Of_Horizons = len(soil_horizons)
         total_horizon_depth = 0.0  # 05192025LML
 
         for i, horizon in enumerate(soil_horizons, start=1):
             # thickness, clay, silt, sand
-            pSoilHorizon.Horizon_Thickness[i] = round(float(horizon["horizon_thickness"]),1)#round(float(Cells.iloc[22 + i - 1, 3 - 1]),1) #'Thickness is rounded to one decimal
-            total_horizon_depth += pSoilHorizon.Horizon_Thickness[i]
-            pSoilHorizon.Clay[i] = float(horizon["percent_clay"])
-            pSoilHorizon.Silt[i] = float(horizon["percent_silt"])
-            pSoilHorizon.Sand[i] = float(horizon["percent_sand"])
+            pSoilHorizen.Horizon_Thickness[i] = round(float(horizon["horizon_thickness"]),1)#round(float(Cells.iloc[22 + i - 1, 3 - 1]),1) #'Thickness is rounded to one decimal
+            total_horizon_depth += pSoilHorizen.Horizon_Thickness[i]
+            pSoilHorizen.Clay[i] = float(horizon["percent_clay"])
+            pSoilHorizen.Silt[i] = float(horizon["percent_silt"])
+            pSoilHorizen.Sand[i] = float(horizon["percent_sand"])
 
             # field capacity & permanent wilting point, with is_number check
             sFC  = horizon.get("field_capacity")
             sPWP = horizon.get("wilting_point")
             if (sFC != None):
                 if is_number(sFC):
-                    pSoilHorizon.FC_WC[i]  = float(sFC)
+                    pSoilHorizen.FC_WC[i]  = float(sFC)
                 else:
-                    pSoilHorizon.FC_WC[i]  = -9999.0
+                    pSoilHorizen.FC_WC[i]  = -9999.0
             if (sPWP != None):
                 if is_number(sPWP):
-                    pSoilHorizon.PWP_WC[i] = float(sPWP)
+                    pSoilHorizen.PWP_WC[i] = float(sPWP)
                 else:
-                    pSoilHorizon.PWP_WC[i] = -9999.0
+                    pSoilHorizen.PWP_WC[i] = -9999.0
 
             # organic matter
-            pSoilHorizon.Percent_Soil_Organic_Matter[i] = float(horizon["organic_matter_percentage"])
+            pSoilHorizen.Percent_Soil_Organic_Matter[i] = float(horizon["organic_matter_percentage"])
+        #09232025LML making sure the overal soil depth goes to 2 meters
+        if total_horizon_depth < 2.:
+            pSoilHorizen.Horizon_Thickness[pSoilHorizen.Number_Of_Horizons] += 2. - total_horizon_depth
 
     #same as before – uncomment/adjust if you need to extend bottom horizon
     #depth_deficit = MAX_Number_Model_Layers * Thickness_Model_Layers - total_horizon_depth
     #if depth_deficit > 0.:
-    #    pSoilHorizon.Horizon_Thickness[pSoilHorizon.Number_Of_Horizons] += round(depth_deficit,1)
+    #    pSoilHorizen.Horizon_Thickness[pSoilHorizen.Number_Of_Horizons] += round(depth_deficit,1)
 
 
     def GetSoilHorizonParamegtersFromSSURGO(df_SSURGO,pSoilHorizen,bNotUseFC_PWP_Sat_WC):
@@ -227,6 +230,9 @@ def run_simulation(json_data: dict) -> dict:
                 pSoilHorizen.Bulk_Dens[i] = -9999.0
             else:
                 pSoilHorizen.Bulk_Dens[i] = float(df_SSURGO.loc[i-1, 'dbthirdbar_r'])
+        #09232025LML making sure the overal soil depth goes to 2 meters
+        if total_horizon_depth < 2.:
+            pSoilHorizen.Horizon_Thickness[pSoilHorizen.Number_Of_Horizons] += 2. - total_horizon_depth
 
         
         #depth_deficit = MAX_Number_Model_Layers * Thickness_Model_Layers - total_horizon_depth #05192025LML
@@ -459,47 +465,43 @@ def run_simulation(json_data: dict) -> dict:
             #exit()
         return good_data
         
-    def ReadSoilInitial(Run_First_Doy, Run_Last_Doy, json_data, pSoilState, pSoilModelLayer, pSoilHorizen, pSoilFlux):
+    def ReadSoilInitial(Run_First_Doy, Run_Last_Doy, json_data, pSoilState, pSoilModelLayer, pSoilHorizen, pSoilFlux, bUseDefaultInitSoil):
         #NUnit: ppm ot kgN_ha
+        DOY = int(Run_First_Doy)
         InitSoilState(pSoilState)
-        initial_conditions = json_data.get("initial_soil_conditions", [])
-        Number_Initial_Conditions_Layers = len(initial_conditions)
-        if Number_Initial_Conditions_Layers <= 0 or pd.isna(Number_Initial_Conditions_Layers): 
-            Number_Initial_Conditions_Layers = 10 #06042025LML initialize a big number
-
-        Thickness_Model_Layers = 0.1
+        Number_Initial_Conditions_Layers = 0
+        valid_Number_Initial_Conditions_Layers = 0
         Thickness = {}
         Number_Of_Sublayers = {}
         Water = {}
         Nitrate = {}
         Ammonium = {}
 
-        DOY = int(Run_First_Doy)
+        if not bUseDefaultInitSoil:
+            Number_Initial_Conditions_Layers = int(len(json_data["initial_soil_conditions"]))
+            if Number_Initial_Conditions_Layers <= 0 or pd.isna(Number_Initial_Conditions_Layers): 
+                Number_Initial_Conditions_Layers = 10 #06042025LML initialize a big number
+            #NUnit: ppm ot kgN_ha
+            unit_str = json_data.get("nunit", "ppm").lower()  # default to ppm
+            if "kg" in unit_str and "ha" in unit_str:
+                NUnit = "kgN_ha"
+            elif "ppm" in unit_str:
+                NUnit = "ppm"
+            else:
+                NUnit = "ppm"
 
-        #NUnit: ppm ot kgN_ha
-        unit_str = json_data.get("nunit", "ppm").lower()  # default to ppm
-        if "kg" in unit_str and "ha" in unit_str:
-            NUnit = "kgN_ha"
-        elif "ppm" in unit_str:
-            NUnit = "ppm"
-        else:
-            NUnit = "ppm"
-
-        #06042025LML added check thickness
-        valid_Number_Initial_Conditions_Layers = 0
-
-        for i, condition in enumerate(initial_conditions, start=1):
-            Thickness[i] = round(float(condition["thickness"]),1)
-            if not pd.isna(Thickness[i]) and Thickness[i] > 0:
-                valid_Number_Initial_Conditions_Layers += 1
-                Number_Of_Sublayers[i] = round(Thickness[i] / Thickness_Model_Layers)
-                Water[i] = float(condition["water"])
-                if NUnit == "kgN_ha":
-                    Nitrate[i] = float(condition["nitrate_n"])  # keep in kg/ha for now
-                    Ammonium[i] = float(condition["ammonium_n"])  # keep in kg/ha
-                elif NUnit == "ppm":
-                    Nitrate[i] = float(condition["nitrate_n"])
-                    Ammonium[i] = float(condition["ammonium_n"])
+            initial_conditions = json_data.get("initial_soil_conditions", [])  # list[dict]
+            
+            for i in range(1, Number_Initial_Conditions_Layers + 1):
+                cond = initial_conditions[i-1]
+                t = float(cond["thickness"])
+                if not pd.isna(t) and t > 0:
+                    valid_Number_Initial_Conditions_Layers += 1
+                    Thickness[i]           = round(t, 1)
+                    Number_Of_Sublayers[i] = round(Thickness[i] / Thickness_Model_Layers)
+                    Water[i]               = float(cond["water"])
+                    Nitrate[i]             = float(cond["nitrate_n"])
+                    Ammonium[i]            = float(cond["ammonium_n"])
         
         Number_Initial_Conditions_Layers = valid_Number_Initial_Conditions_Layers  #06042025LML
 
@@ -509,7 +511,11 @@ def run_simulation(json_data: dict) -> dict:
                 Thickness[i] = 0.2
                 Number_Of_Sublayers[i] = round(Thickness[i] / Thickness_Model_Layers)
                 Water[i] = -9999.
-                Nitrate[i] = -9999.
+                if i < 5:
+                    Nitrate[i] = 20.    #kg/ha
+                else:
+                    Nitrate[i] = 0.     #kg/ha
+                NUnit = 'kgN_ha'
                 Ammonium[i] = -9999.
             
         #print(f'adjusted valid_Number_Initial_Conditions_Layers: {valid_Number_Initial_Conditions_Layers} Number_Initial_Conditions_Layers:{Number_Initial_Conditions_Layers}')
@@ -525,7 +531,7 @@ def run_simulation(json_data: dict) -> dict:
                 if j <= pSoilModelLayer.Number_Model_Layers:
                     #print(f"Layer {j} on DOY {DOY}: OM% = {pSoilModelLayer.Percent_Soil_Organic_Matter[j] / 100},")
 
-                    if Water[i] >= 0 and not pd.isna(Water[i]):
+                    if Water[i] > 0 and not pd.isna(Water[i]):
                         pSoilState.Water_Content[DOY][j] = min(pSoilModelLayer.FC_Water_Content[j], Water[i])
                         pSoilState.Water_Content[DOY][j] = max(pSoilModelLayer.PWP_Water_Content[j], pSoilState.Water_Content[DOY][j]) #06132025LML incase user set zero
                     else:
@@ -534,21 +540,25 @@ def run_simulation(json_data: dict) -> dict:
                     pSoilState.Water_Filled_Porosity[DOY][j] = pSoilState.Water_Content[DOY][j] / pSoilModelLayer.Saturation_Water_Content[i]
                    #pSoilState.Soil_Water_Potential[j] = WP(pSoilModelLayer.Saturation_Water_Content[i], Water[i], pSoilModelLayer.Air_Entry_Potential[i], pSoilModelLayer.B_value[i])
                     pSoilState.Soil_Water_Potential[DOY][j] = WP(pSoilModelLayer.Saturation_Water_Content[i], pSoilState.Water_Content[DOY][j], pSoilModelLayer.Air_Entry_Potential[i], pSoilModelLayer.B_value[i])
-                    if Nitrate[i] >= 0 and not pd.isna(Nitrate[i]):
+                    if Nitrate[i] > 0 and not pd.isna(Nitrate[i]):
                         if NUnit == 'kgN_ha':
                             pSoilState.Nitrate_N_Content[DOY][j] = Nitrate[i] / 10000. / Number_Of_Sublayers[i]    #'Convert kg/ha to kg/m2
                         elif NUnit == 'ppm':
                             pSoilState.Nitrate_N_Content[DOY][j] = Nitrate[i] * pSoilModelLayer.Bulk_Density[j] * pSoilModelLayer.Layer_Thickness[j] / 1000    #'Convert ppm to kg/m2
                     else:
-                        pSoilState.Nitrate_N_Content[DOY][j] = 0. #10 / 10000   #'Convert kg/ha to kg/m2         'Mingliang 6/17/2025
-                        
-                    if Ammonium[i] >= 0 and not pd.isna(Ammonium[i]):
+                        if bUseDefaultInitSoil and j <= 8:
+                            pSoilState.Nitrate_N_Content[DOY][j] = Nitrate[i] / 10000. / Number_Of_Sublayers[i]
+                        elif not bUseDefaultInitSoil and j <= 8: #in case user input zero for upper layers
+                            pSoilState.Nitrate_N_Content[DOY][j] = 0.001 #kg/m2
+                        else:
+                            pSoilState.Nitrate_N_Content[DOY][j] = 0.
+                    if Ammonium[i] > 0 and not pd.isna(Ammonium[i]):
                         if NUnit == 'kgN_ha':
                             pSoilState.Ammonium_N_Content[DOY][j] = Ammonium[i] / 10000. / Number_Of_Sublayers[i]  #'Convert kg/ha to kg/m2
                         elif NUnit == 'ppm':
                             pSoilState.Ammonium_N_Content[DOY][j] = Ammonium[i] * pSoilModelLayer.Bulk_Density[j] * pSoilModelLayer.Layer_Thickness[j] / 1000. #'Convert ppm to kg/m2
                     else:
-                        pSoilState.Ammonium_N_Content[DOY][j] = 0 #'Convert kg/ha to kg/m2                  'Mingliang 6/17/2025
+                        pSoilState.Ammonium_N_Content[DOY][j] = 0. #'Convert kg/ha to kg/m2                  'Mingliang 6/17/2025
                         
                     #print(f'Num_layers: {pSoilModelLayer.Number_Model_Layers} NUnit:{NUnit} i:{i} j:{j} Bulk_Density:{pSoilModelLayer.Bulk_Density[j]} WC:{pSoilState.Water_Content[DOY][j]} Nitrate_N_Content:{pSoilState.Nitrate_N_Content[DOY][j]} Ammonium:{pSoilState.Ammonium_N_Content[DOY][j]}')
                     pSoilModelLayer.Soil_Mass[j] = pSoilModelLayer.Bulk_Density[j] * 1000 * pSoilModelLayer.Layer_Thickness[j] #'kg/m2 in each soil layer. Bulk density converted from Mg/m3 to kg/m3
@@ -563,7 +573,7 @@ def run_simulation(json_data: dict) -> dict:
             #if Cum_J > Number_Initial_Conditions_Layers:
             #    #print(f'Cum_J: {Cum_J} Number_Initial_Conditions_Layers:{Number_Initial_Conditions_Layers}')
             #    break
-    #Number_Model_Layers = Cum_J - 1
+        #Number_Model_Layers = Cum_J - 1
         #'Determine the thickness of the soil water evaporation layer
         #Percent_Sand = ReadInputs.PercentSand(1)
         #Thickness_Evaporative_Layer = Round(-0.001 * Percent_Sand + 0.169, 2)
@@ -575,13 +585,16 @@ def run_simulation(json_data: dict) -> dict:
         NML = pSoilModelLayer.Number_Model_Layers #'Mingliang 4/15/2025 'This is the total number of simulation model layers 'Mingliang 4/15/2025
         for i in range(Number_Initialization_Layers + 1, NML + 1):
                 pSoilModelLayer.Layer_Thickness[i] = pSoilModelLayer.Layer_Thickness[Number_Initialization_Layers]
-                pSoilState.Water_Content[DOY][i] =pSoilState.Water_Content[DOY][Number_Initialization_Layers]
-                pSoilState.Water_Filled_Porosity[DOY][i] = pSoilState.Water_Filled_Porosity[DOY][Number_Initialization_Layers] #pSoilState.Water_Content[DOY][i] / pSoilModelLayer.Saturation_Water_Content[i]
-                #'Mingliang Soil water potential was changed to a two-dimensional array
-                #'        Soil_Water_Potential(i) = WP(Saturation_Water_Content(i), Water_Content(DOY, i), Air_Entry_Potential(i), B_value(i))
-                pSoilState.Soil_Water_Potential[DOY][i] = pSoilState.Soil_Water_Potential[DOY][Number_Initialization_Layers] #WP(pSoilModelLayer.Saturation_Water_Content[i], pSoilState.Water_Content[DOY][i], pSoilModelLayer.Air_Entry_Potential[i], pSoilModelLayer.B_value[i])
-                pSoilState.Nitrate_N_Content[DOY][i] = pSoilState.Nitrate_N_Content[DOY][Number_Initialization_Layers]
-                pSoilState.Ammonium_N_Content[DOY][i] = pSoilState.Ammonium_N_Content[DOY][Number_Initialization_Layers]
+                #09232025LML updated the following section
+                #pSoilState.Water_Content[DOY][i] = pSoilState.Water_Content[DOY][Number_Initialization_Layers]
+                #pSoilState.Water_Filled_Porosity[DOY][i] = pSoilState.Water_Filled_Porosity[DOY][Number_Initialization_Layers] #pSoilState.Water_Content[DOY][i] / pSoilModelLayer.Saturation_Water_Content[i]
+                #pSoilState.Soil_Water_Potential[DOY][i] = pSoilState.Soil_Water_Potential[DOY][Number_Initialization_Layers] #WP(pSoilModelLayer.Saturation_Water_Content[i], pSoilState.Water_Content[DOY][i], pSoilModelLayer.Air_Entry_Potential[i], pSoilModelLayer.B_value[i])
+                
+                pSoilState.Water_Content[DOY][i] = pSoilModelLayer.FC_Water_Content[i] * 0.7 + pSoilModelLayer.PWP_Water_Content[i] * 0.3
+                pSoilState.Water_Filled_Porosity[DOY][i] = pSoilState.Water_Content[DOY][i] / pSoilModelLayer.Saturation_Water_Content[i]
+                pSoilState.Soil_Water_Potential[DOY][i] = WP(pSoilModelLayer.Saturation_Water_Content[i], pSoilState.Water_Content[DOY][i], pSoilModelLayer.Air_Entry_Potential[i], pSoilModelLayer.B_value[i])
+                pSoilState.Nitrate_N_Content[DOY][i] = 0. #09192025LML pSoilState.Nitrate_N_Content[DOY][Number_Initialization_Layers]
+                pSoilState.Ammonium_N_Content[DOY][i] = 0. #09192025LML pSoilState.Ammonium_N_Content[DOY][Number_Initialization_Layers]
                 #'        Initialize soil organi carbon and nitrogen
                 #'        Convert percent organic matter to soil organic carbon in kg C/m2 soil
                 pSoilModelLayer.Soil_Mass[i] = pSoilModelLayer.Bulk_Density[i] * 1000. * pSoilModelLayer.Layer_Thickness[i] #'kg/m2 in each soil layer. Bulk density converted from Mg/m3 to kg/m3
@@ -802,7 +815,14 @@ def run_simulation(json_data: dict) -> dict:
 #Main
     # Initialize JSON structure
     json_data_to_write = {"daily_data": [], "seasonal_data": [], "budget_data": []}
+    bUseDefaultInitSoil = False                                                     #09192025LML Check user input initial soil information or using the default value
+    
+    data_entry = json_data #[0]
+    ic = data_entry.get("initial_soil_conditions")  # could be None, [], or list
+    bUseDefaultInitSoil = not bool(ic)  # True if None or empty, False if non-empty
 
+    if bUseDefaultInitSoil:
+        print("Use default soil initial condition.")
     #user option
     soil_propertities_from_SSURGO = False
     crop_growth_parameter_from_ISM = False
@@ -811,8 +831,6 @@ def run_simulation(json_data: dict) -> dict:
 
     Irrigation_Recommendation_Option = None # 'CWSI' 'Refill' 
     Irrigation_Recommendation_Parameter = None
-
-    data_entry = json_data #[0]
     # Farm and field description
     #Farm_Name = data_entry["farm_name"]
     #Field_Number = int(data_entry["field_number"])
@@ -1175,7 +1193,7 @@ def run_simulation(json_data: dict) -> dict:
     InitSoilFlux(pSoilFlux)
     #ReadSoilInitial(Run_First_DOY,SoilInitCells,pSoilState,pSoilModelLayer)
     ReadSoilInitial(Run_First_Doy, Run_Last_Doy, data_entry, pSoilState,
-                    pSoilModelLayer, pSoilHorizen, pSoilFlux)
+                    pSoilModelLayer, pSoilHorizen, pSoilFlux, bUseDefaultInitSoil)
     #print(f"DEBUG: Number_Model_Layers = {pSoilModelLayer.Number_Model_Layers}")
 
     #05222025LML moved here

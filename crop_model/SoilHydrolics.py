@@ -899,10 +899,10 @@ def ActEvaporation(DOY,pSoilModelLayer,pSoilState,pETState, Crop_Active):
     
     #09182025LML add min() in cases overly estimated evap
     if Water_Content_Top_layer > Permanent_Wilting_Point: 
-        pETState.Actual_Soil_Water_Evaporation[DOY] = min(Pot_Soil_Water_Evap,pSoilState.Water_Content[DOY][1])  #'Soil evaporation in mm/day = kg/m2/day
+        pETState.Actual_Soil_Water_Evaporation[DOY] = min(Pot_Soil_Water_Evap,pSoilModelLayer.Layer_Thickness[1] * WD * (pSoilState.Water_Content[DOY][1] - Air_Dry_Water_Content))  #'Soil evaporation in mm/day = kg/m2/day
     elif Water_Content_Top_layer > Air_Dry_Water_Content:
           pETState.Actual_Soil_Water_Evaporation[DOY] = min(Pot_Soil_Water_Evap * math.pow(((Water_Content_Top_layer - Air_Dry_Water_Content) \
-                 / (Permanent_Wilting_Point - Air_Dry_Water_Content)), 2),pSoilState.Water_Content[DOY][1])
+                 / (Permanent_Wilting_Point - Air_Dry_Water_Content)), 2),pSoilModelLayer.Layer_Thickness[1] * WD * (pSoilState.Water_Content[DOY][1] - Air_Dry_Water_Content))
     else:
           pETState.Actual_Soil_Water_Evaporation[DOY] = 0
           
