@@ -16,7 +16,6 @@ from .Crop import *
 #from CS_ET import *
 from .accessagweathernet import *
 from .ism_default_parameters import *
-import datetime
 from .accessssurgo_functions import *
 from .Balances import *
 from .AutoIrrigation import *
@@ -28,9 +27,28 @@ from datetime import datetime
 
 today_doy = datetime.now().timetuple().tm_yday
 
+def run_simulation(payload):
+    """
+    Accepts either a single dict (one simulation) or a list[dict] (batch).
+    Returns a single result for dict input, or a list of results for list input.
+    """
+    if isinstance(payload, dict):
+        entries = [payload]
+    elif isinstance(payload, list) and all(isinstance(x, dict) for x in payload):
+        entries = payload
+    else:
+        raise TypeError("run_simulation expected a dict or a list[dict]")
 
-def run_simulation(json_data: dict) -> dict:
+    results = []
+    for idx, data_entry in enumerate(entries, start=1):
+        # Optional: give the single-run code a hint it's in batch idx `idx`
+        # e.g., data_entry["_batch_index"] = idx
+        out = run_single_simulation(data_entry)
+        results.append(out)
 
+    return results[0] if len(results) == 1 else results
+
+def run_single_simulation(data_entry: dict):
     def is_blank(s):
         return not s or not s.strip()
     
@@ -817,7 +835,6 @@ def run_simulation(json_data: dict) -> dict:
     json_data_to_write = {"daily_data": [], "seasonal_data": [], "budget_data": []}
     bUseDefaultInitSoil = False                                                     #09192025LML Check user input initial soil information or using the default value
     
-    data_entry = json_data #[0]
     ic = data_entry.get("initial_soil_conditions")  # could be None, [], or list
     bUseDefaultInitSoil = not bool(ic)  # True if None or empty, False if non-empty
 
@@ -1699,6 +1716,3 @@ if __name__ == "__main__":
         json.dump(output, f, indent=2)
     print(f"Results written to {out_path}")
 
-    
-
- 
