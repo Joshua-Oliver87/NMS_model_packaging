@@ -1369,29 +1369,16 @@ def run_single_simulation(data_entry: dict):
                             CropGrowths[Crop_Number], pETState, pSoilModelLayer, 
                             pSoilState)
             
-            if DOY > today_doy:
-                #print("today_doy-true", today_doy)
-                #print("doy-true", DOY)
-                Recommended_N_Fertilization, N_Fert_Recommended_Amount = FertilizerRecommendation(
-                    DOY, pCropState, CropParameters[Crop_Number],
-                    CropGrowths[Crop_Number], pETState,
-                    pSoilModelLayer, pSoilState,
-                    Seasonal_Scheduled_Fertilization, pCS_Fertilization,
-                    Potential_Biomass_At_Maturity, True
-                )
-                #print("Recommended_N_Fertilization, N_Fert_Recommended_Amount-true", Recommended_N_Fertilization, N_Fert_Recommended_Amount)
-            else:
-                #print("today_doy-false", today_doy)
-                #print("doy-false", DOY)
-                Recommended_N_Fertilization, N_Fert_Recommended_Amount = FertilizerRecommendation(
-                    DOY, pCropState, CropParameters[Crop_Number],
-                    CropGrowths[Crop_Number], pETState,
-                    pSoilModelLayer, pSoilState,
-                    Seasonal_Scheduled_Fertilization, pCS_Fertilization,
-                    Potential_Biomass_At_Maturity, False
-                )
-                #print("Recommended_N_Fertilization, N_Fert_Recommended_Amount-false", Recommended_N_Fertilization, N_Fert_Recommended_Amount)
-
+            #print("today_doy-true", today_doy)
+            #print("doy-true", DOY)
+            Recommended_N_Fertilization, N_Fert_Recommended_Amount = FertilizerRecommendation(
+                DOY, pCropState, CropParameters[Crop_Number],
+                CropGrowths[Crop_Number], pETState,
+                pSoilModelLayer, pSoilState,
+                Seasonal_Scheduled_Fertilization, pCS_Fertilization,
+                Potential_Biomass_At_Maturity, True
+            )
+            
             #'synchronize days after emergence (DAE) and day of the year (DOY)
             DOY_At_DAE[DAE] = DOY
             #DAE += 1
