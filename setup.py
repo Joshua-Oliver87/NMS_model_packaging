@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="crop_model",
-    version="0.2.7",
+    version="0.2.8",
     author="liuming",
     description="Simulation engine for AgWeatherNet Nutrient Management System",
     packages=find_packages(),

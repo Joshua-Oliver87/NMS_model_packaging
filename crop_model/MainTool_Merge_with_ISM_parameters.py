@@ -25,7 +25,7 @@ import sys
 import os
 from datetime import datetime 
 
-today_doy = datetime.now().timetuple().tm_yday
+#today_doy = datetime.now().timetuple().tm_yday
 
 def run_simulation(payload):
     """
@@ -106,6 +106,18 @@ def run_single_simulation(data_entry: dict):
         Nitrogen_mass_percentage = -9999
         HalfLife_days = -9999
         #and others
+
+    class CS_FertilizerRecommendation:
+        Daily_Recommendation = dict()
+        Total_By_Fertilizer = dict()
+        Total_Overall = 0.0     # in kg/ha
+
+    
+    def InitFertilizerRecommendation(pCS_FertRec):
+        pCS_FertRec.Daily_Recommendation = {}
+        pCS_FertRec.Total_By_Fertilizer = {}
+        pCS_FertRec.Total_Overall = 0.0
+
 
     def InitFertilization(pCS_Fertilization):
         for i in range(1,367):
@@ -352,6 +364,21 @@ def run_single_simulation(data_entry: dict):
                 # Application method
                 pCS_Fertilization.Application_Method_Number[doy] = int(fert.get("application_method_number", 0))
         return Seasonal_Scheduled_Fertilization
+    
+    def get_fertilizer_for_today(N_recommendation, nitrate_fraction):
+        """
+        Convert nitrogen recommendation (kg N/ha)
+        to fertilizer mass (kg product/ha) using model input nitrate fraction
+        """
+        if N_recommendation is None or N_recommendation <= 0:
+            return 0.0
+        
+        if nitrate_fraction is None or float(nitrate_fraction) <= 0:
+            raise ValueError("Invalid nitrate fraction: must be > 0")
+        
+        N_fraction = float(nitrate_fraction) / 100.0
+        fertilizer_mass = N_recommendation / N_fraction
+        return fertilizer_mass
 
     def ReadMinFertilizer(json_data, pCS_Min_Fertilizer):
         mineral_ferts = json_data.get("fertilization", [])
@@ -749,13 +776,17 @@ def run_single_simulation(data_entry: dict):
         
         
     def WriteTotalSimPeriodOutput(TotalSimPeriodOutput, RunLastDOY, 
-                                SoilLayers, pSoilState, pSoilFlux, json_data_to_write):
+                                SoilLayers, pSoilState, pSoilFlux, json_data_to_write, pCS_FertRec):
         Profile_Nitrate_Content = 0
         Profile_Ammonium_Content = 0
         Last_Simulation_DOY = RunLastDOY # - 1
         for i in range(1, SoilLayers + 1):
             Profile_Nitrate_Content += pSoilState.Nitrate_N_Content[Last_Simulation_DOY - 1][i]
             Profile_Ammonium_Content += pSoilState.Ammonium_N_Content[Last_Simulation_DOY - 1][i]
+
+        fert_totals_ha = {
+            fert_name: value * 10000 for fert_name, value in pCS_FertRec.Total_By_Fertilizer.items()
+        }
         TotalSimPeriodRow = {
             "Crop Number": "All",
             "Cumulative Deep Drainage(mm)": pSoilFlux.Simulation_Total_Deep_Drainage,
@@ -765,7 +796,8 @@ def run_single_simulation(data_entry: dict):
             "Residual soil profile nitrate (kg/ha)": Profile_Nitrate_Content * 10000, #  'Convert kg/m2 to kg/ha
             "Residual soil profile ammonium (kg/ha)": Profile_Ammonium_Content * 10000, #  'Convert kg/m2 to kg/ha
             "Cumulative irrigation (mm)": pSoilFlux.Simulation_Total_Irrigation,
-            "Cumulative N fertilization (kg/ha)": pSoilFlux.Simulation_Total_Fertilization * 10000 #  'Convert kg/m2 to kg/ha
+            "Cumulative N fertilization (kg/ha)": pSoilFlux.Simulation_Total_Fertilization * 10000, #  'Convert kg/m2 to kg/ha
+            "Fertilizer Recommendations by Type (kg/ha)": fert_totals_ha
             }
         TotalSimPeriodOutput.loc[len(TotalSimPeriodOutput)] = TotalSimPeriodRow
 
@@ -778,7 +810,7 @@ def run_single_simulation(data_entry: dict):
                                           Irrigation_Recommendation,
                                           pCS_Fertilization, Today_Crop_N_Demand, 
                                           Available_For_Active_Uptake,
-                                          N_Fert_Recommended_Amount, DOY_Last_Scheduled_Irrigation):
+                                          N_Fert_Recommended_Amount, DOY_Last_Scheduled_Irrigation, Recommended_Fertilizer_Mass):
     #Items from "7-day daily budget table" of Irrigation Schedular, plus nitrogen 
     #budget
 
@@ -821,7 +853,11 @@ def run_single_simulation(data_entry: dict):
             "Nitrogen_Stress_Index (0-1)": pCropState.Nitrogen_Stress_Index[DOY]
                                         if pCropState is not None else 0,
             "N Fertilization Recommendation (kg/ha)": KgPerSquareMeter_to_KgPerHa(N_Fert_Recommended_Amount),
-            "Days Since Last Irrigation": days_since_last_irrigation
+            "Days Since Last Irrigation": days_since_last_irrigation,
+            "Fertilizer Recommendations (kg/ha)": {
+                fert_name: KgPerSquareMeter_to_KgPerHa(value)
+                for fert_name, value in pCS_FertRec.Daily_Recommendation.get(DOY, {}).items()
+            },
         }
 
         DailyBudgetOutputs[Crop_Number].loc[len(DailyBudgetOutputs[Crop_Number])] = BudgetOutRow
@@ -1160,6 +1196,7 @@ def run_single_simulation(data_entry: dict):
     DOY_At_DAE = dict() #(366) As Integer
     Crop_Active = False
 
+
     Run_First_Doy = int(data_entry["first_doy"])
     Crop_Active = False
 
@@ -1203,6 +1240,10 @@ def run_single_simulation(data_entry: dict):
         if good_data == False:
             print('Error: AgWeatherNet data fetch error!\n')
             sys.exit()
+    
+    # initialize fertilizer recommendations
+    pCS_FertRec = CS_FertilizerRecommendation()
+    InitFertilizerRecommendation(pCS_FertRec)
         
     pSoilState = SoilState()
     pSoilFlux = SoilFlux()
@@ -1250,12 +1291,14 @@ def run_single_simulation(data_entry: dict):
     #'Begin time loop
 
     print("number of days to simulate", Number_Of_Days_To_Simulate)
+
     Number_Of_Layers = pSoilModelLayer.Number_Model_Layers
     # Begin time loop
     while Days_Elapsed < Number_Of_Days_To_Simulate + 1:
         Today_Crop_N_Demand = 0.0
         Today_N_Uptake = 0.0
         Available_N = 0.0
+        Recommended_Fertilizer_Mass = 0.0
         #Crop_Number = ReadInputs.CropOrder(1)
         InitialSoilProfile(DOY,pBalance,pSoilState,pSoilModelLayer)
         #Begin_Crop_Senescence = False    #'Mingliang 6/21/2025
@@ -1378,7 +1421,37 @@ def run_single_simulation(data_entry: dict):
                 Seasonal_Scheduled_Fertilization, pCS_Fertilization,
                 Potential_Biomass_At_Maturity, True
             )
-            
+
+            # FERTILIZER RECOMMENDATION:
+            Recommended_Fertilizer_Mass = 0.0
+            if N_Fert_Recommended_Amount > 0:
+                # Loop through all fertilizers in the library
+                for fert_name, fert_obj in pCS_Min_Fertilizer.items():
+                    total_n_fraction = (
+                        fert_obj.Nitrate_mass_percentage +
+                        fert_obj.Ammonium_mass_percentage +
+                        fert_obj.Ammonia_mass_percentage
+                    )
+
+                    # Skip fertilizers without valid N fractions
+                    if total_n_fraction <= 0:
+                        continue
+
+                    # Gross fertilizer amount
+                    fert_mass_today = get_fertilizer_for_today(
+                        N_Fert_Recommended_Amount, total_n_fraction
+                    )
+
+                    # Record daily recommendation by fertilizer type
+                    if DOY not in pCS_FertRec.Daily_Recommendation:
+                        pCS_FertRec.Daily_Recommendation[DOY] = {}
+                    pCS_FertRec.Daily_Recommendation[DOY][fert_name] = fert_mass_today
+
+                    # totals
+                    prev_total = pCS_FertRec.Total_By_Fertilizer.get(fert_name, 0.0)
+                    pCS_FertRec.Total_By_Fertilizer[fert_name] = prev_total + fert_mass_today
+                    pCS_FertRec.Total_Overall += fert_mass_today
+
             #'synchronize days after emergence (DAE) and day of the year (DOY)
             DOY_At_DAE[DAE] = DOY
             #DAE += 1
@@ -1539,7 +1612,7 @@ def run_single_simulation(data_entry: dict):
                                                     pSoilState, pCS_Weather, net_irrigations,
                                                     Irrigation_Recommendation,
                                                     pCS_Fertilization, Today_Crop_N_Demand, 
-                                                    Available_N, N_Fert_Recommended_Amount, DOY_Last_Scheduled_Irrigation)
+                                                    Available_N, N_Fert_Recommended_Amount, DOY_Last_Scheduled_Irrigation, Recommended_Fertilizer_Mass)
         elif not Crop_Active and DAE == 0:
             #add budget output before emergence
             #08052025LML It's a tricky to set the Crop_Number before the crop is planted
@@ -1565,7 +1638,7 @@ def run_single_simulation(data_entry: dict):
                                                     pSoilState, pCS_Weather, net_irrigations,
                                                     Irrigation_Recommendation,
                                                     pCS_Fertilization, Today_Crop_N_Demand, 
-                                                    tAvailable_N, N_Fert_Recommended_Amount, DOY_Last_Scheduled_Irrigation)
+                                                    tAvailable_N, N_Fert_Recommended_Amount, DOY_Last_Scheduled_Irrigation, Recommended_Fertilizer_Mass)
             
         #Important Notes:
         #NOTE										
@@ -1622,7 +1695,8 @@ def run_single_simulation(data_entry: dict):
         SoilLayers,
         pSoilState,
         pSoilFlux,
-        json_data_to_write
+        json_data_to_write,
+        pCS_FertRec
     )
 
     here = os.path.dirname(os.path.abspath(__file__))

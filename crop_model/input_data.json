@@ -60,22 +60,36 @@
       }
     }
   ],
-  "fertilization": [
-    {
-      "ammonia_fraction": "0",
-      "ammonium_fraction": "46",
-      "application_method_number": "2",
-      "date": "140",
-      "fertilizer_name": "mineral",
-      "mineral_rate": "10",
-      "nitrate_fraction": "0",
-      "organic_fertilizer_ammonia_fraction": null,
-      "organic_fertilizer_c_fraction": null,
-      "organic_fertilizer_n_fraction": null,
-      "organic_fertilizer_name": null,
-      "organic_fertilizer_rate": null
-    }
-  ],
+ "fertilization": [
+  {
+    "fertilizer_name": "Urea",
+    "nitrate_fraction": "0",
+    "ammonium_fraction": "0",
+    "ammonia_fraction": "46",
+    "application_method_number": "1",
+    "date": "140",
+    "mineral_rate": "10",
+    "organic_fertilizer_ammonia_fraction": null,
+    "organic_fertilizer_c_fraction": null,
+    "organic_fertilizer_n_fraction": null,
+    "organic_fertilizer_name": null,
+    "organic_fertilizer_rate": null
+  },
+  {
+    "fertilizer_name": "UAN-32",
+    "nitrate_fraction": "7.75",
+    "ammonium_fraction": "7.75",
+    "ammonia_fraction": "16.5",
+    "application_method_number": "2",
+    "date": "160",
+    "mineral_rate": "10",
+    "organic_fertilizer_ammonia_fraction": null,
+    "organic_fertilizer_c_fraction": null,
+    "organic_fertilizer_n_fraction": null,
+    "organic_fertilizer_name": null,
+    "organic_fertilizer_rate": null
+  }
+],
   "first_doy": "121",
   "initial_soil_conditions": [
     {
