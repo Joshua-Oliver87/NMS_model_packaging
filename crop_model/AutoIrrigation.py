@@ -5,7 +5,7 @@ Created on Fri Nov  8 12:52:17 2024
 
 @author: liuming
 """
-from .SoilHydrolics import *
+from SoilHydrolics import *
 #from CS_ET import *
 import pandas as pd
 import sys
@@ -45,6 +45,10 @@ def ReadAutoIrrigation(data_entry, AutoIrrigation, DOY_Last_Scheduled_Irrigation
             irrigation.Maximum_Allowable_CWSI = float(entry.get("CWSI", 0.0))
             irrigation.Refill_Depth = float(entry.get("refill_depth", 0.0))
             #irrigation.Irrigated_Crop_Number = int(entry.get("crop_number", 0))
+
+            print(f"[DEBUG] Loaded AutoIrrEvent {i}: DOY={irrigation.DOY_Event}, "
+            f"Type={irrigation.Event_Type}, Method={irrigation.Scheduling_Method}, "
+            f"MaxPAW={irrigation.Maximum_Allowable_PAW_Depletion}")
 
             if irrigation.Event_Type == "START":
                 irrigation.DOY_To_Start_Auto_Irrigation = irrigation.DOY_Event

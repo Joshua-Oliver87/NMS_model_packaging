@@ -6,7 +6,7 @@ Created on Fri Sep  6 10:13:14 2024
 @author: liuming
 """
 import math
-from .AutoIrrigation import *
+from AutoIrrigation import *
 #Soil Hydrologics
 Thickness_Model_Layers = 0.1
 Carbon_Fraction_In_SOM = 0.58
@@ -115,7 +115,8 @@ class SoilFlux:
     
     Fertilization_Rate = dict() #(366) As Double
     N_Leaching = dict() #(366) As Double
-    N_Leaching_Accumulated = dict() #(366) As Double
+    #N_Leaching_Accumulated = dict() #(366) As Double
+    N_Leaching_Accumulated_Crop = dict() #(366) As Double
     Deep_Drainage = dict() #(366) As Double
     Chemical_Balance = dict() #(366) As Double
     Water_Balance = dict() #(366) As Double
@@ -136,11 +137,17 @@ class SoilFlux:
     Cumulative_Mineralization_Next_Three_Layers_Crop = dict()
     Cumulative_Mineralization_All_Layers = 0.0    #'Mingliang 6/21/2025
     
-    Cumulative_Deep_Drainage = 0.
-    Cumulative_N_Leaching = 0. #kg/m2
+    #Cumulative_Deep_Drainage = 0.
+    Cumulative_Deep_Drainage_Crop = dict()
+    
+    #Cumulative_N_Leaching = 0. #kg/m2
+    Cumulative_N_Leaching_Crop = dict()
+    
     Sum_N_Fertilization = 0.
-    Cumulative_Irrigation = 0.                                                 #only account when crop is active
-    Cumulative_Fertilization = 0.
+    #Cumulative_Irrigation = 0.                                                 #only account when crop is active
+    Cumulative_Irrigation_Crop = dict()
+    #Cumulative_Fertilization = 0.
+    Cumulative_Fertilization_Crop = dict()
     
     Simulation_Total_N_Leaching = 0.
     Simulation_Total_Deep_Drainage = 0.
@@ -236,7 +243,7 @@ def InitSoilFlux(pSoilFlux):
         
         pSoilFlux.Fertilization_Rate[i] = 0.
         pSoilFlux.N_Leaching[i] = 0.
-        pSoilFlux.N_Leaching_Accumulated[i] = 0.
+        #pSoilFlux.N_Leaching_Accumulated[i] = 0.
         pSoilFlux.Deep_Drainage[i] = 0.
         pSoilFlux.Chemical_Balance[i] = 0.
         pSoilFlux.Water_Balance[i] = 0.
@@ -244,6 +251,11 @@ def InitSoilFlux(pSoilFlux):
         pSoilFlux.Layer_Mineralization[i] = dict()
         for j in range(1,21):
             pSoilFlux.Layer_Mineralization[i][j] = 0.
+            
+        pSoilFlux.N_Leaching_Accumulated_Crop[i] = dict()
+        for k in range(1,3):
+            pSoilFlux.N_Leaching_Accumulated_Crop[i][k] = 0.
+            
     pSoilFlux.Layer_Oxidized_SOM_C_Transfer_Back_To_SOM = 0.
     pSoilFlux.Layer_Oxidized_SOM_N_Transferred_To_Ammonium = 0.
     
@@ -254,6 +266,10 @@ def InitSoilFlux(pSoilFlux):
     for i in range(1,3):
         pSoilFlux.Cumulative_Mineralization_Top_Three_Layers_Crop[i] = 0.
         pSoilFlux.Cumulative_Mineralization_Next_Three_Layers_Crop[i] = 0.
+        pSoilFlux.Cumulative_Deep_Drainage_Crop[i] = 0.
+        pSoilFlux.Cumulative_N_Leaching_Crop[i] = 0.
+        pSoilFlux.Cumulative_Irrigation_Crop[i] = 0.
+        pSoilFlux.Cumulative_Fertilization_Crop[i] = 0.
 
     
     pSoilFlux.Cumulative_Deep_Drainage = 0.
@@ -342,16 +358,16 @@ def CalculateHydraulicProperties(N_Horz,pSoilHorizons,pSoilModelLayer,bNotUseFC_
         Silt = pSoilHorizons.Silt[i]
         pSoilHorizons.AE_Pot[i] = AE(Sand, Clay)
         pSoilHorizons.B_Val[i] = B(Sand, Clay)
-        if i not in pSoilHorizons.FC_WP or pSoilHorizons.FC_WP[i] <= 0 or pd.isna(pSoilHorizons.FC_WP[i]) or bNotUseFC_PWP_Sat_WC:
+        if i not in pSoilHorizons.FC_WP or pd.isna(pSoilHorizons.FC_WP[i]) or pSoilHorizons.FC_WP[i] <= 0 or bNotUseFC_PWP_Sat_WC:
             pSoilHorizons.FC_WP[i] = WPFC(Clay, Silt)
         pSoilHorizons.PWP_WP[i] = -1500
-        if i not in pSoilHorizons.Bulk_Dens or pSoilHorizons.Bulk_Dens[i] <= 0 or pd.isna(pSoilHorizons.Bulk_Dens[i]) or bNotUseFC_PWP_Sat_WC:
+        if i not in pSoilHorizons.Bulk_Dens or pd.isna(pSoilHorizons.Bulk_Dens[i]) or pSoilHorizons.Bulk_Dens[i] <= 0 or bNotUseFC_PWP_Sat_WC:
             pSoilHorizons.Bulk_Dens[i] = BD(Sand, Clay)
-        if i not in pSoilHorizons.Sat_WC or pSoilHorizons.Sat_WC[i] <= 0 or pd.isna(pSoilHorizons.Sat_WC[i]) or bNotUseFC_PWP_Sat_WC:
+        if i not in pSoilHorizons.Sat_WC or pd.isna(pSoilHorizons.Sat_WC[i]) or pSoilHorizons.Sat_WC[i] <= 0 or bNotUseFC_PWP_Sat_WC:
             pSoilHorizons.Sat_WC[i] = WS(Sand, Clay)
-        if i not in pSoilHorizons.FC_WC or pSoilHorizons.FC_WC[i] <= 0 or pd.isna(pSoilHorizons.FC_WC[i]) or bNotUseFC_PWP_Sat_WC: 
+        if i not in pSoilHorizons.FC_WC or pd.isna(pSoilHorizons.FC_WC[i]) or pSoilHorizons.FC_WC[i] <= 0 or bNotUseFC_PWP_Sat_WC: 
             pSoilHorizons.FC_WC[i] = WC(pSoilHorizons.Sat_WC[i], pSoilHorizons.FC_WP[i], pSoilHorizons.AE_Pot[i], pSoilHorizons.B_Val[i])
-        if i not in pSoilHorizons.PWP_WC or pSoilHorizons.PWP_WC[i] <= 0 or pd.isna(pSoilHorizons.PWP_WC[i]) or bNotUseFC_PWP_Sat_WC: 
+        if i not in pSoilHorizons.PWP_WC or pd.isna(pSoilHorizons.PWP_WC[i]) or pSoilHorizons.PWP_WC[i] <= 0 or bNotUseFC_PWP_Sat_WC: 
             pSoilHorizons.PWP_WC[i] = WC(pSoilHorizons.Sat_WC[i], pSoilHorizons.PWP_WP[i], pSoilHorizons.AE_Pot[i], pSoilHorizons.B_Val[i])
         pSoilHorizons.Number_Of_Sublayers[i] = round(pSoilHorizons.Horizon_Thickness[i] / Thickness_Model_Layers)
         
@@ -380,6 +396,10 @@ def CalculateHydraulicProperties(N_Horz,pSoilHorizons,pSoilModelLayer,bNotUseFC_
             pSoilModelLayer.Percent_Soil_Organic_Matter[j] = pSoilHorizons.Percent_Soil_Organic_Matter[i]
         Cum_J = L + 1
     pSoilModelLayer.Number_Model_Layers = Cum_J - 1
+    
+    for i in range(1,pSoilModelLayer.Number_Model_Layers + 1):
+        pSoilModelLayer.Layer_Thickness[i] = Thickness_Model_Layers #m  The thickness of all model layers is 0.1 m   'MINGLIANG 11/10/2025 
+    
     #print(f'pSoilModelLayer.Number_Model_Layers:{pSoilModelLayer.Number_Model_Layers}')
     #pSoilModelLayer.Number_Model_Layers = min(MAX_Number_Model_Layers, Cum_J - 1) #05192025LML limit total soil layers to MAX_Number_Model_Layers
 
@@ -396,7 +416,7 @@ def WaterAndNTransport(DOY, pSoilModelLayer, pSoilState, net_irrigations, WaterN
                        Prec, pCS_Fertilization, Nitrate_Fraction, 
                        AutoIrrigations, pSoilFlux, CropActive, pETState, 
                        Water_Depth_To_Refill_fc, Auto_Irrigation,
-                       Recommended_N_Fertilization, Nitrate_N_Recommended):
+                       Recommended_N_Fertilization, Nitrate_N_Recommended, Crop_Number):
     #'This subroutine only transport nitrate N. Ammonium N only moves down the soil when transformed to nitrate
     Chem_Mass = dict()
     WC = dict()
@@ -603,11 +623,11 @@ def WaterAndNTransport(DOY, pSoilModelLayer, pSoilState, net_irrigations, WaterN
     pSoilFlux.Deep_Drainage[DOY] = Cumulative_Pulse_Deep_Drainage  #'mm
     
     if CropActive:
-       pSoilFlux.Cumulative_Deep_Drainage += Cumulative_Pulse_Deep_Drainage #'mm
-       pSoilFlux.Cumulative_N_Leaching += Cumulative_Pulse_N_Leaching 
-       pSoilFlux.Cumulative_Irrigation += NID
-       pSoilFlux.Cumulative_Fertilization += Nitrate_N_Fertilization + Ammonium_N_Fertilization
-       pSoilFlux.N_Leaching_Accumulated[DOY] = pSoilFlux.N_Leaching_Accumulated[Adj_DOY] + Cumulative_Pulse_N_Leaching
+       pSoilFlux.Cumulative_Deep_Drainage_Crop[Crop_Number] += Cumulative_Pulse_Deep_Drainage #'mm
+       pSoilFlux.Cumulative_N_Leaching_Crop[Crop_Number] += Cumulative_Pulse_N_Leaching 
+       pSoilFlux.Cumulative_Irrigation_Crop[Crop_Number] += NID
+       pSoilFlux.Cumulative_Fertilization_Crop[Crop_Number] += Nitrate_N_Fertilization + Ammonium_N_Fertilization
+       pSoilFlux.N_Leaching_Accumulated_Crop[DOY][Crop_Number] = pSoilFlux.N_Leaching_Accumulated_Crop[Adj_DOY][Crop_Number] + Cumulative_Pulse_N_Leaching
     
     #print(f'N_Leaching_Accumulated(kg/ha):{pSoilFlux.N_Leaching_Accumulated[DOY]}')
     
@@ -899,10 +919,10 @@ def ActEvaporation(DOY,pSoilModelLayer,pSoilState,pETState, Crop_Active):
     
     #09182025LML add min() in cases overly estimated evap
     if Water_Content_Top_layer > Permanent_Wilting_Point: 
-        pETState.Actual_Soil_Water_Evaporation[DOY] = min(Pot_Soil_Water_Evap,pSoilModelLayer.Layer_Thickness[1] * WD * (pSoilState.Water_Content[DOY][1] - Air_Dry_Water_Content))  #'Soil evaporation in mm/day = kg/m2/day
+        pETState.Actual_Soil_Water_Evaporation[DOY] = min(Pot_Soil_Water_Evap,pSoilModelLayer.Layer_Thickness[1] * WD * (Water_Content_Top_layer - Air_Dry_Water_Content))  #'Soil evaporation in mm/day = kg/m2/day
     elif Water_Content_Top_layer > Air_Dry_Water_Content:
           pETState.Actual_Soil_Water_Evaporation[DOY] = min(Pot_Soil_Water_Evap * math.pow(((Water_Content_Top_layer - Air_Dry_Water_Content) \
-                 / (Permanent_Wilting_Point - Air_Dry_Water_Content)), 2),pSoilModelLayer.Layer_Thickness[1] * WD * (pSoilState.Water_Content[DOY][1] - Air_Dry_Water_Content))
+                 / (Permanent_Wilting_Point - Air_Dry_Water_Content)), 2),pSoilModelLayer.Layer_Thickness[1] * WD * (Water_Content_Top_layer - Air_Dry_Water_Content))
     else:
           pETState.Actual_Soil_Water_Evaporation[DOY] = 0
           

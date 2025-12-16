@@ -72,14 +72,14 @@ def ReferencePlantNConcentration(DOY, pCropState, pCropParameter, pCropGrowth, E
     Critical_N_Concentration_At_Maturity = pCropParameter.Critical_N_Concentration_Maturity
     Minimum_N_Concentration_At_Maturity = pCropParameter.Minimum_N_Concentration_Maturity
     #DOY_Begin_Decline = pCropGrowth.Beging_Senescence_DOY #'Mingliang 8/13/2025
-    DOY_End_Nitrogen_Dilution = pCropGrowth.Full_Canopy_DOY  #'Mingliang 8/13/2025
+    DOY_End_Nitrogen_Dilution = pCropGrowth.Full_Canopy_DOY + 10 #'Mingliang 8/13/2025
     Days_Elapsed = 0
     #'Start processing
     Amax = N_Maximum_Concentration_At_Emergence / math.pow(Biomass_To_Start_Dilution_Maximum_N_Concentration, Slope)
     Acrit = N_Critical_Concentration_At_Emergence / math.pow(Biomass_To_Start_Dilution_Critical_N_Concentration, Slope)
     Amin = N_Minimum_Concentration_At_Emergence / math.pow(Biomass_To_Start_Dilution_Minimum_N_Concentration, Slope)
     DOY_Season_End = pCropGrowth.Maturity_DOY
-    Cumulative_Top_Biomass = pCropState.Cumulative_Potential_Crop_Biomass[DOY] * 10  #'Convert kg/m2 to Mg/ha
+    Cumulative_Top_Biomass = pCropState.Cumulative_Potential_Crop_Biomass[DOY] * 10.  #'Convert kg/m2 to Mg/ha
     #Begin_Crop_Senescence = False
     #global Begin_Crop_Senescence
     if not End_Nitrogen_Dilution:   #DOY <= DOY_Begin_Decline and Cumulative_Top_Biomass > 0:
@@ -321,7 +321,7 @@ def FertilizerRecommendation(DOY, pCropState, pCropParameter,
                              pCropGrowth, pETState, pSoilModelLayer, pSoilState, 
                              Scheduled_Fertilization, pCS_Fertilization, 
                              Potential_Biomass_At_Maturity, Auto_Fertilization):
-    N_Conc_That_Triggers_Fertilization = 0. 
+    N_Conc_That_Triggers_Fertilization = 0
     Scheduling_Window_Days = 0
     Next_Week_Scheduled_Fertilization = False
     Readily_Available_Soil_N_Mass = 0.
@@ -342,12 +342,28 @@ def FertilizerRecommendation(DOY, pCropState, pCropParameter,
     #'Mingliang 7/23/2025
     #'Calculation of recommended fertilization, based on a plant N conc threshold that triggers fertilization
     Begin_Senescence = pCropGrowth.Beging_Senescence_DOY
+    
+    SOC_For_Mineralization_Estimation = 0.
+    Estimated_Mineralization = 0. 
+    SOC = dict()   #(20) As Double   'MINGLIANG 11/18/2025
+    KD = 0.00005   #'1/day    'MINGLIANG 11/18/2025
+    CN_RATIO = 10. #'MINGLIANG 11/18/2025
+    
+    pCropState.Recommended_N_Fertilization = False
+    pCropState.N_Fert_Recommended_Amount[DOY] = 0.
+    
     if DOY > Begin_Senescence: 
         Scheduling_Window_Days = (365 - DOY) + Begin_Senescence
     else: 
         Scheduling_Window_Days = Begin_Senescence - DOY
     #global Auto_Fertilization
     if Auto_Fertilization and DOY < Begin_Senescence: #'Mingliang 7/18/2025 Added to enable or disable automatic fertilization.
+        SOC_For_Mineralization_Estimation = 0.   #'MINGLIANG 11/18/2025
+        for Layer in range(1, 7): #'Top six soil layers used to estimate mineralization    'MINGLIANG 11/18/2025
+            SOC[Layer] = pSoilState.Soil_Organic_Carbon[DOY][Layer] # 'MINGLIANG 11/18/2025
+            SOC_For_Mineralization_Estimation += SOC[Layer]  #'kg/m2    'MINGLIANG 11/18/2025
+            
+        Estimated_Mineralization = (SOC_For_Mineralization_Estimation * KD / CN_RATIO) * Scheduling_Window_Days #'kg/m2  'MINGLIANG 11/18/2025
         Next_Week_Scheduled_Fertilization = False
         Scheduled_Fertilization_Amount = 0
         Days_Counter = 0
@@ -361,7 +377,7 @@ def FertilizerRecommendation(DOY, pCropState, pCropParameter,
                 pCropState.Recommended_N_Fertilization = False
             Days_Counter += 1
 
-        N_Conc_That_Triggers_Fertilization = pCropState.Maximum_N_Concentration[DOY] * 0.2 + pCropState.Critical_N_Concentration[DOY] * 0.8
+        N_Conc_That_Triggers_Fertilization = pCropState.Maximum_N_Concentration[DOY] * 0.5 + pCropState.Critical_N_Concentration[DOY] * 0.5 #COS 11122025 pCropState.Maximum_N_Concentration[DOY] * 0.2 + pCropState.Critical_N_Concentration[DOY] * 0.8
         if pCropState.Crop_N_Concentration[DOY] < N_Conc_That_Triggers_Fertilization and not Next_Week_Scheduled_Fertilization: 
             #'Calculate current soil N mass to a soil depth equal to half maximum root depth (Best estimate of N mass available for future N uptake)
             Pertinent_Soil_Depth = round(pCropParameter.Maximum_Root_Depth / 2., 1)
@@ -378,22 +394,16 @@ def FertilizerRecommendation(DOY, pCropState, pCropParameter,
             #global Potential_Biomass_At_Maturity
             Nitrate_N_Recommended = Potential_Biomass_At_Maturity * (pCropParameter.Maximum_N_Concentration_Maturity \
                      + pCropParameter.Critical_N_Concentration_Maturity) / 2. - pCropState.Crop_N_Mass[pre_doy] - Scheduled_Fertilization_Amount \
-                     - Readily_Available_Soil_N_Mass
-            if Nitrate_N_Recommended > 0.001: #'This is to ensure that N recommendation is at least 10 kg/ha
+                     - Readily_Available_Soil_N_Mass - Estimated_Mineralization
+            if Nitrate_N_Recommended < 0: Nitrate_N_Recommended = 0. #'Sources of N are sufficient to avoid N deficiency 'MINGLIANG 11/18/2025
+            if Nitrate_N_Recommended > 0.0005: #'This is to ensure that N recommendation is at least 5 kg/ha
                 pCropState.Recommended_N_Fertilization = True
                 pCropState.N_Fert_Recommended_DOY[DOY]= DOY
                 pCropState.N_Fert_Recommended_Amount[DOY] = Nitrate_N_Recommended
-            else:
-                pCropState.Recommended_N_Fertilization = False
-                pCropState.N_Fert_Recommended_Amount[DOY] = 0.
-        else:
-            pCropState.Recommended_N_Fertilization = False
-            pCropState.N_Fert_Recommended_Amount[DOY] = 0.
     #'Mingliang 7/23/2025 End of fertilization recommendation
-        print("pCropState", pCropState)
     return pCropState.Recommended_N_Fertilization, pCropState.N_Fert_Recommended_Amount[DOY]
 
-def InitializeCrop(DOY,pCropState,pSoilFlux,pCropParameter,pETState):
+def InitializeCrop(DOY,pCropState,pSoilFlux,pCropParameter,pETState,Crop_Number):
     pCropState.Green_Canopy_Cover[DOY] = pCropParameter.Initial_Green_Canopy_Cover
     pCropState.Total_Canopy_Cover[DOY] = pCropParameter.Initial_Green_Canopy_Cover
     Depth_Of_Seed = pCropParameter.Seeding_Depth
@@ -405,10 +415,10 @@ def InitializeCrop(DOY,pCropState,pSoilFlux,pCropParameter,pETState):
     pCropState.Crop_N_Mass[DOY - 1] = pCropState.Cumulative_Crop_Biomass[DOY - 1] * pCropParameter.Maximum_N_Concentration_Emergence
     pCropState.Crop_N_Concentration[DOY - 1] = pCropParameter.Maximum_N_Concentration_Emergence #'Mingliang 8/13/2025
     pCropState.Cumulative_N_Uptake[DOY] = 0.
-    pSoilFlux.Cumulative_Irrigation = 0.
-    pSoilFlux.CumulativeFertilization = 0.
-    pSoilFlux.CumulativeDeepDrainage = 0.
-    pSoilFlux.CumulativeNLeaching = 0.
+    pSoilFlux.Cumulative_Irrigation_Crop[Crop_Number] = 0.
+    pSoilFlux.Cumulative_Fertilization_Crop[Crop_Number] = 0.
+    pSoilFlux.Cumulative_Deep_Drainage_Crop[Crop_Number] = 0.
+    pSoilFlux.Cumulative_N_Leaching_Crop[Crop_Number] = 0.
     pETState.Crop_Soil_Water_Evaporation = 0.
     pETState.Total_Transpiration = 0.
     pCropState.Seasonal_N_Uptake = 0.

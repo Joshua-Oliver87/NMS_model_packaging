@@ -6,7 +6,7 @@ Created on Tue Nov  5 10:55:46 2024
 @author: liuming
 """
 import math
-from .SoilHydrolics import *
+from SoilHydrolics import *
 
 Empirical_Constant_m = 0.5
 Empirical_Constant_n = 6.

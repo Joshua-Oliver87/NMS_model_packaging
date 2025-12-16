@@ -70,8 +70,8 @@ def fetch_AgWeatherNet_data(STATION_ID,START,END,bdaily=False):
         url = f"{base_url}&START={START}&END={END}&BASIS=daily"
     #print(url)
     params = {
-        "UNAME": "AGWEATHERNET_USERNAME_REDACTED",   #USE YOUT ACCOUNT
-        "PASS": "AGWEATHERNET_PASSWORD_REDACTED",
+        "UNAME": "########",   #USE YOUT ACCOUNT
+        "PASS": "########",
         "STATION_ID": str(STATION_ID)
     }
     response = requests.get(url,params=params)
