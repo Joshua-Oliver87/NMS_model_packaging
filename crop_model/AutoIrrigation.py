@@ -35,20 +35,26 @@ def ReadAutoIrrigation(data_entry, AutoIrrigation, DOY_Last_Scheduled_Irrigation
     auto_irrigation_data = data_entry.get("auto_irrigation", [])
     AutoIrrigation.Number_Of_Auto_Entries = len(auto_irrigation_data)
 
+
     if AutoIrrigation.Number_Of_Auto_Entries > 0:
         for i, entry in enumerate(auto_irrigation_data, start=1):
             irrigation = AutoIrrigationEvent()
             irrigation.DOY_Event = int(entry.get("doy", 0))
             irrigation.Event_Type = entry.get("auto_irrigation", "")
             irrigation.Scheduling_Method = int(entry.get("method", 0))
-            irrigation.Maximum_Allowable_PAW_Depletion = float(entry.get("Max_PAW_depletion", 0.0))
+            raw_mad = float(entry.get("Max_PAW_depletion", 0.0))
+
+            # If user passed percent (Excel-style), convert
+            if raw_mad > 1.0:
+                raw_mad /= 100.0
+
+            irrigation.Maximum_Allowable_PAW_Depletion = raw_mad
             irrigation.Maximum_Allowable_CWSI = float(entry.get("CWSI", 0.0))
             irrigation.Refill_Depth = float(entry.get("refill_depth", 0.0))
             #irrigation.Irrigated_Crop_Number = int(entry.get("crop_number", 0))
 
-            print(f"[DEBUG] Loaded AutoIrrEvent {i}: DOY={irrigation.DOY_Event}, "
-            f"Type={irrigation.Event_Type}, Method={irrigation.Scheduling_Method}, "
-            f"MaxPAW={irrigation.Maximum_Allowable_PAW_Depletion}")
+            if irrigation.Event_Type == "START" and irrigation.DOY_Event == 0:
+                continue #ignore malformed event
 
             if irrigation.Event_Type == "START":
                 irrigation.DOY_To_Start_Auto_Irrigation = irrigation.DOY_Event

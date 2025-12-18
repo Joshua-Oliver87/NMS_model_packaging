@@ -9,17 +9,17 @@ import pandas as pd
 #import WaterUptakeConfig as Soil
 #from CropWaterUptakeClass import *
 #from SoilWater import *
-from CropParameter import *
-from SoilHydrolics import *
-from Crop import *
+from .CropParameter import *
+from .SoilHydrolics import *
+from .Crop import *
 #from canopycover import *
 #from CS_ET import *
-from accessagweathernet import *
-from ism_default_parameters import *
-from accessssurgo_functions import *
-from Balances import *
-from AutoIrrigation import *
-from OrganicCandN import *
+from .accessagweathernet import *
+from .ism_default_parameters import *
+from .accessssurgo_functions import *
+from .Balances import *
+from .AutoIrrigation import *
+from .OrganicCandN import *
 import json
 import sys
 import os
@@ -262,9 +262,9 @@ def run_single_simulation(data_entry: dict):
                 pSoilHorizen.Bulk_Dens[i] = -9999.0
             else:
                 pSoilHorizen.Bulk_Dens[i] = float(df_SSURGO.loc[i-1, 'dbthirdbar_r'])
-            if not bUseVB:
-                if total_horizon_depth < 1.5:
-                    pSoilHorizen.Horizon_Thickness[pSoilHorizen.Number_Of_Horizons] += 1.5 - total_horizon_depth
+        if not bUseVB:
+            if total_horizon_depth < 1.5:
+                pSoilHorizen.Horizon_Thickness[pSoilHorizen.Number_Of_Horizons] += 1.5 - total_horizon_depth
 
         
         #depth_deficit = MAX_Number_Model_Layers * Thickness_Model_Layers - total_horizon_depth #05192025LML
@@ -581,56 +581,11 @@ def run_single_simulation(data_entry: dict):
                 t = float(cond["thickness"])
                 if not pd.isna(t) and t > 0:
                     valid_Number_Initial_Conditions_Layers += 1
-                    Initial_Conditions_Layer_Thickness[i]           = round(t, 1)
+                    Initial_Conditions_Layer_Thickness[i]  = round(t, 1)
                     Number_Of_Sublayers[i] = round(Initial_Conditions_Layer_Thickness[i] / Thickness_Model_Layers)
                     Water[i]               = float(cond["water"])
                     Nitrate[i]             = float(cond["nitrate_n"])
                     Ammonium[i]            = float(cond["ammonium_n"])
-
-            """
-            if not bUseDefaultInitSoil:
-                Number_Initial_Conditions_Layers = int(len(json_data["initial_soil_conditions"]))
-                if Number_Initial_Conditions_Layers <= 0 or pd.isna(Number_Initial_Conditions_Layers): 
-                    Number_Initial_Conditions_Layers = 10 #06042025LML initialize a big number
-                #NUnit: ppm ot kgN_ha
-                unit_str = json_data.get("nunit", "ppm").lower()  # default to ppm
-                if "kg" in unit_str and "ha" in unit_str:
-                    NUnit = "kgN_ha"
-                elif "ppm" in unit_str:
-                    NUnit = "ppm"
-                else:
-                    NUnit = "ppm"
-
-                initial_conditions = json_data.get("initial_soil_conditions", [])  # list[dict]
-                
-                for i in range(1, Number_Initial_Conditions_Layers + 1):
-                    cond = initial_conditions[i-1]
-                    t = float(cond["thickness"])
-                    if not pd.isna(t) and t > 0:
-                        valid_Number_Initial_Conditions_Layers += 1
-                        Thickness[i]           = round(t, 1)
-                        Number_Of_Sublayers[i] = round(Thickness[i] / Thickness_Model_Layers)
-                        Water[i]               = float(cond["water"])
-                        Nitrate[i]             = float(cond["nitrate_n"])
-                        Ammonium[i]            = float(cond["ammonium_n"])
-            
-            Number_Initial_Conditions_Layers = valid_Number_Initial_Conditions_Layers  #06042025LML
-
-            if Number_Initial_Conditions_Layers == 0:
-                Number_Initial_Conditions_Layers = 5
-                for i in range(1, Number_Initial_Conditions_Layers + 1):
-                    Thickness[i] = 0.2
-                    Number_Of_Sublayers[i] = round(Thickness[i] / Thickness_Model_Layers)
-                    Water[i] = -9999.
-                    if i < 5:
-                        Nitrate[i] = 20.    #kg/ha
-                    else:
-                        Nitrate[i] = 0.     #kg/ha
-                    NUnit = 'kgN_ha'
-                    Ammonium[i] = -9999.
-                
-            #print(f'adjusted valid_Number_Initial_Conditions_Layers: {valid_Number_Initial_Conditions_Layers} Number_Initial_Conditions_Layers:{Number_Initial_Conditions_Layers}')
-            """
 
             # Distribute variables for each model layer of thickness 0.1 m
             Cum_J = 1
@@ -648,6 +603,8 @@ def run_single_simulation(data_entry: dict):
                         else:
                             if bUsedForFirstday:
                                 pSoilState.Water_Content[DOY][j] = def_water[j]
+
+
                         pSoilState.Water_Filled_Porosity[DOY][j] = pSoilState.Water_Content[DOY][j] / pSoilModelLayer.Saturation_Water_Content[j]
                         #pSoilState.Soil_Water_Potential[j] = WP(pSoilModelLayer.Saturation_Water_Content[i], Water[i], pSoilModelLayer.Air_Entry_Potential[i], pSoilModelLayer.B_value[i])
                         pSoilState.Soil_Water_Potential[DOY][j] = WP(pSoilModelLayer.Saturation_Water_Content[j], pSoilState.Water_Content[DOY][j], pSoilModelLayer.Air_Entry_Potential[j], pSoilModelLayer.B_value[j])
@@ -691,8 +648,6 @@ def run_single_simulation(data_entry: dict):
                         pSoilState.Water_Content[DOY][i] = pSoilModelLayer.FC_Water_Content[i] * 0.8 + pSoilModelLayer.PWP_Water_Content[i] * 0.2
                         pSoilState.Water_Filled_Porosity[DOY][i] = pSoilState.Water_Content[DOY][i] / pSoilModelLayer.Saturation_Water_Content[i]
                         pSoilState.Soil_Water_Potential[DOY][i] = WP(pSoilModelLayer.Saturation_Water_Content[i], pSoilState.Water_Content[DOY][i], pSoilModelLayer.Air_Entry_Potential[i], pSoilModelLayer.B_value[i])
-                        
-                        
                         if bUsedForFirstday:
                             pSoilState.Ammonium_N_Content[DOY][i] = 0. 
                             if i > copy_nitrate_to_layer: 
@@ -923,6 +878,8 @@ def run_single_simulation(data_entry: dict):
 
     if bUseDefaultInitSoil:
         print("Use default soil initial condition.")
+        bUseDefaultInitSoil = True
+        
     #user option
     soil_propertities_from_SSURGO = False
     crop_growth_parameter_from_ISM = False
@@ -981,7 +938,7 @@ def run_single_simulation(data_entry: dict):
     Potential_Biomass_At_Maturity = 0
 
 
-    ISM_cropnames = {'Triticale': 'Triticale (for forage)','Silage Corn': 'Corn (silage)'}  #TODO
+    ISM_cropnames = {'Winter Triticale (Forage)': 'Winter Triticale (for forage)','Silage Corn': 'Corn (silage)'}  #TODO
     field_lat = 45.97
     field_lon = -119.26
     wkt_geometry = f'point ({field_lon} {field_lat})'
@@ -1036,7 +993,7 @@ def run_single_simulation(data_entry: dict):
             print('Warning: Cannot find SSURGO data for this field!')
     CalculateHydraulicProperties(pSoilHorizen.Number_Of_Horizons,pSoilHorizen,pSoilModelLayer,True) #06042025LML hard-coded to always calculate FC, PWP, and Sat WC
 
-    ISM_cropnames = {'Triticale': 'Triticale (for forage)','Corn': 'Corn'}
+    ISM_cropnames = {'Winter Triticale (Forage)': 'Winter Triticale (for forage)','Corn': 'Corn'}
 
     #'Crop description
     Number_Of_Crops = len(data_entry["crops"])
@@ -1538,11 +1495,6 @@ def run_single_simulation(data_entry: dict):
         PAW_Depletion_Today,Water_Depth_To_Refill_fc = calc_PAW_depletion(DOY, 
             Number_Of_Layers, pSoilState, pETState, pSoilModelLayer)
         if 185 <= DOY <= 250:  # Narrow window to avoid 3000-line logs; adjust as needed
-            print(
-                f"[DOY {DOY}] CropActive={Crop_Active} Auto_Irr={Auto_Irrigation} | "
-                f"PAW_dep={PAW_Depletion_Today:.3f} | "
-                f"Refill_fc={Water_Depth_To_Refill_fc:.2f}"
-            )
             
             # Show the threshold if AUTO irrigation is scheduled
             if DOY in autoirrigation_info:
@@ -1550,11 +1502,13 @@ def run_single_simulation(data_entry: dict):
                 print(f"   AutoIrr Event → Mode={info[0]}, Param={info[1:]}")
             
             # Show PAW threshold used
+            """
             if Auto_Irrigation:
                 try:
                     print(f"   Max_PAW_depletion threshold = {Irrigation_Recommendation_Parameter}")
                 except:
                     print("   Max_PAW_depletion threshold missing!")
+            """
         
         """
         #05202025LML identify irrigation method for estimating recommendation
@@ -1592,14 +1546,17 @@ def run_single_simulation(data_entry: dict):
 
         if Auto_Irrigation:  # 08052025LML
             if DOY in autoirrigation_info:
-                if autoirrigation_info[DOY][0] == 1:
+                mode, param = autoirrigation_info[DOY]
+
+                if mode == 1:
                     Irrigation_Recommendation_Option = 'PAW Depletion'
-                    Irrigation_Recommendation_Parameter = autoirrigation_info[DOY][1]
-                elif autoirrigation_info[DOY][0] == 2:
+                    Irrigation_Recommendation_Parameter = param
+
+                elif mode == 2:
                     Irrigation_Recommendation_Option = 'CWSI'
-                    rec = autoirrigation_info[DOY]
-                    Irrigation_Recommendation_Parameter = rec[1] if len(rec) > 1 else None
-                else:
+                    Irrigation_Recommendation_Parameter = param
+
+                else:  # STOP
                     Irrigation_Recommendation_Option = None
                     Irrigation_Recommendation_Parameter = None
 
