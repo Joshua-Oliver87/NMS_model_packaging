@@ -929,7 +929,8 @@ def run_single_simulation(data_entry: dict):
         Auto_Fertilizations[1] = bool(crop_flags.get("Crop 1", False))
         Auto_Fertilizations[2] = bool(crop_flags.get("Crop 2", False))
 
-        Auto_Irrigation  = get_json_boolean(data_entry,'Auto_Irrigation')     #'Mingliang 7/20/2025  Should set True for estimating irrigation recommendation after TODAY.
+    
+    Auto_Irrigation  = get_json_boolean(data_entry,'Auto_Irrigation')     #'Mingliang 7/20/2025  Should set True for estimating irrigation recommendation after TODAY.
     Seasonal_Scheduled_Fertilization = 0. #'Mingliang 7/20/2025
 
     #Begin_Crop_Senescence = False    #'Mingliang 6/21/2025
