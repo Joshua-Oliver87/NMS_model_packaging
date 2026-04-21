@@ -317,7 +317,96 @@ def NitrogenUptake(DOY, pCropState, pCropParameter, pCropGrowth, pETState, pSoil
         
     return Today_Crop_N_Demand,Available_N, Today_N_Uptake
 
-def FertilizerRecommendation(DOY, pCropState, pCropParameter, 
+def FertilizerRecommendation(Premergence, DOY, DAE, Crop_Number, pCropState, pCropParameter, 
+                             pCropGrowth, pETState, pSoilModelLayer, pSoilState, 
+                             Scheduled_Fertilization, pCS_Fertilization, 
+                             Potential_Biomass_At_Maturity, Auto_Fertilization, 
+                             Auto_Fertilization_Parameter, DAE_When_Crop_Ends):
+    Kd = 0.00005 #'1/day
+    CN_Ratio = 10. 
+    
+    Auto_Fert = False
+    #Actual_DOY = 0
+    #'Account for events before emergence
+    Recommended_N_Fertilization = False
+    Nitrate_N_Recommended = 0.
+    Number_Of_Days_In_Scheduling_Window = 0
+
+    if not Auto_Fertilization or Auto_Fertilization_Parameter is None:
+        return Recommended_N_Fertilization, Nitrate_N_Recommended
+
+    if Premergence:
+    #'Account for events before emergence
+        split_doy = Auto_Fertilization_Parameter.Auto_Fert_Split_DOYs.get(1)
+        if split_doy is not None and DOY == split_doy:
+            Days_before_emergence = pCropGrowth.Emergence_DOY - DOY
+            if Days_before_emergence < 0:
+                Days_before_emergence += 365
+            Fraction_Of_Total_N_Rate = Auto_Fertilization_Parameter.Auto_Fert_Split_Percents[1] / 100.
+            Number_Of_Days_In_Scheduling_Window = DAE_When_Crop_Ends + Days_before_emergence
+            Auto_Fert = True
+    else:
+        for split in [1, 2, 3]:
+            split_doy = Auto_Fertilization_Parameter.Auto_Fert_Split_DOYs.get(split)
+            if split_doy is None:
+                continue
+            if DOY == split_doy:
+                Fraction_Of_Total_N_Rate = Auto_Fertilization_Parameter.Auto_Fert_Split_Percents[split] / 100.
+                Number_Of_Days_In_Scheduling_Window = DAE_When_Crop_Ends - DAE   #'Mingliang 01/23/2026
+                Auto_Fert = True
+    if Auto_Fert:    
+        #'Estimation of mineralization
+        Estimated_Mineralization = 0.
+        for Layer in range(1,7):  #'Top six soil layers used to estimate mineralization
+            SOC =  pSoilState.Soil_Organic_Carbon[DOY][Layer]
+            Estimated_Mineralization += (SOC * Kd / CN_Ratio) * Number_Of_Days_In_Scheduling_Window #'kg/m2
+        
+        #'Determine if N fertilization is scheduled in the future
+        Next_Week_Scheduled_Fertilization = False
+        Scheduled_Fertilization_Amount = 0.
+        Days_Counter = 1
+        while Days_Counter <= Number_Of_Days_In_Scheduling_Window:
+            C_DOY = Days_Counter + DOY - 1
+            t_nitrate = 0. 
+            t_ammonium = 0.
+            if C_DOY in pCS_Fertilization.Nitrate_Fertilization_Rate:
+                t_nitrate = pCS_Fertilization.Nitrate_Fertilization_Rate[C_DOY]
+            if C_DOY in pCS_Fertilization.Ammonium_Fertilization_Rate:
+                t_ammonium = pCS_Fertilization.Ammonium_Fertilization_Rate[C_DOY]
+            Scheduled_Fertilization_Amount += t_nitrate + t_ammonium
+            Days_Counter += 1
+            if C_DOY > 365: C_DOY = 1
+
+    
+        #'Determine available soil N mass
+        Readily_Available_Soil_N_Mass = 0
+        NL = pSoilModelLayer.Number_Model_Layers
+        for Layer in range(2, NL+1):     #'Root nutrient absorsion begins at layer 2 LML note: not rooting depth?
+            Readily_Available_Soil_N_Mass += pSoilState.Nitrate_N_Content[DOY][Layer] + pSoilState.Ammonium_N_Content[DOY][Layer]
+        
+        Max_Crop_N_Conc = 0.0
+        if pCropGrowth.Harvest_DOY < pCropGrowth.Maturity_DOY:
+            Max_Crop_N_Conc = pCropState.Maximum_N_Concentration[pCropGrowth.Harvest_DOY]
+        else:
+            Max_Crop_N_Conc = pCropParameter.Maximum_N_Concentration_Maturity
+           
+        Nitrate_N_Recommended = Potential_Biomass_At_Maturity * Max_Crop_N_Conc \
+                                 - pCropState.Crop_N_Mass[DOY - 1] \
+                                 - Scheduled_Fertilization_Amount \
+                                 - Readily_Available_Soil_N_Mass \
+                                 - Estimated_Mineralization
+        #'Apply the use efficiency of N fertilization, accounting for losses due to leaching or gaseous forms, and N below the region with significant root fraction
+        Nitrate_N_Recommended *= Fraction_Of_Total_N_Rate / 0.8 #'Use efficiency of N fertilization, accounting for losses due to leaching or gaseous forms, and N below
+        
+        if Nitrate_N_Recommended < 0.002: Nitrate_N_Recommended = 0.002   #'This is to ensure that N recommendation is at least 20 kg/ha
+        if Nitrate_N_Recommended > 0.: 
+            Recommended_N_Fertilization = True
+            pCropState.N_Fert_Recommended_DOY[DOY] = DOY
+            pCropState.N_Fert_Recommended_Amount[DOY] = Nitrate_N_Recommended
+    pCropState.Recommended_N_Fertilization = Recommended_N_Fertilization
+    return Recommended_N_Fertilization, Nitrate_N_Recommended
+
+def FertilizerRecommendation_OBSELETE(Preplant, DOY, pCropState, pCropParameter, 
                              pCropGrowth, pETState, pSoilModelLayer, pSoilState, 
                              Scheduled_Fertilization, pCS_Fertilization, 
                              Potential_Biomass_At_Maturity, Auto_Fertilization):

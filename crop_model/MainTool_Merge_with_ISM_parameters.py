@@ -112,6 +112,13 @@ def run_single_simulation(data_entry: dict):
         Total_By_Fertilizer = dict()
         Total_Overall = 0.0     # in kg/ha
 
+    class CS_CropAutoFertilizationParameter:
+        Auto_Fert_Split_DOYs = None
+        Auto_Fert_Split_Percents = None
+        def __init__(self):
+            self.Auto_Fert_Split_DOYs = {}
+            self.Auto_Fert_Split_Percents = {}
+
     
     def InitFertilizerRecommendation(pCS_FertRec):
         pCS_FertRec.Daily_Recommendation = {}
@@ -423,9 +430,9 @@ def run_single_simulation(data_entry: dict):
 
         for ir in irrigations:
             try:
-                # Safely pull values
-                doy_raw = ir.get("doy")
-                net_raw = ir.get("net")
+                # Safely pull values — accept both key conventions
+                doy_raw = ir.get("doy") or ir.get("date")
+                net_raw = ir.get("net") or ir.get("net_irrigation")
 
                 # Require both fields
                 if doy_raw is None or net_raw is None:
@@ -512,158 +519,79 @@ def run_single_simulation(data_entry: dict):
             #exit()
         return good_data
         
-    def ReadSoilInitial(Run_First_Doy, Run_Last_Doy, json_data, pSoilState, pSoilModelLayer, pSoilHorizen, pSoilFlux, bUseDefaultInitSoil=False,bUsedForFirstday=True, bUseVB=False):
-        #NUnit: ppm ot kgN_ha
+    def SamplingSoilUpdate(DOY, Run_First_Doy, Run_Last_Doy, json_data, pSoilState, pSoilModelLayer, pSoilHorizen, pSoilFlux):
+        #NUnit: ppm or kgN_ha
         #11122025LML
-        #bUsedForFirstday: the soil condition are used only for set up soil initial condition at first day of simulation;
+        #bUsedForFirstday: the soil conditions are used only to set up soil initial condition at first day of simulation;
         # If False, the valid value will be used for updating modeled soil state DURING the simulation
-    
-        DOY = int(Run_First_Doy)
+
+        Sampling_DOY = int(Run_First_Doy)
+        if Sampling_DOY != int(DOY):
+            print(f'Error: Sampling_DOY {Sampling_DOY} is not consistent with current DOY {DOY}!')
+            sys.exit(1)
+
         InitSoilState(pSoilState)
+        InitialSoilConditions(DOY, pSoilModelLayer, pSoilState)
+
         Number_Initial_Conditions_Layers = 0
         valid_Number_Initial_Conditions_Layers = 0
-        #Thickness = {}
-        Initial_Conditions_Layer_Thickness = {}
-        Number_Of_Sublayers = {}
-        Water = {}
-        Nitrate = {}
-        Ammonium = {}
+        Initial_Conditions_Layer_Thickness = dict()
+        Number_Of_Sublayers = dict()
+        Water = dict()
+        Nitrate = dict()
+        Ammonium = dict()
 
-         #MINGLIANG 11/10/2025   Clear the initial conditions array to avoid potential errors
-        for i in range(1, 21):
-            Water[i] = 0.
-            Nitrate[i] = 0.
-            Ammonium[i] = 0.
-        NML = pSoilModelLayer.Number_Model_Layers #This is the total number of simulation model layers
-        
-        #11122025 LML calculate default Water & nitrate
-        def_water = dict()
-        def_nitrate = dict()
-        for i in range(1, NML + 1):
-            def_water[i] = pSoilModelLayer.FC_Water_Content[i] * 0.8 + pSoilModelLayer.PWP_Water_Content[i] * 0.2   #'MINGLIANG 11/10/2025  I changed the weighting factors
-            if i > 5:
-                def_nitrate[i] = 0. 
-            else:
-                def_nitrate[i] = 0.002 #'kg/m2
+        initial_conditions = json_data.get("initial_soil_conditions") or []
+        Number_Initial_Conditions_Layers = int(len(initial_conditions))
+        print(f'SamplingSoilUpdate: DOY={DOY}, reading {Number_Initial_Conditions_Layers} initial_soil_conditions entries')
 
+        #NUnit: ppm or kgN_ha
+        unit_str = json_data.get("nunit", "ppm").lower()
+        if "kg" in unit_str and "ha" in unit_str:
+            NUnit = "kgN_ha"
+        elif "ppm" in unit_str:
+            NUnit = "ppm"
+        else:
+            NUnit = "ppm"  # default
 
-        if bUseDefaultInitSoil:
-            Number_Initial_Conditions_Layers = NML #MINGLIANG 11/10/2025   WHEN USING DEFAULT INITIAL VALUES IS BETTER TO INITIALIZE ALL MODEL SOIL LAYERS
-    
-        if bUseDefaultInitSoil:
-            #NO NEED TO Distribute variables for each model layer of thickness 0.1 m. It is done here for default intial conditions
-            if bUsedForFirstday:
-                for i in range(1, Number_Initial_Conditions_Layers + 1):
-                    Initial_Conditions_Layer_Thickness[i] = Thickness_Model_Layers
-                    Number_Of_Sublayers[i] = 1
-                    pSoilState.Water_Content[DOY][i] = def_water[i]
-                    pSoilState.Nitrate_N_Content[DOY][i] = def_nitrate[i]
-                    pSoilState.Ammonium_N_Content[DOY][i] = 0. #'kg/m2
-        else:            
-            #end_row_idx = 16 - 1
-            Number_Initial_Conditions_Layers = int(len(json_data["initial_soil_conditions"]))
-            #if Number_Initial_Conditions_Layers <= 0 or pd.isna(Number_Initial_Conditions_Layers): 
-            #    Number_Initial_Conditions_Layers = 10 #06042025LML initialize a big number
-            #Thickness_Model_Layers = 0.1
-            #NUnit: ppm ot kgN_ha
-            unit_str = json_data.get("nunit", "ppm").lower()  # default to ppm
-            if "kg" in unit_str and "ha" in unit_str:
-                NUnit = "kgN_ha"
-            elif "ppm" in unit_str:
-                NUnit = "ppm"
-            else:
-                NUnit = "ppm"
+        for i in range(1, Number_Initial_Conditions_Layers + 1):
+            cond = initial_conditions[i - 1]
+            t = float(cond["thickness"])
+            if not pd.isna(t) and t > 0:
+                valid_Number_Initial_Conditions_Layers += 1
+                Initial_Conditions_Layer_Thickness[i] = round(t, 1)
+                Number_Of_Sublayers[i] = round(Initial_Conditions_Layer_Thickness[i] / Thickness_Model_Layers)
+                Water[i]   = float(cond["water"])
+                Nitrate[i] = float(cond["nitrate_n"])
+                Ammonium[i] = float(cond["ammonium_n"])
+                print(f'  Entry {i}: thickness={t}, sublayers={Number_Of_Sublayers[i]}, water={Water[i]}, nitrate={Nitrate[i]}, ammonium={Ammonium[i]}')
 
-            initial_conditions = json_data.get("initial_soil_conditions", [])  # list[dict]
-            
-            for i in range(1, Number_Initial_Conditions_Layers + 1):
-                cond = initial_conditions[i-1]
-                t = float(cond["thickness"])
-                if not pd.isna(t) and t > 0:
-                    valid_Number_Initial_Conditions_Layers += 1
-                    Initial_Conditions_Layer_Thickness[i]  = round(t, 1)
-                    Number_Of_Sublayers[i] = round(Initial_Conditions_Layer_Thickness[i] / Thickness_Model_Layers)
-                    Water[i]               = float(cond["water"])
-                    Nitrate[i]             = float(cond["nitrate_n"])
-                    Ammonium[i]            = float(cond["ammonium_n"])
-
-            # Distribute variables for each model layer of thickness 0.1 m
-            Cum_J = 1
-            for i in range(1, Number_Initial_Conditions_Layers + 1):
-                NL = Number_Of_Sublayers[i]
-                k = Cum_J
-                L = (k + NL - 1)
-                for j in range(k, L + 1):
-                    #MINGLIANG 11/10/2025 the thickness of layers are now set in Calculate Hydraulic Properties
-                    #pSoilModelLayer.Layer_Thickness[j] = Thickness[i] / Number_Of_Sublayers[i]
-                    if j <= pSoilModelLayer.Number_Model_Layers:
-                        if not pd.isna(Water[i]) and Water[i] > 0:
-                            pSoilState.Water_Content[DOY][j] = min(pSoilModelLayer.FC_Water_Content[j], Water[i])
-                            pSoilState.Water_Content[DOY][j] = max(pSoilModelLayer.PWP_Water_Content[j], pSoilState.Water_Content[DOY][j]) #06132025LML incase user set zero
-                        else:
-                            if bUsedForFirstday:
-                                pSoilState.Water_Content[DOY][j] = def_water[j]
-
-
-                        pSoilState.Water_Filled_Porosity[DOY][j] = pSoilState.Water_Content[DOY][j] / pSoilModelLayer.Saturation_Water_Content[j]
-                        #pSoilState.Soil_Water_Potential[j] = WP(pSoilModelLayer.Saturation_Water_Content[i], Water[i], pSoilModelLayer.Air_Entry_Potential[i], pSoilModelLayer.B_value[i])
-                        pSoilState.Soil_Water_Potential[DOY][j] = WP(pSoilModelLayer.Saturation_Water_Content[j], pSoilState.Water_Content[DOY][j], pSoilModelLayer.Air_Entry_Potential[j], pSoilModelLayer.B_value[j])
-
-
-                        if not pd.isna(Nitrate[i]) and Nitrate[i] > 0:
-                            if NUnit == 'kgN_ha':
-                                pSoilState.Nitrate_N_Content[DOY][j] = Nitrate[i] / 10000. / Number_Of_Sublayers[i]    #'Convert kg/ha to kg/m2
-                            elif NUnit == 'ppm':
-                                pSoilState.Nitrate_N_Content[DOY][j] = Nitrate[i] * pSoilModelLayer.Bulk_Density[j] * pSoilModelLayer.Layer_Thickness[j] / 1000    #'Convert ppm to kg/m2
-                        else:
-                            if bUsedForFirstday:
-                                pSoilState.Nitrate_N_Content[DOY][j] = def_nitrate[j]
-                            
-                        if not pd.isna(Ammonium[i]) and Ammonium[i] > 0:
-                            if NUnit == 'kgN_ha':
-                                pSoilState.Ammonium_N_Content[DOY][j] = Ammonium[i] / 10000. / Number_Of_Sublayers[i]  #'Convert kg/ha to kg/m2
-                            elif NUnit == 'ppm':
-                                pSoilState.Ammonium_N_Content[DOY][j] = Ammonium[i] * pSoilModelLayer.Bulk_Density[j] * pSoilModelLayer.Layer_Thickness[j] / 1000. #'Convert ppm to kg/m2
-                        else:
-                            if bUsedForFirstday:
-                                pSoilState.Ammonium_N_Content[DOY][j] = 0.
-                        #print(f'Num_layers: {pSoilModelLayer.Number_Model_Layers} NUnit:{NUnit} i:{i} j:{j} Bulk_Density:{pSoilModelLayer.Bulk_Density[j]} WC:{pSoilState.Water_Content[DOY][j]} Nitrate_N_Content:{pSoilState.Nitrate_N_Content[DOY][j]} Ammonium:{pSoilState.Ammonium_N_Content[DOY][j]}')
-                        pSoilModelLayer.Soil_Mass[j] = pSoilModelLayer.Bulk_Density[j] * 1000 * pSoilModelLayer.Layer_Thickness[j] #'kg/m2 in each soil layer. Bulk density converted from Mg/m3 to kg/m3
-                        SOC = pSoilModelLayer.Soil_Mass[j] * (pSoilModelLayer.Percent_Soil_Organic_Matter[j] / 100.) * Carbon_Fraction_In_SOM #'kg/m2
-                        pSoilState.Soil_Organic_Carbon[DOY][j] = SOC
-                        pSoilState.Soil_Organic_Nitrogen[DOY][j] = SOC / SOC_C_N_Ratio
-                    #print(f'i:{i} j:{j}:OM:{pSoilState.Soil_Organic_Carbon[DOY][j]}')
-                    
-                Cum_J = L + 1
-        
-            Number_Initialization_Layers = Cum_J - 1 #'Mingliang 4/15/2025
-            #NML = pSoilModelLayer.Number_Model_Layers #'Mingliang 4/15/2025 'This is the total number of simulation model layers 'Mingliang 4/15/2025
-            #Extend initial conditions below last layer when the soil depth is greater than the sampling depth
-            copy_nitrate_to_layer = 5   #12052025LML-COS use same approach
-            if NML > Number_Initialization_Layers:
-                for i in range(Number_Initialization_Layers + 1, NML + 1):
-                        #pSoilModelLayer.Layer_Thickness[i] = pSoilModelLayer.Layer_Thickness[Number_Initialization_Layers]
-                    
-                        #12052025LML-COS used same approach
-                        pSoilState.Water_Content[DOY][i] = pSoilModelLayer.FC_Water_Content[i] * 0.8 + pSoilModelLayer.PWP_Water_Content[i] * 0.2
-                        pSoilState.Water_Filled_Porosity[DOY][i] = pSoilState.Water_Content[DOY][i] / pSoilModelLayer.Saturation_Water_Content[i]
-                        pSoilState.Soil_Water_Potential[DOY][i] = WP(pSoilModelLayer.Saturation_Water_Content[i], pSoilState.Water_Content[DOY][i], pSoilModelLayer.Air_Entry_Potential[i], pSoilModelLayer.B_value[i])
-                        if bUsedForFirstday:
-                            pSoilState.Ammonium_N_Content[DOY][i] = 0. 
-                            if i > copy_nitrate_to_layer: 
-                                pSoilState.Nitrate_N_Content[DOY][i] = 0. 
-                            else:
-                                pSoilState.Nitrate_N_Content[DOY][i] = 0.002 #'kg/m2
-                        
-                        pSoilModelLayer.Soil_Mass[i] = pSoilModelLayer.Bulk_Density[i] * 1000. * pSoilModelLayer.Layer_Thickness[i] #'kg/m2 in each soil layer. Bulk density converted from Mg/m3 to kg/m3
-                        SOC = pSoilModelLayer.Soil_Mass[i] * (pSoilModelLayer.Percent_Soil_Organic_Matter[Number_Initialization_Layers] / 100.) * Carbon_Fraction_In_SOM #'kg/m2
-                        pSoilState.Soil_Organic_Carbon[DOY][i] = SOC
-                        pSoilState.Soil_Organic_Nitrogen[DOY][i] = SOC / SOC_C_N_Ratio
-            
-            #05222025LML Move the following sections outside the initialization procedure
-            #pSoilState.Auto_Irrigation = False
-            #for i in range(Run_First_Doy, Run_Last_Doy + 1):
-            #    pSoilFlux.Net_Irrigation_Depth[DOY] = 0.                                #TODO
+        #'Distribute variables for each model layer of thickness 0.1 m
+        Cum_J = 1
+        for i in range(1, Number_Initial_Conditions_Layers + 1):  # note: i is initial condition layer; j is model layer
+            NL = Number_Of_Sublayers[i]
+            k = Cum_J
+            L = (k + NL - 1)
+            for j in range(k, L + 1):
+                #MINGLIANG 11/10/2025 the thickness of layers are now set in CalculateHydraulicProperties
+                if j <= pSoilModelLayer.Number_Model_Layers:
+                    if not pd.isna(Water[i]) and Water[i] > 0:
+                        pSoilState.Water_Content[DOY][j] = min(pSoilModelLayer.FC_Water_Content[j], Water[i])
+                         #pSoilState.Water_Filled_Porosity[DOY][j] = pSoilState.Water_Content[DOY][j] / pSoilModelLayer.Saturation_Water_Content[j]
+                        ##pSoilState.Soil_Water_Potential[j] = WP(pSoilModelLayer.Saturation_Water_Content[i], Water[i], pSoilModelLayer.Air_Entry_Potential[i], pSoilModelLayer.B_value[i])
+                        #pSoilState.Soil_Water_Potential[DOY][j] = WP(pSoilModelLayer.Saturation_Water_Content[j], pSoilState.Water_Content[DOY][j], pSoilModelLayer.Air_Entry_Potential[j], pSoilModelLayer.B_value[j])
+                    if not pd.isna(Nitrate[i]) and Nitrate[i] > 0:
+                        if NUnit == 'kgN_ha':
+                            pSoilState.Nitrate_N_Content[DOY][j] = Nitrate[i] / 10000. / Number_Of_Sublayers[i]    #'Convert kg/ha to kg/m2
+                        elif NUnit == 'ppm':
+                            pSoilState.Nitrate_N_Content[DOY][j] = Nitrate[i] * pSoilModelLayer.Bulk_Density[j] * pSoilModelLayer.Layer_Thickness[j] / 1000    #'Convert ppm to kg/m2
+                    if not pd.isna(Ammonium[i]) and Ammonium[i] > 0:
+                        if NUnit == 'kgN_ha':
+                            pSoilState.Ammonium_N_Content[DOY][j] = Ammonium[i] / 10000. / Number_Of_Sublayers[i]  #'Convert kg/ha to kg/m2
+                        elif NUnit == 'ppm':
+                            pSoilState.Ammonium_N_Content[DOY][j] = Ammonium[i] * pSoilModelLayer.Bulk_Density[j] * pSoilModelLayer.Layer_Thickness[j] / 1000.  #'Convert ppm to kg/m2
+            Cum_J = L + 1
+        print(f'SamplingSoilUpdate: finished — model layers 1–{Cum_J - 1} initialized, Number_Model_Layers={pSoilModelLayer.Number_Model_Layers}')
 
 
     def WriteCropSummaryOutput(Crop_Number, DOY, CropSumOutputs, 
@@ -769,7 +697,8 @@ def run_single_simulation(data_entry: dict):
             SoilOutRow[f'NH4-N (kg/ha) L{i}'] = pSoilState.Ammonium_N_Content[DOY][i] * 10000 #'Convert kg/m2 to kg/ha
         for i in range(1,7):
             SoilOutRow[f'Mineralized-N (kg/ha) L{i}'] = pSoilFlux.Layer_Mineralization[DOY][i] * 10000 #'Convert kg/m2 to kg/ha
-        
+            SoilOutRow[f'SOC(kg/ha) L{i}'] = pSoilState.SOM_C_Pool[DOY][i] * 10000 #'Convert kg/m2 to kg/ha
+
         json_data_to_write["daily_data"].append(SoilOutRow)
 
         if Crop_Number != 0:
@@ -872,7 +801,8 @@ def run_single_simulation(data_entry: dict):
     # Initialize JSON structure
     json_data_to_write = {"daily_data": [], "seasonal_data": [], "budget_data": []}
     bUseDefaultInitSoil = False                                                     #09192025LML Check user input initial soil information or using the default value
-    
+                                                                                    #If True: Use default values for initialize soil conditions
+                                                                                    #Otherwize, read the initial condition from initial soil files or records
     ic = data_entry.get("initial_soil_conditions")  # could be None, [], or list
     bUseDefaultInitSoil = not bool(ic)  # True if None or empty, False if non-empty
 
@@ -917,17 +847,30 @@ def run_single_simulation(data_entry: dict):
     Water_Source = int(data_entry["water_source"])
     Water_N_Conc = float(data_entry["water_n_concentration"])   #(mg/L)
 
-    Auto_Fertilizations = {1: False, 2: False}
 
+    # Read Auto-Fertilization parameters:
+    Auto_Fertilizations = {1: True, 2: True}
+    Crop_AutoFertilization_Parameters = {1: None, 2: None}
 
-    auto_fert_list = data_entry.get("auto_fertilization", [])
+    auto_fert_list = data_entry.get("auto_fertilization") or []
 
     if isinstance(auto_fert_list, list) and len(auto_fert_list) > 0:
         block = auto_fert_list[0]  # first item in list
-        crop_flags = block.get("crop", {})
+        crop_flags = block.get("crop") or {}
 
-        Auto_Fertilizations[1] = bool(crop_flags.get("Crop 1", False))
-        Auto_Fertilizations[2] = bool(crop_flags.get("Crop 2", False))
+        Auto_Fertilizations[1] = get_json_boolean(crop_flags, "Crop 1") if "Crop 1" in crop_flags else True
+        Auto_Fertilizations[2] = get_json_boolean(crop_flags, "Crop 2") if "Crop 2" in crop_flags else True
+
+        splits_block = block.get("splits") or {}
+        for crop_num, crop_key in [(1, "Crop 1"), (2, "Crop 2")]:
+            split_list = splits_block.get(crop_key) or []
+            if split_list:
+                param = CS_CropAutoFertilizationParameter()
+                for i, s in enumerate(split_list[:3], start=1):
+                    param.Auto_Fert_Split_DOYs[i] = int(s["doy"])
+                    param.Auto_Fert_Split_Percents[i] = float(s["percent"])
+                Crop_AutoFertilization_Parameters[crop_num] = param
+
 
     
     Auto_Irrigation  = get_json_boolean(data_entry,'Auto_Irrigation')     #'Mingliang 7/20/2025  Should set True for estimating irrigation recommendation after TODAY.
@@ -936,10 +879,9 @@ def run_single_simulation(data_entry: dict):
     #Begin_Crop_Senescence = False    #'Mingliang 6/21/2025
     End_Nitrogen_Dilution = False     #'Mingliang 6/21/2025'
 
-    Potential_Biomass_At_Maturity = 0
 
 
-    ISM_cropnames = {'Winter Triticale (Forage)': 'Winter Triticale (for forage)','Silage Corn': 'Corn (silage)'}  #TODO
+    ISM_cropnames = {'Triticale': 'Triticale (for forage)','Silage Corn': 'Corn (silage)'}  #TODO
     field_lat = 45.97
     field_lon = -119.26
     wkt_geometry = f'point ({field_lon} {field_lat})'
@@ -1131,6 +1073,8 @@ def run_single_simulation(data_entry: dict):
         SoilColums[f'NH4-N (kg/ha) L{i}'] = "float64"
     for i in range(1,7):
         SoilColums[f'Mineralized-N (kg/ha) L{i}'] = "float64"
+        SoilColums[f'SOC(kg/ha) L{i}'] = "float64"
+
         
     SoilOutputs = dict()
     for crop in range(1,Number_Of_Crops + 1):
@@ -1228,12 +1172,14 @@ def run_single_simulation(data_entry: dict):
 
     #crop_states = dict()
 
-    pCropState = CropState()
-    InitCropState(pCropState)
+    pCropState = dict()
+    pETState = dict()
 
-    pETState = ETState()
-    InitETState(pETState)
-
+    for crop in range(1,Number_Of_Crops + 1):
+        pCropState[crop] = CropState()
+        InitCropState(pCropState[crop])
+        pETState[crop] = ETState()
+        InitETState(pETState[crop])
 
     pBalance = Balances()
 
@@ -1274,9 +1220,9 @@ def run_single_simulation(data_entry: dict):
     InitSoilState(pSoilState)
     InitSoilFlux(pSoilFlux)
     #ReadSoilInitial(Run_First_DOY,SoilInitCells,pSoilState,pSoilModelLayer)
-    bUsedForFirstday = True
-    ReadSoilInitial(Run_First_Doy, Run_Last_Doy, data_entry, pSoilState,
-                    pSoilModelLayer, pSoilHorizen, pSoilFlux, bUsedForFirstday=bUsedForFirstday,bUseDefaultInitSoil=bUseDefaultInitSoil,bUseVB=bUseVB_initsoil)
+    # Build a DOY-keyed dict of soil initial condition sources (matches reference dSoilInitCells pattern).
+    # JSON provides one entry at the first simulation DOY; additional DOYs can be added in the future.
+    dSoilInitCells = {Run_First_Doy: data_entry}
     #print(f"DEBUG: Number_Model_Layers = {pSoilModelLayer.Number_Model_Layers}")
 
     #05222025LML moved here
@@ -1317,103 +1263,102 @@ def run_single_simulation(data_entry: dict):
 
     print("number of days to simulate", Number_Of_Days_To_Simulate)
 
+    DAE_Crop_Ends = dict()
+    Potential_Biomass_At_Maturities = dict()
+    for crop in range(1,Number_Of_Crops + 1):
+        print(f'crop:{crop}')
+        End_Nitrogen_Dilution = False
+        DAE_Crop_Ends[crop] = min(CropGrowths[crop].Maturity_DAE, CropGrowths[crop].Harvest_DAE)
+        #Set up Crop
+        InitializeCrop(DOY,pCropState[crop],pSoilFlux,CropParameters[crop],pETState[crop],crop)
+        #'Set state variables for the potential crop for the entire season. The potential crop grows without water and N stress
+        Day_Of_The_Year = CropGrowths[crop].Emergence_DOY
+        for Days_After_Emergence in range(0, DAE_Crop_Ends[crop] + 1):
+            PotentialCanopyCover(crop, Days_After_Emergence, 
+                                Day_Of_The_Year, CropParameters[crop], 
+                                pCropState[crop], CropGrowths[crop]) #Calculate potential green canopy cover for the entire season
+            PotET(Day_Of_The_Year, True, True, pCropState[crop], CropParameters[crop], pCS_Weather, pETState[crop]) #Calculations are for the potential crop and the crop is active
+            Biomass(Day_Of_The_Year, True, pCropState[crop], CropParameters[crop], pCS_Weather, pETState[crop]) #Calculate potential biomass for the entire season
+            End_Nitrogen_Dilution = ReferencePlantNConcentration(Day_Of_The_Year, pCropState[crop], CropParameters[crop], CropGrowths[crop], End_Nitrogen_Dilution)
+            Day_Of_The_Year += 1
+            if Day_Of_The_Year > 365: Day_Of_The_Year = 1
+        tpre_doy = Day_Of_The_Year - 1
+        if tpre_doy == 0: tpre_doy = 365
+        Potential_Biomass_At_Maturities[crop] = pCropState[crop].Cumulative_Potential_Crop_Biomass[tpre_doy]
+
     Number_Of_Layers = pSoilModelLayer.Number_Model_Layers
+    CropStates = pCropState  # per-crop dict; pCropState reassigned to active crop each day
+    ETStates = pETState      # per-crop dict; pETState reassigned to active crop each day
+
     # Begin time loop
     while Days_Elapsed < Number_Of_Days_To_Simulate + 1:
         Today_Crop_N_Demand = 0.0
         Today_N_Uptake = 0.0
         Available_N = 0.0
         Recommended_Fertilizer_Mass = 0.0
+        
+        if DOY in dSoilInitCells:
+            SamplingSoilUpdate(DOY, Run_First_Doy, Run_Last_Doy, dSoilInitCells[DOY],
+                               pSoilState, pSoilModelLayer, pSoilHorizen, pSoilFlux)
+
         #Crop_Number = ReadInputs.CropOrder(1)
         InitialSoilProfile(DOY,pBalance,pSoilState,pSoilModelLayer)
         #Begin_Crop_Senescence = False    #'Mingliang 6/21/2025
-        End_Nitrogen_Dilution = False     #'Mingling 6/21/2025'
+        End_Nitrogen_Dilution = False
         Recommended_N_Fertilization = False
         N_Fert_Recommended_Amount = 0.
-        #'Set up Crop Number 1
+
+        print(f'DOY:{DOY} DAE:{DAE} Crop_Number:{Crop_Number}')
+        Next_Crop = 0  #for bare ground management; if 0: there is an active/unharvested crop
         if DOY == CropGrowths[1].Emergence_DOY:
-            Crop_Active = True
             Crop_Number = 1
+            Crop_Active = True
             DAE = 1
-            InitializeCrop(DOY,pCropState,pSoilFlux,CropParameters[1],pETState,Crop_Number)
+        elif 2 in CropGrowths and DOY == CropGrowths[2].Emergence_DOY:
+            Crop_Number = 2
+            Crop_Active = True
+            DAE = 1
 
-            #'Convert days of the year to days after emergence
-            if CropGrowths[1].Emergence_DOY > CropGrowths[1].Maturity_DOY:
-                DAE_At_Maturity = (365 - CropGrowths[1].Emergence_DOY) + CropGrowths[1].Maturity_DOY
+        if Crop_Number == 0:
+            if 2 not in CropGrowths:
+                Next_Crop = 1
             else:
-                DAE_At_Maturity = CropGrowths[1].Maturity_DOY - CropGrowths[1].Emergence_DOY
-            #'Set state variables for the potential crop for the entire season. The potential crop grows without water and N stress
-            Day_Of_The_Year = CropGrowths[1].Emergence_DOY
-            for Days_After_Emergence in range(0, DAE_At_Maturity + 1):
+                if CropGrowths[1].Harvest_DOY < CropGrowths[1].Emergence_DOY:  # crop 1 crosses Dec 31
+                    if DOY > CropGrowths[1].Harvest_DOY and DOY < CropGrowths[1].Emergence_DOY:
+                        Next_Crop = 2
+                    elif DOY < CropGrowths[1].Emergence_DOY:
+                        Next_Crop = 1
+                else:  # crop 1 within one calendar year
+                    if DOY > CropGrowths[1].Harvest_DOY:
+                        Next_Crop = 2
+                    elif DOY < CropGrowths[1].Emergence_DOY:
+                        Next_Crop = 1
 
-                PotentialCanopyCover(Crop_Number, Days_After_Emergence,
-                                    Day_Of_The_Year, CropParameters[1],
-                                    pCropState, CropGrowths[1]) #Calculate potential green canopy cover for the entire season
-                PotET(Day_Of_The_Year, True, Crop_Active, pCropState, CropParameters[1], pCS_Weather, pETState) #Calculations are for the potential crop and the crop is active
+        if Next_Crop != 0:  # pre-plant period — run pre-emergence fertilizer recommendation
+            pCropState = CropStates[Next_Crop]
+            pETState = ETStates[Next_Crop]
+            Recommended_N_Fertilization, N_Fert_Recommended_Amount = \
+                FertilizerRecommendation(True, DOY, 0, Next_Crop,
+                                         pCropState, CropParameters[Next_Crop],
+                                         CropGrowths[Next_Crop], pETState,
+                                         pSoilModelLayer, pSoilState,
+                                         Seasonal_Scheduled_Fertilization, pCS_Fertilization,
+                                         Potential_Biomass_At_Maturities[Next_Crop],
+                                         Auto_Fertilizations[Next_Crop],
+                                         Crop_AutoFertilization_Parameters[Next_Crop],
+                                         DAE_Crop_Ends[Next_Crop])
+        else:
+            pCropState = CropStates[Crop_Number]
+            pETState = ETStates[Crop_Number]
 
-                Biomass(Day_Of_The_Year, True, pCropState, CropParameters[1], pCS_Weather, pETState) #Calculate potential biomass for the entire season
-                End_Nitrogen_Dilution = ReferencePlantNConcentration(Day_Of_The_Year, pCropState, CropParameters[1], CropGrowths[1], End_Nitrogen_Dilution)
-                Day_Of_The_Year += 1
-                if Day_Of_The_Year > 365: Day_Of_The_Year = 1
-
-            tpre_doy = Day_Of_The_Year - 1
-            if tpre_doy == 0: tpre_doy = 365
-            Potential_Biomass_At_Maturity = pCropState.Cumulative_Potential_Crop_Biomass[tpre_doy]
-                # right after you finish loading your JSON into CropParamaters[1]:
-                #print("→ crop parameters via JSON:")
-                #for k,v in vars(CropParameters[1]).items():
-                #    print(f"   {k}: {v}")
-            
-        #Begin_Crop_Senescence = False
-        End_Nitrogen_Dilution = False
-        if 2 in CropGrowths and DOY == CropGrowths[2].Emergence_DOY:
-            #'Set up Crop Number 2
-            if DOY == CropGrowths[2].Emergence_DOY:
-                Crop_Active = True
-                Crop_Number = 2
-                DAE = 1
-                InitializeCrop(DOY,pCropState,pSoilFlux,CropParameters[2],pETState,Crop_Number)
-
-                #'Convert days of the year to days after emergence
-                if CropGrowths[2].Emergence_DOY > CropGrowths[2].Maturity_DOY:
-                    DAE_At_Maturity = (365 - CropGrowths[2].Emergence_DOY) + CropGrowths[2].Maturity_DOY
-                else:
-                    DAE_At_Maturity = CropGrowths[2].Maturity_DOY - CropGrowths[2].Emergence_DOY
-
-                #'Set state variables for the potential crop for the entire season. The potential crop grows without water and N stress
-                Day_Of_The_Year = CropGrowths[2].Emergence_DOY
-                for Days_After_Emergence in range(0, DAE_At_Maturity + 1):
-                    PotentialCanopyCover(Crop_Number, Days_After_Emergence, 
-                                        Day_Of_The_Year, CropParameters[2],
-                                        pCropState, CropGrowths[2]) #Calculate potential green canopy cover for the entire season
-                    PotET(Day_Of_The_Year, True, Crop_Active, pCropState, 
-                        CropParameters[2], pCS_Weather, pETState) #Calculations are for the potential crop and the crop is active
-                    Biomass(Day_Of_The_Year, True, pCropState, CropParameters[2],
-                            pCS_Weather, pETState) #Calculate potential biomass for the entire season
-                    End_Nitrogen_Dilution = ReferencePlantNConcentration(Day_Of_The_Year, pCropState, 
-                                         CropParameters[2], CropGrowths[2], End_Nitrogen_Dilution)
-                    Day_Of_The_Year += 1
-                    if Day_Of_The_Year > 365: Day_Of_The_Year = 1
-
-                tpre_doy = Day_Of_The_Year - 1
-                if tpre_doy == 0: tpre_doy = 365
-                Potential_Biomass_At_Maturity = pCropState.Cumulative_Potential_Crop_Biomass[tpre_doy]
-        #print(f'DOY:{DOY} DAE:{DAE} Crop_Number:{Crop_Number}')
-
+        #print(f'Crop_Number:{Crop_Number} Next_Crop:{Next_Crop}')
 
         if Crop_Number == 1 and (DOY == CropGrowths[1].Maturity_DOY or DOY == CropGrowths[1].Harvest_DOY):
             Crop_Active = False
-            #Crop_Number = 0
-            #DAE = 0
             pSoilState.Auto_Irrigation = False
-            #Auto_Irrigation = False
-
-        if Number_Of_Crops >= 2 and Crop_Number == 2 and (DOY == CropGrowths[2].Maturity_DOY or DOY == CropGrowths[2].Harvest_DOY):
+        elif Crop_Number == 2 and (DOY == CropGrowths[2].Maturity_DOY or DOY == CropGrowths[2].Harvest_DOY):
             Crop_Active = False
-            #Crop_Number = 0
-            #DAE = 0
             pSoilState.Auto_Irrigation = False
-            #Auto_Irrigation = False
 
 
         if Crop_Active: 
@@ -1438,14 +1383,23 @@ def run_single_simulation(data_entry: dict):
                             CropGrowths[Crop_Number], pETState, pSoilModelLayer, 
                             pSoilState)
             
-            #print("today_doy-true", today_doy)
-            #print("doy-true", DOY)
             Recommended_N_Fertilization, N_Fert_Recommended_Amount = FertilizerRecommendation(
-                DOY, pCropState, CropParameters[Crop_Number],
-                CropGrowths[Crop_Number], pETState,
-                pSoilModelLayer, pSoilState,
-                Seasonal_Scheduled_Fertilization, pCS_Fertilization,
-                Potential_Biomass_At_Maturity, Auto_Fertilization
+                False,                                            # Premergence: False — called inside Crop_Active
+                DOY,
+                DAE,
+                Crop_Number,
+                pCropState,
+                CropParameters[Crop_Number],
+                CropGrowths[Crop_Number],
+                pETState,
+                pSoilModelLayer,
+                pSoilState,
+                Seasonal_Scheduled_Fertilization,
+                pCS_Fertilization,
+                Potential_Biomass_At_Maturities[Crop_Number],
+                Auto_Fertilization,
+                Crop_AutoFertilization_Parameters[Crop_Number],  # Auto_Fertilization_Parameter
+                DAE_Crop_Ends[Crop_Number]                        # DAE_When_Crop_Ends
             )
 
             # FERTILIZER RECOMMENDATION:
@@ -1480,150 +1434,68 @@ def run_single_simulation(data_entry: dict):
 
             #'synchronize days after emergence (DAE) and day of the year (DOY)
             DOY_At_DAE[DAE] = DOY
-            #DAE += 1
         else:
-            PotET(DOY, False, False, pCropState, None, pCS_Weather, pETState) #Crop is not active and only potential and actual evaporation is calculated
+            PotET(DOY, False, False, pCropState, None, pCS_Weather, pETState)
             ActEvaporation(DOY,pSoilModelLayer,pSoilState,pETState, False)
-            
+
         SoilTemperature(DOY,pCS_Weather.Tmax[DOY],pCS_Weather.Tmin[DOY],
                         pSoilModelLayer,pSoilState)
         Mineralization(DOY, Crop_Number, pSoilModelLayer, pSoilState, pSoilFlux, Crop_Active)
         Nitrification(DOY,pSoilModelLayer,pSoilState,pSoilFlux)
 
-        #02072025LML estimate the irrigation recommendations 
-        Irrigation_Recommendation = 0.0
         #Always calculate PAW Depletion for that day
-        PAW_Depletion_Today,Water_Depth_To_Refill_fc = calc_PAW_depletion(DOY, 
+        PAW_Depletion_Today,Water_Depth_To_Refill_fc = calc_PAW_depletion(DOY,
             Number_Of_Layers, pSoilState, pETState, pSoilModelLayer)
-        if 185 <= DOY <= 250:  # Narrow window to avoid 3000-line logs; adjust as needed
-            
-            # Show the threshold if AUTO irrigation is scheduled
-            if DOY in autoirrigation_info:
-                info = autoirrigation_info[DOY]
-                print(f"   AutoIrr Event → Mode={info[0]}, Param={info[1:]}")
-            
-            # Show PAW threshold used
-            """
-            if Auto_Irrigation:
-                try:
-                    print(f"   Max_PAW_depletion threshold = {Irrigation_Recommendation_Parameter}")
-                except:
-                    print("   Max_PAW_depletion threshold missing!")
-            """
-        
-        """
-        #05202025LML identify irrigation method for estimating recommendation
-        if DOY in autoirrigation_info:
-            if autoirrigation_info[DOY][0] == 1:
-                Irrigation_Recommendation_Option = 'PAW Depletion'
-                Irrigation_Recommendation_Parameter = autoirrigation_info[DOY][1]
-            elif autoirrigation_info[DOY][0] == 2:
-                Irrigation_Recommendation_Option = 'CWSI'
-                Irrigation_Recommendation_Parameter = autoirrigation_info[DOY][2]
-            else:
-                Irrigation_Recommendation_Option = None
-                Irrigation_Recommendation_Parameter = None
-        #print(f'{Irrigation_Recommendation_Option} {Irrigation_Recommendation_Parameter}')
 
-        if Crop_Active and Irrigation_Recommendation_Option == 'PAW Depletion':
-            Irrigation_Recommendation = \
-                SetAutoIrrigation(DOY, True, False, Number_Of_Layers, 
-                                    Irrigation_Recommendation_Parameter, -9999, False, 
-                                    -9999, pSoilState, pETState, pSoilModelLayer, Water_Depth_To_Refill_fc)
-        elif Crop_Active and Irrigation_Recommendation_Option == 'CWSI':
-            Irrigation_Recommendation = \
-                SetAutoIrrigation(DOY, False, True, Number_Of_Layers, 
-                                    -9999, Irrigation_Recommendation_Parameter, False, 
-                                    -9999, pSoilState, pETState, pSoilModelLayer, Water_Depth_To_Refill_fc)  
-        elif Irrigation_Recommendation_Option == 'Refill':
-            Irrigation_Recommendation = \
-                SetAutoIrrigation(DOY, False, False, Number_Of_Layers, 
-                                    -9999, -9999, True, 
-                                    Irrigation_Recommendation_Parameter, pSoilState, 
-                                    pETState, pSoilModelLayer, Water_Depth_To_Refill_fc)
-        """
-        # before the chain, set a default
         Irrigation_Recommendation = 0.0
-
-        if Auto_Irrigation:  # 08052025LML
+        if Auto_Irrigation:
             if DOY in autoirrigation_info:
                 mode, param = autoirrigation_info[DOY]
-
                 if mode == 1:
                     Irrigation_Recommendation_Option = 'PAW Depletion'
                     Irrigation_Recommendation_Parameter = param
-
                 elif mode == 2:
                     Irrigation_Recommendation_Option = 'CWSI'
                     Irrigation_Recommendation_Parameter = param
-
-                else:  # STOP
+                else:
                     Irrigation_Recommendation_Option = None
                     Irrigation_Recommendation_Parameter = None
 
-            # ---- only tiny guards added below ----
             if Crop_Active and Irrigation_Recommendation_Option == 'PAW Depletion':
-                try:
-                    _paw = float(Irrigation_Recommendation_Parameter)
-                except (TypeError, ValueError):
-                    _paw = None
-                if _paw is not None:
-                    Irrigation_Recommendation = SetAutoIrrigation(
-                        DOY, True, False, Number_Of_Layers,
-                        _paw, -9999, False, -9999,
-                        pSoilState, pETState, pSoilModelLayer, Water_Depth_To_Refill_fc
-                    )
-
+                Irrigation_Recommendation = SetAutoIrrigation(
+                    DOY, True, False, Number_Of_Layers,
+                    Irrigation_Recommendation_Parameter, -9999, False, -9999,
+                    pSoilState, pETState, pSoilModelLayer, Water_Depth_To_Refill_fc
+                )
             elif Crop_Active and Irrigation_Recommendation_Option == 'CWSI':
-                try:
-                    _cwsi = float(Irrigation_Recommendation_Parameter)
-                except (TypeError, ValueError):
-                    _cwsi = None
-                if _cwsi is not None:
-                    Irrigation_Recommendation = SetAutoIrrigation(
-                        DOY, False, True, Number_Of_Layers,
-                        -9999, _cwsi, False, -9999,
-                        pSoilState, pETState, pSoilModelLayer, Water_Depth_To_Refill_fc
-                    )
-
+                Irrigation_Recommendation = SetAutoIrrigation(
+                    DOY, False, True, Number_Of_Layers,
+                    -9999, Irrigation_Recommendation_Parameter, False, -9999,
+                    pSoilState, pETState, pSoilModelLayer, Water_Depth_To_Refill_fc
+                )
             elif Irrigation_Recommendation_Option == 'Refill':
-                try:
-                    _refill = float(Irrigation_Recommendation_Parameter)
-                except (TypeError, ValueError):
-                    _refill = None
-                if _refill is not None:
-                    Irrigation_Recommendation = SetAutoIrrigation(
-                        DOY, False, False, Number_Of_Layers,
-                        -9999, -9999, True, _refill,
-                        pSoilState, pETState, pSoilModelLayer, Water_Depth_To_Refill_fc
-                    )
-        else:
-            Irrigation_Recommendation = 0.0
+                Irrigation_Recommendation = SetAutoIrrigation(
+                    DOY, False, False, Number_Of_Layers,
+                    -9999, -9999, True, Irrigation_Recommendation_Parameter,
+                    pSoilState, pETState, pSoilModelLayer, Water_Depth_To_Refill_fc
+                )
 
-        #print(f'Irrigation_Recommendation:{Irrigation_Recommendation} ')    
-        net_irrigation_today,fertilizer_today = \
-            WaterAndNTransport(DOY, pSoilModelLayer, pSoilState, net_irrigations, 
-                            Water_N_Conc, 
-                            pCS_Weather.Precipitation[DOY], 
-                            #pCS_Fertilization.Nitrate_Fertilization_Rate[DOY], 
-                            #pCS_Fertilization.Ammonium_Fertilization_Rate[DOY], 
-                            #pCS_Fertilization.Nitrate_Fraction[DOY], 
-                            #pCS_Fertilization.Nitrate_Fertilization_Rate[DOY], 
-                            #pCS_Fertilization.Ammonium_Fertilization_Rate[DOY], 
-                            pCS_Fertilization,
-                            -9999., 
-                            AutoIrrigations,
-                            pSoilFlux, 
-                            Crop_Active,
-                            pETState,
-                            Water_Depth_To_Refill_fc,
-                            Auto_Irrigation,
-                            Recommended_N_Fertilization, 
-                            N_Fert_Recommended_Amount,
-                            Crop_Number)
+        net_irrigation_today, fertilizer_today = \
+            WaterAndNTransport(DOY, pSoilModelLayer, pSoilState, net_irrigations,
+                               Water_N_Conc,
+                               pCS_Weather.Precipitation[DOY],
+                               pCS_Fertilization,
+                               -9999.,
+                               AutoIrrigations,
+                               pSoilFlux,
+                               Crop_Active,
+                               pETState,
+                               Water_Depth_To_Refill_fc,
+                               Auto_Irrigation,
+                               Recommended_N_Fertilization,
+                               N_Fert_Recommended_Amount,
+                               Crop_Number)
 
-
-        
         #output managements
         if net_irrigation_today >= 1e-12 or fertilizer_today >=1e-12:
             FieldManagementsLogsOutput.loc[len(FieldManagementsLogsOutput)] = {

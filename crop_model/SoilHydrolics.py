@@ -10,166 +10,172 @@ from .AutoIrrigation import *
 #Soil Hydrologics
 Thickness_Model_Layers = 0.1
 Carbon_Fraction_In_SOM = 0.58
-SOC_C_N_Ratio = 12. #kg/kg
+#SOC_C_N_Ratio = 12. #kg/kg
 #MAX_Number_Model_Layers = 20                                                   #05192025LML hard coded maximum soil layers
 
 class SoilHorizons:
-    Number_Of_Horizons = 0
-    Horizon_Thickness = dict() #m
-    Clay = dict() #%
-    Sand = dict() #%
-    Silt = dict() #%
-    AE_Pot = dict()
-    B_Val = dict()
-    FC_WP = dict() #kPa
-    PWP_WP = dict() #kPa
-    Bulk_Dens = dict()  #(Mg/m3)
-    Sat_WC = dict() #fraction
-    FC_WC = dict() #fraction
-    PWP_WC = dict() #fraction
-    Soil_Organic_Carbon = dict() #%
-    Percent_Soil_Organic_Matter = dict()
-    Number_Of_Sublayers = dict()
+    def __init__(self):
+        self.Number_Of_Horizons = 0
+        self.Horizon_Thickness = dict() #m
+        self.Clay = dict() #%
+        self.Sand = dict() #%
+        self.Silt = dict() #%
+        self.AE_Pot = dict()
+        self.B_Val = dict()
+        self.FC_WP = dict() #kPa
+        self.PWP_WP = dict() #kPa
+        self.Bulk_Dens = dict()  #(Mg/m3)
+        self.Sat_WC = dict() #fraction
+        self.FC_WC = dict() #fraction
+        self.PWP_WC = dict() #fraction
+        self.Soil_Organic_Carbon = dict() #%
+        self.Percent_Soil_Organic_Matter = dict()
+        self.Number_Of_Sublayers = dict()
 
 class SoilModelLayer:
-    Number_Model_Layers = 0
-    Air_Entry_Potential = dict()
-    B_value = dict()
-    WP_At_FC = dict()
-    WP_At_PWP = dict()
-    FC_Water_Content = dict()
-    PWP_Water_Content = dict()
-    Plant_Available_Water_Content = dict()
-    Bulk_Density = dict()
-    Layer_Thickness = dict()
-    Saturation_Water_Content = dict()
-    Clay_Fraction = dict()
-    Fraction_Of_Sand = dict() #(20) As Double
-    Fraction_Of_Silt = dict() #(20) As Double
-    Soil_Mass = dict() #(20) As Double
-    Percent_Soil_Organic_Matter = dict() #(20) As Double
-    Thickness_Evaporative_Layer = 0
+    def __init__(self):
+        self.Number_Model_Layers = 0
+        self.Air_Entry_Potential = dict()
+        self.B_value = dict()
+        self.WP_At_FC = dict()
+        self.WP_At_PWP = dict()
+        self.FC_Water_Content = dict()
+        self.PWP_Water_Content = dict()
+        self.Plant_Available_Water_Content = dict()
+        self.Bulk_Density = dict()
+        self.Layer_Thickness = dict()
+        self.Saturation_Water_Content = dict()
+        self.Clay_Fraction = dict()
+        self.Fraction_Of_Sand = dict() #(20) As Double
+        self.Fraction_Of_Silt = dict() #(20) As Double
+        self.Soil_Mass = dict() #(20) As Double
+        self.Percent_Soil_Organic_Matter = dict() #(20) As Double
+        self.Thickness_Evaporative_Layer = 0
 
 class SoilState:
-    Water_Content = dict() #(365, 20) As Double
-    
-    Water_Filled_Porosity = dict() #(365, 20) As Double
-    
-    Nitrate_N_Content = dict() #(365, 20) As Double
-    Ammonium_N_Content = dict() #(365, 20) As Double
-    
-    Soil_Organic_Carbon = dict() #(365, 20) As Double
-    Soil_Organic_Nitrogen = dict() #(365, 20) As Double
-    Nitrate_N_In_Water = dict() #(kg) (366) As Double  'Mingliang June 3
-    
-    SOM_C_Pool = dict() #(366, 20) As Double
-    SOM_N_Pool = dict() #(366, 20) As Double
-    Residue_C_Pool = dict() #(366, 20) As Double
-    Residue_N_Pool = dict() #(366, 20) As Double
-    Profile_Nitrate_N_Content = dict() #(366) As Double
-    Profile_Ammonium_N_Content = dict() #(366) As Double
-    
-    PAW_Depletion = dict() #(366)
-    #PAW_Depletion_Top50cm = dict() #(366) As Double 'NEW Mingliang
-    #PAW_Depletion_Mid50cm = dict() #(366) As Double 'NEW Mingliang
-    #PAW_Depletion_Bottom50cm = dict() #(366) As Double 'NEW Mingliang
-    Water_Content_Top50cm = dict() #(366) As Double 'Mingliang 4/17/2025
-    Water_Content_Mid50cm = dict() #(366) As Double 'Mingliang 4/17/2025
-    Water_Content_Bottom50cm = dict() #(366) As Double 'Mingliang 4/17/2025
-    N_Mass_Top50cm = dict() #(366) As Double 'NEW Mingliang
-    N_Mass_Mid50cm = dict() #(366) As Double 'NEW Mingliang
-    N_Mass_Bottom50cm = dict() #(366) As Double 'NEW Mingliang
-    
-    #N_Leaching = dict() #(365) As Double
-    #Deep_Drainage = dict() #(365) As Double
-    #Chemical_Balance = dict() #(365) As Double
-    #Water_Balance = dict() #(365) As Double
-    
-    Soil_Water_Potential = dict() # = dict() (366,20)
-    Layer_Daily_Soil_Temperature = dict()
-    Layer_Hourly_Soil_Temperature = dict() #(20,24)?  (Layer, Hour)
-    
-    Oxidation_Water_Function = dict() #6
-    Oxidation_Temperature_Function = dict() #6
-    
-    Saturation_Carbon_Conc_kg_Per_m2 = 0.
-    SOC_Oxidation_Rate = 0.
-    
-    Auto_Irrigation = False
-    Number_Of_Events = 0
-    Method = 0
-    PAW_Trigger = False
-    CWSI_Trigger = False
-    Max_Allowed_CWSI = 0.
-    MAD = 0.
-    Refill_Today = False
-    Soil_Depth_To_Refill = 0.
+    def __init__(self):
+        self.Water_Content = dict() #(365, 20) As Double
+        
+        self.Water_Filled_Porosity = dict() #(365, 20) As Double
+        
+        self.Nitrate_N_Content = dict() #(365, 20) As Double
+        self.Ammonium_N_Content = dict() #(365, 20) As Double
+        
+        self.Soil_Organic_Carbon = dict() #(365, 20) As Double
+        self.Soil_Organic_Nitrogen = dict() #(365, 20) As Double
+        self.Nitrate_N_In_Water = dict() #(kg) (366) As Double  'Mingliang June 3
+        
+        self.SOM_C_Pool = dict() #(366, 20) As Double
+        self.SOM_N_Pool = dict() #(366, 20) As Double
+        self.Residue_C_Pool = dict() #(366, 20) As Double
+        self.Residue_N_Pool = dict() #(366, 20) As Double
+        self.Profile_Nitrate_N_Content = dict() #(366) As Double
+        self.Profile_Ammonium_N_Content = dict() #(366) As Double
+        
+        self.PAW_Depletion = dict() #(366)
+        #PAW_Depletion_Top50cm = dict() #(366) As Double 'NEW Mingliang
+        #PAW_Depletion_Mid50cm = dict() #(366) As Double 'NEW Mingliang
+        #PAW_Depletion_Bottom50cm = dict() #(366) As Double 'NEW Mingliang
+        self.Water_Content_Top50cm = dict() #(366) As Double 'Mingliang 4/17/2025
+        self.Water_Content_Mid50cm = dict() #(366) As Double 'Mingliang 4/17/2025
+        self.Water_Content_Bottom50cm = dict() #(366) As Double 'Mingliang 4/17/2025
+        self.N_Mass_Top50cm = dict() #(366) As Double 'NEW Mingliang
+        self.N_Mass_Mid50cm = dict() #(366) As Double 'NEW Mingliang
+        self.N_Mass_Bottom50cm = dict() #(366) As Double 'NEW Mingliang
+        
+        #N_Leaching = dict() #(365) As Double
+        #Deep_Drainage = dict() #(365) As Double
+        #Chemical_Balance = dict() #(365) As Double
+        #Water_Balance = dict() #(365) As Double
+        
+        self.Soil_Water_Potential = dict() # = dict() (366,20)
+        self.Layer_Daily_Soil_Temperature = dict()
+        self.Layer_Hourly_Soil_Temperature = dict() #(20,24)?  (Layer, Hour)
+        
+        self.Oxidation_Water_Function = dict() #6
+        self.Oxidation_Temperature_Function = dict() #6
+        
+        self.Saturation_Carbon_Conc_kg_Per_m2 = 0.
+        self.SOC_Oxidation_Rate = 0.
+        
+        self.Auto_Irrigation = False
+        self.Number_Of_Events = 0
+        self.Method = 0
+        self.PAW_Trigger = False
+        self.CWSI_Trigger = False
+        self.Max_Allowed_CWSI = 0.
+        self.MAD = 0.
+        self.Refill_Today = False
+        self.Soil_Depth_To_Refill = 0.
     
 class SoilFlux:
-    Mineralization_Top_Three_Layers = dict() #(366) As Double
-    Mineralization_Next_Three_Layers = dict() #(366) As Double
-    Daily_Nitrification = dict() #(366) As Double
-    Daily_Profile_SOC_Pool_Oxidation = dict() #(366) As Double
-    Daily_Profile_Oxidized_SOM_C_Transfer_Back_To_SOM = dict() #(366) As Double
-    Daily_Profile_Oxidized_SOM_N_Transfer_To_Ammonium_Pool = dict() #(366) As Double
+    def __init__(self):
+        self.Mineralization_Top_Three_Layers = dict() #(366) As Double
+        self.Mineralization_Next_Three_Layers = dict() #(366) As Double
+        self.Daily_Nitrification = dict() #(366) As Double
+        self.Daily_Profile_SOC_Pool_Oxidation = dict() #(366) As Double
+        self.Daily_Profile_Oxidized_SOM_C_Transfer_Back_To_SOM = dict() #(366) As Double
+        self.Daily_Profile_Oxidized_SOM_N_Transfer_To_Ammonium_Pool = dict() #(366) As Double
+        
+        self.Fertilization_Rate = dict() #(366) As Double
+        self.N_Leaching = dict() #(366) As Double
+        #N_Leaching_Accumulated = dict() #(366) As Double
+        self.N_Leaching_Accumulated_Crop = dict() #(366) As Double
+        self.Deep_Drainage = dict() #(366) As Double
+        self.Chemical_Balance = dict() #(366) As Double
+        self.Water_Balance = dict() #(366) As Double
+        self.Net_Irrigation_Depth = dict() #(366) As Double
     
-    Fertilization_Rate = dict() #(366) As Double
-    N_Leaching = dict() #(366) As Double
-    #N_Leaching_Accumulated = dict() #(366) As Double
-    N_Leaching_Accumulated_Crop = dict() #(366) As Double
-    Deep_Drainage = dict() #(366) As Double
-    Chemical_Balance = dict() #(366) As Double
-    Water_Balance = dict() #(366) As Double
-    Net_Irrigation_Depth = dict() #(366) As Double
-
-    Layer_Mineralization = dict() #((366, 20) As Double
-
-    #Oxidation_Water_Function = dict() #((6) As Double
-    #Oxidation_Temperature_Function = dict() #(6) As Double
+        self.Layer_Mineralization = dict() #((366, 20) As Double
     
-    Layer_SOC_Pool_Oxidation = 0.
-    Layer_Oxidized_SOM_C_Transfer_Back_To_SOM = 0.
-    Layer_Oxidized_SOM_N_Transferred_To_Ammonium = 0.
-    
-    Cumulative_Mineralization_Top_Three_Layers_All_Days = 0.0
-    Cumulative_Mineralization_Next_Three_Layers_All_Days = 0.0
-    Cumulative_Mineralization_Top_Three_Layers_Crop = dict()
-    Cumulative_Mineralization_Next_Three_Layers_Crop = dict()
-    Cumulative_Mineralization_All_Layers = 0.0    #'Mingliang 6/21/2025
-    
-    #Cumulative_Deep_Drainage = 0.
-    Cumulative_Deep_Drainage_Crop = dict()
-    
-    #Cumulative_N_Leaching = 0. #kg/m2
-    Cumulative_N_Leaching_Crop = dict()
-    
-    Sum_N_Fertilization = 0.
-    #Cumulative_Irrigation = 0.                                                 #only account when crop is active
-    Cumulative_Irrigation_Crop = dict()
-    #Cumulative_Fertilization = 0.
-    Cumulative_Fertilization_Crop = dict()
-    
-    Simulation_Total_N_Leaching = 0.
-    Simulation_Total_Deep_Drainage = 0.
-    Simulation_Total_Irrigation = 0.
-    Simulation_Total_Fertilization = 0.
+        #Oxidation_Water_Function = dict() #((6) As Double
+        #Oxidation_Temperature_Function = dict() #(6) As Double
+        
+        self.Layer_SOC_Pool_Oxidation = dict()
+        self.Layer_Oxidized_SOM_C_Transfer_Back_To_SOM = dict()
+        self.Layer_Oxidized_SOM_N_Transferred_To_Ammonium = dict()
+        self.Layer_N_Released_From_SOM_Oxidation = dict()
+        self.Layer_Oxidized_SOM_N_Transfer_Back_To_SOM = dict()
+        
+        self.Cumulative_Mineralization_Top_Three_Layers_All_Days = 0.0
+        self.Cumulative_Mineralization_Next_Three_Layers_All_Days = 0.0
+        self.Cumulative_Mineralization_Top_Three_Layers_Crop = dict()
+        self.Cumulative_Mineralization_Next_Three_Layers_Crop = dict()
+        self.Cumulative_Mineralization_All_Layers = 0.0    #'Mingliang 6/21/2025
+        
+        #Cumulative_Deep_Drainage = 0.
+        self.Cumulative_Deep_Drainage_Crop = dict()
+        
+        #Cumulative_N_Leaching = 0. #kg/m2
+        self.Cumulative_N_Leaching_Crop = dict()
+        
+        self.Sum_N_Fertilization = 0.
+        #Cumulative_Irrigation = 0.                                                 #only account when crop is active
+        self.Cumulative_Irrigation_Crop = dict()
+        #Cumulative_Fertilization = 0.
+        self.Cumulative_Fertilization_Crop = dict()
+        
+        self.Simulation_Total_N_Leaching = 0.
+        self.Simulation_Total_Deep_Drainage = 0.
+        self.Simulation_Total_Irrigation = 0.
+        self.Simulation_Total_Fertilization = 0.
     
 
 class ETState:
-    Potential_Transpiration = dict()
-    Potential_Crop_Transpiration = dict()
-    Potential_Soil_Water_Evaporation = dict()
-    Potential_ET = dict()
-    Actual_Transpiration = dict()
-    Actual_Soil_Water_Evaporation = dict()
-    Water_Stress_Index = dict()
-    Root_Fraction = dict()
-    Adjusted_Root_Fraction = dict() #(20) As Double
-    Soil_Water_Uptake = dict() #(366,20)
-    Total_Transpiration = 0.
-    Cumulative_Soil_Water_Evaporation = 0 #'Mingliang 4/17/2025
-    Crop_Soil_Water_Evaporation = 0
-
+    def __init__(self):
+        self.Potential_Transpiration = dict()
+        self.Potential_Crop_Transpiration = dict()
+        self.Potential_Soil_Water_Evaporation = dict()
+        self.Potential_ET = dict()
+        self.Actual_Transpiration = dict()
+        self.Actual_Soil_Water_Evaporation = dict()
+        self.Water_Stress_Index = dict()
+        self.Root_Fraction = dict()
+        self.Adjusted_Root_Fraction = dict() #(20) As Double
+        self.Soil_Water_Uptake = dict() #(366,20)
+        self.Total_Transpiration = 0.
+        self.Cumulative_Soil_Water_Evaporation = 0 #'Mingliang 4/17/2025
+        self.Crop_Soil_Water_Evaporation = 0
 
 def InitSoilState(pSoilState):
     for i in range(1,367):
@@ -256,12 +262,16 @@ def InitSoilFlux(pSoilFlux):
         for k in range(1,3):
             pSoilFlux.N_Leaching_Accumulated_Crop[i][k] = 0.
             
-    pSoilFlux.Layer_Oxidized_SOM_C_Transfer_Back_To_SOM = 0.
-    pSoilFlux.Layer_Oxidized_SOM_N_Transferred_To_Ammonium = 0.
-    
     pSoilFlux.Cumulative_Mineralization_Top_Three_Layers_All_Days = 0.0
     pSoilFlux.Cumulative_Mineralization_Next_Three_Layers_All_Days = 0.0
     pSoilFlux.Cumulative_Mineralization_All_Layers = 0.0
+    
+    for j in range(1,21):
+        pSoilFlux.Layer_SOC_Pool_Oxidation[j] = 0.0
+        pSoilFlux.Layer_Oxidized_SOM_C_Transfer_Back_To_SOM[j] = 0.0
+        pSoilFlux.Layer_Oxidized_SOM_N_Transferred_To_Ammonium[j] = 0.0
+        pSoilFlux.Layer_N_Released_From_SOM_Oxidation[j] = 0.0
+        pSoilFlux.Layer_Oxidized_SOM_N_Transfer_Back_To_SOM[j] = 0.0
     
     for i in range(1,3):
         pSoilFlux.Cumulative_Mineralization_Top_Three_Layers_Crop[i] = 0.
@@ -282,6 +292,25 @@ def InitSoilFlux(pSoilFlux):
     pSoilFlux.Simulation_Total_Deep_Drainage = 0.
     pSoilFlux.Simulation_Total_Irrigation = 0.
     pSoilFlux.Simulation_Total_Fertilization = 0.
+
+def InitialSoilConditions(DOY, pSoilModelLayer, pSoilState):                   #'Mingliang 01/23/2026 NEW SUBROUTINE
+    Carbon_Fraction_In_SOM = 0.58
+    SOC_C_N_Ratio = 12. #'kg/kg
+    NML = pSoilModelLayer.Number_Model_Layers                                  #'This is the total number of simulation model layers, defined by the soil description
+    for i in range(1, NML + 1):
+        pSoilState.Water_Content[DOY][i] = pSoilModelLayer.FC_Water_Content[i] * 0.8 + pSoilModelLayer.PWP_Water_Content[i] * 0.2
+        pSoilState.Water_Filled_Porosity[DOY][i] = pSoilState.Water_Content[DOY][i] / pSoilModelLayer.Saturation_Water_Content[i]
+        pSoilState.Soil_Water_Potential[DOY][i] = WP(pSoilModelLayer.Saturation_Water_Content[i], pSoilState.Water_Content[DOY][i], pSoilModelLayer.Air_Entry_Potential[i], pSoilModelLayer.B_value[i])
+        
+        pSoilState.Ammonium_N_Content[DOY][i] = 0. 
+        pSoilState.Nitrate_N_Content[DOY][i] = 0.002 #'kg/m2
+        if i > 7:
+            pSoilState.Nitrate_N_Content[DOY][i] = 0.0
+        
+        pSoilModelLayer.Soil_Mass[i] = pSoilModelLayer.Bulk_Density[i] * 1000. * pSoilModelLayer.Layer_Thickness[i] #'kg/m2 in each soil layer. Bulk density converted from Mg/m3 to kg/m3
+        SOC = pSoilModelLayer.Soil_Mass[i] * (pSoilModelLayer.Percent_Soil_Organic_Matter[i] / 100.) * Carbon_Fraction_In_SOM #'kg/m2
+        pSoilState.Soil_Organic_Carbon[DOY][i] = SOC
+        pSoilState.Soil_Organic_Nitrogen[DOY][i] = SOC / SOC_C_N_Ratio
 
 
 def WS(Sand, Clay):

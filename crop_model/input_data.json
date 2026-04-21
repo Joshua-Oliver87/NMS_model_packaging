@@ -3,12 +3,23 @@
   "Auto_Irrigation": true,
   "nunit": "kgN_ha",
   "auto_fertilization": [
-  { 
-    "crop": {
-      "Crop 1": true,
-      "Crop 2": false
+    {
+      "crop": {
+        "Crop 1": true,
+        "Crop 2": true
+      },
+      "splits": {
+        "Crop 1": [
+          { "doy": "132", "percent": "30" },
+          { "doy": "167", "percent": "70" }
+        ],
+        "Crop 2": [
+          { "doy": "288", "percent": "40" },
+          { "doy": "50",  "percent": "60" }
+        ]
+      }
     }
-  }],
+  ],
   "auto_irrigation": [
     {
       "CWSI": "0",
@@ -70,12 +81,12 @@
     },
     {
       "growth": {
-        "begin_senescence_doy": "105",
+        "begin_senescence_doy": "135",
         "emergence_doy": "303",
         "expected_yield": "5000.00",
-        "full_canopy_doy": "74",
-        "harvest_doy": "91",
-        "maturity_doy": "135",
+        "full_canopy_doy": "120",
+        "harvest_doy": "125",
+        "maturity_doy": "150",
         "planting_doy": "288"
       },
       "name": "Winter Triticale (Forage)",
@@ -91,7 +102,7 @@
         "leaf_water_potential_permanent_wilting_j_per_kg": "-1500.00000",
         "maturity_green_canopy_cover_fraction_0_1": "0.00000",
         "maximum_crop_height_m": "1.00000",
-        "maximum_crop_water_uptake_mm_per_day": "10.00000",
+        "maximum_crop_water_uptake_mm_per_day": "12.00000",
         "maximum_daily_n_uptake_rate": "4.00000",
         "maximum_green_canopy_cover_fraction_0_1": "0.80000",
         "maximum_n_concentration_at_emergence_kg_per_kg": "0.07",
@@ -114,8 +125,8 @@
     "ammonium_fraction": "0",
     "ammonia_fraction": "0",
     "application_method_number": "2",
-    "date": "135",
-    "mineral_rate": "70",
+    "date": "138",
+    "mineral_rate": "88",
     "organic_fertilizer_ammonia_fraction": null,
     "organic_fertilizer_c_fraction": null,
     "organic_fertilizer_n_fraction": null,
@@ -123,13 +134,13 @@
     "organic_fertilizer_rate": null
   },
   {
-    "fertilizer_name": "Nitrate",
+    "fertilizer_name": "Ammonium Nitrate",
     "nitrate_fraction": "100",
     "ammonium_fraction": "0",
     "ammonia_fraction": "0",
     "application_method_number": "1",
-    "date": "288",
-    "mineral_rate": "30",
+    "date": "298",
+    "mineral_rate": "77",
     "organic_fertilizer_ammonia_fraction": null,
     "organic_fertilizer_c_fraction": null,
     "organic_fertilizer_n_fraction": null,
@@ -137,71 +148,77 @@
     "organic_fertilizer_rate": null
   }
 ],
-  "first_doy": "125",
+  "first_doy": "130",
   "initial_soil_conditions": [
     {
       "ammonium_n": "0.00",
       "nitrate_n": "10.00",
       "thickness": "0.2",
-      "water": "0.250"
+      "water": "0.2"
     },
     {
       "ammonium_n": "5",
       "nitrate_n": "20.00",
       "thickness": "0.2",
-      "water": "0.250"
+      "water": "0.2"
     },
     {
       "ammonium_n": "5",
       "nitrate_n": "30.00",
       "thickness": "0.2",
-      "water": "0.250"
+      "water": "0.2"
     },
     {
       "ammonium_n": "0.00",
       "nitrate_n": "20.00",
       "thickness": "0.2",
-      "water": "0.250"
+      "water": "0.20"
+    },
+     {
+      "ammonium_n": "0.00",
+      "nitrate_n": "10.00",
+      "thickness": "0.2",
+      "water": "0.26"
     }
   ],
   "irrigation": [
     {
-      "doy": "196",
-      "net": "50"
+      "date": "196",
+      "net_irrigation": "50"
     },
     {
-      "doy": "213",
-      "net": "50"
+      "date": "213",
+      "net_irrigation": "50"
     }
   ],
   "soil_horizons": [
     {
       "horizon_thickness": "0.08001",
-      "organic_matter_percentage": "0.8",
-      "percent_clay": "7",
-      "percent_sand": "65.7",
-      "percent_silt": "27.3"
+      "organic_matter_percentage": "1",
+      "percent_clay": "18",
+      "percent_sand": "42",
+      "percent_silt": "40"
     },
     {
       "horizon_thickness": "0.249936",
-      "organic_matter_percentage": "0.3",
-      "percent_clay": "7",
-      "percent_sand": "65.7",
-      "percent_silt": "27.3"
+      "organic_matter_percentage": "1",
+      "percent_clay": "18",
+      "percent_sand": "42",
+      "percent_silt": "40"
     },
     {
       "horizon_thickness": "0.379984",
-      "organic_matter_percentage": "0.3",
-      "percent_clay": "7",
-      "percent_sand": "47.6",
-      "percent_silt": "45.4"
+      "organic_matter_percentage": "0.5",
+      "percent_clay": "15",
+      "percent_sand": "20",
+      "percent_silt": "65"
     },
     {
       "horizon_thickness": "0.810006",
       "organic_matter_percentage": "0.3",
-      "percent_clay": "2",
-      "percent_sand": "96.5",
-      "percent_silt": "1.5"
+      "percent_clay": "10",
+      "percent_sand": "65",
+      "percent_silt": "25"
     }
   ],
   "water_n_concentration": "0",

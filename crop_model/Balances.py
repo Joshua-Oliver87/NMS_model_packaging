@@ -8,16 +8,17 @@ Created on Mon Nov 11 23:50:08 2024
 
 
 class Balances:
-    Initial_WD = 0.
-    Initial_NO3_N = 0.
-    Initial_NH4_N = 0.
-    Initial_SOC = 0.
-    Initial_SON = 0.
-    Balance_Water = 0.
-    Balance_NO3_N = 0.
-    Balance_NH4_N = 0.
-    Balance_SOC = 0.
-    Balance_SON = 0.
+    def __init__(self):
+        self.Initial_WD = 0.
+        self.Initial_NO3_N = 0.
+        self.Initial_NH4_N = 0.
+        self.Initial_SOC = 0.
+        self.Initial_SON = 0.
+        self.Balance_Water = 0.
+        self.Balance_NO3_N = 0.
+        self.Balance_NH4_N = 0.
+        self.Balance_SOC = 0.
+        self.Balance_SON = 0.
     
 def InitialSoilProfile(DOY,pBalance,pSoilState,pSoilModelLayer):
     Water_Density = 1000 #'kg/m3
