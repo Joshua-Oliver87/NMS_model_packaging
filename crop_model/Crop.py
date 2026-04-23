@@ -331,14 +331,9 @@ def FertilizerRecommendation(Premergence, DOY, DAE, Crop_Number, pCropState, pCr
     Recommended_N_Fertilization = False
     Nitrate_N_Recommended = 0.
     Number_Of_Days_In_Scheduling_Window = 0
-
-    if not Auto_Fertilization or Auto_Fertilization_Parameter is None:
-        return Recommended_N_Fertilization, Nitrate_N_Recommended
-
     if Premergence:
     #'Account for events before emergence
-        split_doy = Auto_Fertilization_Parameter.Auto_Fert_Split_DOYs.get(1)
-        if split_doy is not None and DOY == split_doy:
+        if DOY == Auto_Fertilization_Parameter.Auto_Fert_Split_DOYs[1]:
             Days_before_emergence = pCropGrowth.Emergence_DOY - DOY
             if Days_before_emergence < 0:
                 Days_before_emergence += 365
@@ -346,11 +341,8 @@ def FertilizerRecommendation(Premergence, DOY, DAE, Crop_Number, pCropState, pCr
             Number_Of_Days_In_Scheduling_Window = DAE_When_Crop_Ends + Days_before_emergence
             Auto_Fert = True
     else:
-        for split in [1, 2, 3]:
-            split_doy = Auto_Fertilization_Parameter.Auto_Fert_Split_DOYs.get(split)
-            if split_doy is None:
-                continue
-            if DOY == split_doy:
+        for split in [1,2,3]:
+            if DOY == Auto_Fertilization_Parameter.Auto_Fert_Split_DOYs[split]:
                 Fraction_Of_Total_N_Rate = Auto_Fertilization_Parameter.Auto_Fert_Split_Percents[split] / 100.
                 Number_Of_Days_In_Scheduling_Window = DAE_When_Crop_Ends - DAE   #'Mingliang 01/23/2026
                 Auto_Fert = True
@@ -398,7 +390,7 @@ def FertilizerRecommendation(Premergence, DOY, DAE, Crop_Number, pCropState, pCr
         #'Apply the use efficiency of N fertilization, accounting for losses due to leaching or gaseous forms, and N below the region with significant root fraction
         Nitrate_N_Recommended *= Fraction_Of_Total_N_Rate / 0.8 #'Use efficiency of N fertilization, accounting for losses due to leaching or gaseous forms, and N below
         
-        if Nitrate_N_Recommended < 0.002: Nitrate_N_Recommended = 0.002   #'This is to ensure that N recommendation is at least 20 kg/ha
+        if Nitrate_N_Recommended > 0.0 and Nitrate_N_Recommended < 0.002: Nitrate_N_Recommended = 0.002   #'This is to ensure that N recommendation is at least 20 kg/ha Min: add negative condition for high soil N
         if Nitrate_N_Recommended > 0.: 
             Recommended_N_Fertilization = True
             pCropState.N_Fert_Recommended_DOY[DOY] = DOY
