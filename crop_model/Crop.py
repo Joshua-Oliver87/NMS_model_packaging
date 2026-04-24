@@ -341,7 +341,7 @@ def FertilizerRecommendation(Premergence, DOY, DAE, Crop_Number, pCropState, pCr
             Number_Of_Days_In_Scheduling_Window = DAE_When_Crop_Ends + Days_before_emergence
             Auto_Fert = True
     else:
-        for split in [1,2,3]:
+        for split in Auto_Fertilization_Parameter.Auto_Fert_Split_DOYs:
             if DOY == Auto_Fertilization_Parameter.Auto_Fert_Split_DOYs[split]:
                 Fraction_Of_Total_N_Rate = Auto_Fertilization_Parameter.Auto_Fert_Split_Percents[split] / 100.
                 Number_Of_Days_In_Scheduling_Window = DAE_When_Crop_Ends - DAE   #'Mingliang 01/23/2026

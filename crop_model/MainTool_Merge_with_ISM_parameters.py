@@ -525,7 +525,8 @@ def run_single_simulation(data_entry: dict):
         #bUsedForFirstday: the soil conditions are used only to set up soil initial condition at first day of simulation;
         # If False, the valid value will be used for updating modeled soil state DURING the simulation
 
-        Sampling_DOY = int(Run_First_Doy)
+        _ic_block = json_data.get("initial_soil_conditions") or {}
+        Sampling_DOY = int(_ic_block.get("sampling_doy", Run_First_Doy))
         if Sampling_DOY != int(DOY):
             print(f'Error: Sampling_DOY {Sampling_DOY} is not consistent with current DOY {DOY}!')
             sys.exit(1)
@@ -541,9 +542,9 @@ def run_single_simulation(data_entry: dict):
         Nitrate = dict()
         Ammonium = dict()
 
-        initial_conditions = json_data.get("initial_soil_conditions") or []
+        initial_conditions = _ic_block.get("layers") or []
         Number_Initial_Conditions_Layers = int(len(initial_conditions))
-        print(f'SamplingSoilUpdate: DOY={DOY}, reading {Number_Initial_Conditions_Layers} initial_soil_conditions entries')
+        print(f'SamplingSoilUpdate: DOY={DOY}, reading {Number_Initial_Conditions_Layers} soil layers')
 
         #NUnit: ppm or kgN_ha
         unit_str = json_data.get("nunit", "ppm").lower()
@@ -803,8 +804,8 @@ def run_single_simulation(data_entry: dict):
     bUseDefaultInitSoil = False                                                     #09192025LML Check user input initial soil information or using the default value
                                                                                     #If True: Use default values for initialize soil conditions
                                                                                     #Otherwize, read the initial condition from initial soil files or records
-    ic = data_entry.get("initial_soil_conditions")  # could be None, [], or list
-    bUseDefaultInitSoil = not bool(ic)  # True if None or empty, False if non-empty
+    ic = data_entry.get("initial_soil_conditions")  # object with "sampling_doy" and "layers", or None
+    bUseDefaultInitSoil = not bool(ic and ic.get("layers"))
 
     if bUseDefaultInitSoil:
         print("Use default soil initial condition.")
@@ -1220,9 +1221,11 @@ def run_single_simulation(data_entry: dict):
     InitSoilState(pSoilState)
     InitSoilFlux(pSoilFlux)
     #ReadSoilInitial(Run_First_DOY,SoilInitCells,pSoilState,pSoilModelLayer)
-    # Build a DOY-keyed dict of soil initial condition sources (matches reference dSoilInitCells pattern).
-    # JSON provides one entry at the first simulation DOY; additional DOYs can be added in the future.
-    dSoilInitCells = {Run_First_Doy: data_entry}
+    # Build a DOY-keyed dict of soil initial condition sources.
+    # Key is sampling_doy from the JSON so the trigger fires on the correct day.
+    _ic_block = data_entry.get("initial_soil_conditions") or {}
+    _sampling_doy_key = int(_ic_block.get("sampling_doy", Run_First_Doy))
+    dSoilInitCells = {_sampling_doy_key: data_entry}
     #print(f"DEBUG: Number_Model_Layers = {pSoilModelLayer.Number_Model_Layers}")
 
     #05222025LML moved here

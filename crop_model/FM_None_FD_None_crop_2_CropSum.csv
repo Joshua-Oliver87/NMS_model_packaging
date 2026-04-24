@@ -1,14 +1,14 @@
-index,0
-Cumulative Deep Drainage(mm),29.002034215600393
-Cumulative N Leaching (kg/ha),1.4310897381503578
-"Cumulative mineralization, 0.0 m - 0.3 m soil layer (kg/ha)",5.473214862232665
-"Cumulative mineralization, 0.3 m - 0.6 m soil layer (kg/ha)",1.610351989812329
-Residual soil profile nitrate (kg/ha),48.24277437206604
-Residual soil profile ammonium (kg/ha),2.904115212913182
-Cumulative irrigation (mm),0.0
-Cumulative N fertilization (kg/ha),0.0
-Seasonal Transpiration (mm),150.8521108239941
-Seasonal Soil Water Evaporation (mm),47.07049572984203
-Seasonal N Uptake (kg/ha),71.5583551964821
-Expected Potential Biomass at maturity (kg/ha),10689.57377394342
-"Biomass at maturity or harvest, whichever is first (kg/ha)",4985.5140221489255
+index
+Cumulative Deep Drainage(mm)
+Cumulative N Leaching (kg/ha)
+"Cumulative mineralization, 0.0 m - 0.3 m soil layer (kg/ha)"
+"Cumulative mineralization, 0.3 m - 0.6 m soil layer (kg/ha)"
+Residual soil profile nitrate (kg/ha)
+Residual soil profile ammonium (kg/ha)
+Cumulative irrigation (mm)
+Cumulative N fertilization (kg/ha)
+Seasonal Transpiration (mm)
+Seasonal Soil Water Evaporation (mm)
+Seasonal N Uptake (kg/ha)
+Expected Potential Biomass at maturity (kg/ha)
+"Biomass at maturity or harvest, whichever is first (kg/ha)"

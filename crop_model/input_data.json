@@ -2,6 +2,36 @@
   "area": "20",
   "Auto_Irrigation": true,
   "nunit": "kgN_ha",
+  "fertilization": [
+    {
+      "fertilizer_name": "Nitrate",
+      "nitrate_fraction": "100",
+      "ammonium_fraction": "0",
+      "ammonia_fraction": "0",
+      "application_method_number": "2",
+      "date": "120",
+      "mineral_rate": "10000",
+      "organic_fertilizer_ammonia_fraction": null,
+      "organic_fertilizer_c_fraction": null,
+      "organic_fertilizer_n_fraction": null,
+      "organic_fertilizer_name": null,
+      "organic_fertilizer_rate": null
+    },
+    {
+      "fertilizer_name": "Ammonium Nitrate",
+      "nitrate_fraction": "100",
+      "ammonium_fraction": "0",
+      "ammonia_fraction": "0",
+      "application_method_number": "1",
+      "date": "298",
+      "mineral_rate": "77",
+      "organic_fertilizer_ammonia_fraction": null,
+      "organic_fertilizer_c_fraction": null,
+      "organic_fertilizer_n_fraction": null,
+      "organic_fertilizer_name": null,
+      "organic_fertilizer_rate": null
+    }
+  ],
   "auto_fertilization": [
     {
       "crop": {
@@ -78,109 +108,45 @@
         "slope_of_daytime_vpd_power_function": "0.50000",
         "transpiration_use_efficiency_kg_per_kg": "0.00750"
       }
-    },
-    {
-      "growth": {
-        "begin_senescence_doy": "135",
-        "emergence_doy": "303",
-        "expected_yield": "5000.00",
-        "full_canopy_doy": "120",
-        "harvest_doy": "125",
-        "maturity_doy": "150",
-        "planting_doy": "288"
-      },
-      "name": "Winter Triticale (Forage)",
-      "parameters": {
-        "biomass_start_dilution_critical_n_concentration_mg_per_ha": "1.50000",
-        "biomass_start_dilution_maximum_n_concentration_mg_per_ha": "2.00000",
-        "biomass_start_dilution_minimum_n_concentration_mg_per_ha": "0.50000",
-        "critical_n_concentration_at_emergence_kg_per_kg": "0.0434",
-        "critical_n_concentration_at_maturity_kg_per_kg": "0.0085",
-        "initial_green_canopy_cover_fraction_0_1": "0.02000",
-        "initial_root_depth_m": "0.15000",
-        "leaf_water_potential_onset_of_stomatal_closure_j_per_kg": "-1200.00000",
-        "leaf_water_potential_permanent_wilting_j_per_kg": "-1500.00000",
-        "maturity_green_canopy_cover_fraction_0_1": "0.00000",
-        "maximum_crop_height_m": "1.00000",
-        "maximum_crop_water_uptake_mm_per_day": "12.00000",
-        "maximum_daily_n_uptake_rate": "4.00000",
-        "maximum_green_canopy_cover_fraction_0_1": "0.80000",
-        "maximum_n_concentration_at_emergence_kg_per_kg": "0.07",
-        "maximum_n_concentration_at_maturity_kg_per_kg": "0.0135",
-        "maximum_root_depth_m": "1.50000",
-        "midseason_crop_coefficient": "1.05000",
-        "minimum_n_concentration_at_emergence_kg_per_kg": "0.0315",
-        "minimum_n_concentration_at_maturity_kg_per_kg": "0.0061",
-        "n_dilution_slope": "-0.37000",
-        "seeding_depth_m": "0.05000",
-        "slope_of_daytime_vpd_power_function": "0.50000",
-        "transpiration_use_efficiency_kg_per_kg": "0.005"
-      }
     }
-  ],
- "fertilization": [
-  {
-    "fertilizer_name": "Nitrate",
-    "nitrate_fraction": "100",
-    "ammonium_fraction": "0",
-    "ammonia_fraction": "0",
-    "application_method_number": "2",
-    "date": "138",
-    "mineral_rate": "88",
-    "organic_fertilizer_ammonia_fraction": null,
-    "organic_fertilizer_c_fraction": null,
-    "organic_fertilizer_n_fraction": null,
-    "organic_fertilizer_name": null,
-    "organic_fertilizer_rate": null
-  },
-  {
-    "fertilizer_name": "Ammonium Nitrate",
-    "nitrate_fraction": "100",
-    "ammonium_fraction": "0",
-    "ammonia_fraction": "0",
-    "application_method_number": "1",
-    "date": "298",
-    "mineral_rate": "77",
-    "organic_fertilizer_ammonia_fraction": null,
-    "organic_fertilizer_c_fraction": null,
-    "organic_fertilizer_n_fraction": null,
-    "organic_fertilizer_name": null,
-    "organic_fertilizer_rate": null
-  }
 ],
-  "first_doy": "130",
-  "initial_soil_conditions": [
-    {
-      "ammonium_n": "0.00",
-      "nitrate_n": "10.00",
-      "thickness": "0.2",
-      "water": "0.2"
-    },
-    {
-      "ammonium_n": "5",
-      "nitrate_n": "20.00",
-      "thickness": "0.2",
-      "water": "0.2"
-    },
-    {
-      "ammonium_n": "5",
-      "nitrate_n": "30.00",
-      "thickness": "0.2",
-      "water": "0.2"
-    },
-    {
-      "ammonium_n": "0.00",
-      "nitrate_n": "20.00",
-      "thickness": "0.2",
-      "water": "0.20"
-    },
-     {
-      "ammonium_n": "0.00",
-      "nitrate_n": "10.00",
-      "thickness": "0.2",
-      "water": "0.26"
-    }
-  ],
+  "first_doy": "95",
+  "initial_soil_conditions": {
+    "sampling_doy": "95",
+    "layers": 
+    [
+      {
+        "ammonium_n": "0.00",
+        "nitrate_n": "10.00",
+        "thickness": "0.2",
+        "water": "0.2"
+      },
+      {
+        "ammonium_n": "5",
+        "nitrate_n": "20.00",
+        "thickness": "0.2",
+        "water": "0.2"
+      },
+      {
+        "ammonium_n": "5",
+        "nitrate_n": "30.00",
+        "thickness": "0.2",
+        "water": "0.2"
+      },
+      {
+        "ammonium_n": "0.00",
+        "nitrate_n": "20.00",
+        "thickness": "0.2",
+        "water": "0.20"
+      },
+      {
+        "ammonium_n": "0.00",
+        "nitrate_n": "10.00",
+        "thickness": "0.2",
+        "water": "0.26"
+      }
+    ]
+  },
   "irrigation": [
     {
       "date": "196",
