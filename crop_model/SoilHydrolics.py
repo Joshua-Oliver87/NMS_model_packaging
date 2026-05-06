@@ -445,7 +445,7 @@ def WaterAndNTransport(DOY, pSoilModelLayer, pSoilState, net_irrigations, WaterN
                        Prec, pCS_Fertilization, Nitrate_Fraction, 
                        AutoIrrigations, pSoilFlux, CropActive, pETState, 
                        Water_Depth_To_Refill_fc, Auto_Irrigation,
-                       Recommended_N_Fertilization, Nitrate_N_Recommended, Crop_Number):
+                       Recommended_N_Fertilization, Nitrate_N_Recommended, Crop_Number, Auto_Fertilization):
     #'This subroutine only transport nitrate N. Ammonium N only moves down the soil when transformed to nitrate
     Chem_Mass = dict()
     WC = dict()
@@ -527,7 +527,7 @@ def WaterAndNTransport(DOY, pSoilModelLayer, pSoilState, net_irrigations, WaterN
     #'Begin Mingliang 7/12/2025
     Nitrate_N_Fertilization = 0.
     Ammonium_N_Fertilization = 0.
-    if Recommended_N_Fertilization: #LML note: might overwrite existing fertilization
+    if Recommended_N_Fertilization and Auto_Fertilization: #LML note: might overwrite existing fertilization 4/30/2026 LML added control to add recommendation
         #'Fertilizer recommendation is expressed only as the mass of N-nitrate to apply
         Nitrate_N_Fertilization = Nitrate_N_Recommended
         pCS_Fertilization.Nitrate_Fertilization_Rate[DOY] = Nitrate_N_Fertilization #'kg/m2

@@ -1350,9 +1350,11 @@ def run_single_simulation(data_entry: dict):
                                          Auto_Fertilizations[Next_Crop],
                                          Crop_AutoFertilization_Parameters[Next_Crop],
                                          DAE_Crop_Ends[Next_Crop])
+            Auto_Fertilization = Auto_Fertilizations[Next_Crop]
         else:
             pCropState = CropStates[Crop_Number]
             pETState = ETStates[Crop_Number]
+            Auto_Fertilization = False
 
         #print(f'Crop_Number:{Crop_Number} Next_Crop:{Next_Crop}')
 
@@ -1497,7 +1499,8 @@ def run_single_simulation(data_entry: dict):
                                Auto_Irrigation,
                                Recommended_N_Fertilization,
                                N_Fert_Recommended_Amount,
-                               Crop_Number)
+                               Crop_Number,
+                               Auto_Fertilization)
 
         #output managements
         if net_irrigation_today >= 1e-12 or fertilizer_today >=1e-12:
