@@ -345,7 +345,8 @@ def FertilizerRecommendation(Premergence, DOY, DAE, Crop_Number, pCropState, pCr
     
     if Premergence:
     #'Account for events before emergence
-        if DOY == Auto_Fertilization_Parameter.Auto_Fert_Split_DOYs[1]:
+        split1_doy = Auto_Fertilization_Parameter.Auto_Fert_Split_DOYs.get(1)
+        if split1_doy is not None and DOY == split1_doy:
             Days_before_emergence = pCropGrowth.Emergence_DOY - DOY
             if Days_before_emergence < 0:
                 Days_before_emergence += 365
@@ -354,7 +355,8 @@ def FertilizerRecommendation(Premergence, DOY, DAE, Crop_Number, pCropState, pCr
             Auto_Fert = True
     else:
         for split in [1,2,3]:
-            if DOY == Auto_Fertilization_Parameter.Auto_Fert_Split_DOYs[split]:
+            split_doy = Auto_Fertilization_Parameter.Auto_Fert_Split_DOYs.get(split)
+            if split_doy is not None and DOY == split_doy:
                 Fraction_Of_Total_N_Rate = Auto_Fertilization_Parameter.Auto_Fert_Split_Percents[split] / 100.
                 Number_Of_Days_In_Scheduling_Window = DAE_When_Crop_Ends - DAE   #'Mingliang 01/23/2026
                 Auto_Fert = True

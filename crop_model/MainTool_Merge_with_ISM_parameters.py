@@ -851,7 +851,7 @@ def run_single_simulation(data_entry: dict):
 
     # Read Auto-Fertilization parameters:
     Auto_Fertilizations = {1: True, 2: True}
-    Crop_AutoFertilization_Parameters = {1: None, 2: None}
+    Crop_AutoFertilization_Parameters = {1: CS_CropAutoFertilizationParameter(), 2: CS_CropAutoFertilizationParameter()}
 
     auto_fert_list = data_entry.get("auto_fertilization") or []
 

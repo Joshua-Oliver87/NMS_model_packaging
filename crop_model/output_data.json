@@ -11182,7 +11182,7 @@
       "N Available (kg/ha)": 10097.734647624478,
       "N Uptake Rate (kg/ha/day)": 0,
       "Nitrogen_Stress_Index (0-1)": 0,
-      "N Fertilization Recommendation (kg/ha)": -3691.859092112028,
+      "N Fertilization Recommendation (kg/ha)": 0.0,
       "Days Since Last Irrigation": -81,
       "Fertilizer Recommendations (kg/ha)": {}
     },
@@ -11777,7 +11777,7 @@
       "N Available (kg/ha)": 10051.66776868566,
       "N Uptake Rate (kg/ha/day)": 7.072969826784616,
       "Nitrogen_Stress_Index (0-1)": 0,
-      "N Fertilization Recommendation (kg/ha)": -8610.543780642469,
+      "N Fertilization Recommendation (kg/ha)": 0.0,
       "Days Since Last Irrigation": -46,
       "Fertilizer Recommendations (kg/ha)": {}
     },
