@@ -110,9 +110,9 @@
       }
     }
 ],
-  "first_doy": "95",
+  "first_doy": "135",
   "initial_soil_conditions": {
-    "sampling_doy": "95",
+    "sampling_doy": "152",
     "layers": 
     [
       {

@@ -1220,6 +1220,7 @@ def run_single_simulation(data_entry: dict):
     pSoilFlux = SoilFlux()
     InitSoilState(pSoilState)
     InitSoilFlux(pSoilFlux)
+    InitialSoilConditions(Run_First_Doy, pSoilModelLayer, pSoilState)
     #ReadSoilInitial(Run_First_DOY,SoilInitCells,pSoilState,pSoilModelLayer)
     # Build a DOY-keyed dict of soil initial condition sources.
     # Key is sampling_doy from the JSON so the trigger fires on the correct day.
