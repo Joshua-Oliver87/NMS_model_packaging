@@ -9,17 +9,17 @@ import pandas as pd
 #import WaterUptakeConfig as Soil
 #from CropWaterUptakeClass import *
 #from SoilWater import *
-from CropParameter import *
-from SoilHydrolics import *
-from Crop import *
+from .CropParameter import *
+from .SoilHydrolics import *
+from .Crop import *
 #from canopycover import *
 #from CS_ET import *
-from accessagweathernet import *
-from ism_default_parameters import *
-from accessssurgo_functions import *
-from Balances import *
-from AutoIrrigation import *
-from OrganicCandN import *
+from .accessagweathernet import *
+from .ism_default_parameters import *
+from .accessssurgo_functions import *
+from .Balances import *
+from .AutoIrrigation import *
+from .OrganicCandN import *
 import json
 import sys
 import os
