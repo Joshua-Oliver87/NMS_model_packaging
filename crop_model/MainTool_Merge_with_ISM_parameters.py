@@ -9,17 +9,17 @@ import pandas as pd
 #import WaterUptakeConfig as Soil
 #from CropWaterUptakeClass import *
 #from SoilWater import *
-from .CropParameter import *
-from .SoilHydrolics import *
-from .Crop import *
+from CropParameter import *
+from SoilHydrolics import *
+from Crop import *
 #from canopycover import *
 #from CS_ET import *
-from .accessagweathernet import *
-from .ism_default_parameters import *
-from .accessssurgo_functions import *
-from .Balances import *
-from .AutoIrrigation import *
-from .OrganicCandN import *
+from accessagweathernet import *
+from ism_default_parameters import *
+from accessssurgo_functions import *
+from Balances import *
+from AutoIrrigation import *
+from OrganicCandN import *
 import json
 import sys
 import os
@@ -531,7 +531,23 @@ def run_single_simulation(data_entry: dict):
             print(f'Error: Sampling_DOY {Sampling_DOY} is not consistent with current DOY {DOY}!')
             sys.exit(1)
 
+        # Preserve auto-irrigation state across InitSoilState, which resets the triggers
+        _saved_auto_irrigation  = pSoilState.Auto_Irrigation
+        _saved_paw_trigger      = pSoilState.PAW_Trigger
+        _saved_cwsi_trigger     = pSoilState.CWSI_Trigger
+        _saved_mad              = pSoilState.MAD
+        _saved_max_cwsi         = pSoilState.Max_Allowed_CWSI
+        _saved_soil_depth       = pSoilState.Soil_Depth_To_Refill
+
         InitSoilState(pSoilState)
+
+        pSoilState.Auto_Irrigation      = _saved_auto_irrigation
+        pSoilState.PAW_Trigger          = _saved_paw_trigger
+        pSoilState.CWSI_Trigger         = _saved_cwsi_trigger
+        pSoilState.MAD                  = _saved_mad
+        pSoilState.Max_Allowed_CWSI     = _saved_max_cwsi
+        pSoilState.Soil_Depth_To_Refill = _saved_soil_depth
+
         InitialSoilConditions(DOY, pSoilModelLayer, pSoilState)
 
         Number_Initial_Conditions_Layers = 0

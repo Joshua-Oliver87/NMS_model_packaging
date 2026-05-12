@@ -6,7 +6,7 @@ Created on Fri Sep  6 10:13:14 2024
 @author: liuming
 """
 import math
-from .AutoIrrigation import *
+from AutoIrrigation import *
 #Soil Hydrologics
 Thickness_Model_Layers = 0.1
 Carbon_Fraction_In_SOM = 0.58

@@ -10,10 +10,10 @@
       "ammonia_fraction": "0",
       "application_method_number": "2",
       "date": "120",
-      "mineral_rate": "10000",
+      "mineral_rate": "10",
       "organic_fertilizer_ammonia_fraction": null,
       "organic_fertilizer_c_fraction": null,
-      "organic_fertil izer_n_fraction": null,
+      "organic_fertilizer_n_fraction": null,
       "organic_fertilizer_name": null,
       "organic_fertilizer_rate": null
     },

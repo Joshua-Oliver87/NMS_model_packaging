@@ -5,7 +5,7 @@ Created on Fri Nov  8 12:52:17 2024
 
 @author: liuming
 """
-from .SoilHydrolics import *
+from SoilHydrolics import *
 #from CS_ET import *
 import pandas as pd
 import sys
