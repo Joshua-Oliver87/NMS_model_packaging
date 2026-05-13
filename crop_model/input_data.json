@@ -1,62 +1,12 @@
 {
-  "area": "20",
-  "Auto_Irrigation": true,
-  "nunit": "kgN_ha",
-  "fertilization": [
-    {
-      "fertilizer_name": "Nitrate",
-      "nitrate_fraction": "100",
-      "ammonium_fraction": "0",
-      "ammonia_fraction": "0",
-      "application_method_number": "2",
-      "date": "120",
-      "mineral_rate": "10",
-      "organic_fertilizer_ammonia_fraction": null,
-      "organic_fertilizer_c_fraction": null,
-      "organic_fertilizer_n_fraction": null,
-      "organic_fertilizer_name": null,
-      "organic_fertilizer_rate": null
-    },
-    {
-      "fertilizer_name": "Ammonium Nitrate",
-      "nitrate_fraction": "100",
-      "ammonium_fraction": "0",
-      "ammonia_fraction": "0",
-      "application_method_number": "1",
-      "date": "298",
-      "mineral_rate": "77",
-      "organic_fertilizer_ammonia_fraction": null,
-      "organic_fertilizer_c_fraction": null,
-      "organic_fertilizer_n_fraction": null,
-      "organic_fertilizer_name": null,
-      "organic_fertilizer_rate": null
-    }
-  ],
-  "auto_fertilization": [
-    {
-      "crop": {
-        "Crop 1": true,
-        "Crop 2": true
-      },
-      "splits": {
-        "Crop 1": [
-          { "doy": "132", "percent": "30" },
-          { "doy": "167", "percent": "70" }
-        ],
-        "Crop 2": [
-          { "doy": "288", "percent": "40" },
-          { "doy": "50",  "percent": "60" }
-        ]
-      }
-    }
-  ],
+  "area": "32",
   "auto_irrigation": [
     {
       "CWSI": "0",
       "Max_PAW_depletion": "0.50",
       "auto_irrigation": "START",
       "crop_number": "1",
-      "doy": "145",
+      "doy": "133",
       "method": "1",
       "refill_depth": "0"
     },
@@ -65,7 +15,7 @@
       "Max_PAW_depletion": "0",
       "auto_irrigation": "STOP",
       "crop_number": "1",
-      "doy": "232",
+      "doy": "273",
       "method": "0",
       "refill_depth": "0"
     }
@@ -75,11 +25,11 @@
       "growth": {
         "begin_senescence_doy": "227",
         "emergence_doy": "145",
-        "expected_yield": "10000",
+        "expected_yield": "12563",
         "full_canopy_doy": "196",
-        "harvest_doy": "268",
+        "harvest_doy": "273",
         "maturity_doy": "258",
-        "planting_doy": "135"
+        "planting_doy": "130"
       },
       "name": "Corn",
       "parameters": {
@@ -109,86 +59,74 @@
         "transpiration_use_efficiency_kg_per_kg": "0.00750"
       }
     }
-],
-  "first_doy": "135",
-  "initial_soil_conditions": {
-    "sampling_doy": "152",
-    "layers": 
-    [
-      {
-        "ammonium_n": "0.00",
-        "nitrate_n": "10.00",
-        "thickness": "0.2",
-        "water": "0.2"
-      },
-      {
-        "ammonium_n": "5",
-        "nitrate_n": "20.00",
-        "thickness": "0.2",
-        "water": "0.2"
-      },
-      {
-        "ammonium_n": "5",
-        "nitrate_n": "30.00",
-        "thickness": "0.2",
-        "water": "0.2"
-      },
-      {
-        "ammonium_n": "0.00",
-        "nitrate_n": "20.00",
-        "thickness": "0.2",
-        "water": "0.20"
-      },
-      {
-        "ammonium_n": "0.00",
-        "nitrate_n": "10.00",
-        "thickness": "0.2",
-        "water": "0.26"
-      }
-    ]
-  },
-  "irrigation": [
+  ],
+  "fertilization": [
     {
-      "date": "196",
-      "net_irrigation": "50"
-    },
-    {
-      "date": "213",
-      "net_irrigation": "50"
+      "ammonia_fraction": "0",
+      "ammonium_fraction": "46",
+      "application_method_number": "2",
+      "date": "129",
+      "fertilizer_name": "mineral",
+      "mineral_rate": "11208",
+      "nitrate_fraction": "0",
+      "organic_fertilizer_ammonia_fraction": null,
+      "organic_fertilizer_c_fraction": null,
+      "organic_fertilizer_n_fraction": null,
+      "organic_fertilizer_name": null,
+      "organic_fertilizer_rate": null
     }
   ],
+  "first_doy": "125",
+  "initial_soil_conditions": {
+    "layers": [
+      {
+        "ammonium_n": "5.00",
+        "nitrate_n": "1.00",
+        "thickness": "0.2",
+        "water": "0.10"
+      },
+      {
+        "ammonium_n": "5.00",
+        "nitrate_n": "1.00",
+        "thickness": "0.2",
+        "water": "0.10"
+      }
+    ],
+    "sampling_doy": "133"
+  },
+  "irrigation": null,
   "soil_horizons": [
     {
-      "horizon_thickness": "0.08001",
-      "organic_matter_percentage": "1",
-      "percent_clay": "18",
-      "percent_sand": "42",
-      "percent_silt": "40"
+      "field_capacity": "",
+      "horizon_thickness": "0.15",
+      "organic_matter_percentage": "1.50",
+      "percent_clay": "8",
+      "percent_sand": "22",
+      "percent_silt": "71",
+      "wilting_point": ""
     },
     {
-      "horizon_thickness": "0.249936",
-      "organic_matter_percentage": "1",
-      "percent_clay": "18",
-      "percent_sand": "42",
-      "percent_silt": "40"
+      "field_capacity": "",
+      "horizon_thickness": "0.56",
+      "organic_matter_percentage": "0.30",
+      "percent_clay": "8",
+      "percent_sand": "22",
+      "percent_silt": "71",
+      "wilting_point": ""
     },
     {
-      "horizon_thickness": "0.379984",
-      "organic_matter_percentage": "0.5",
-      "percent_clay": "15",
-      "percent_sand": "20",
-      "percent_silt": "65"
-    },
-    {
-      "horizon_thickness": "0.810006",
-      "organic_matter_percentage": "0.3",
-      "percent_clay": "10",
-      "percent_sand": "65",
-      "percent_silt": "25"
+      "field_capacity": "",
+      "horizon_thickness": "0.51",
+      "organic_matter_percentage": "0.30",
+      "percent_clay": "8",
+      "percent_sand": "22",
+      "percent_silt": "71",
+      "wilting_point": ""
     }
   ],
-  "water_n_concentration": "0",
-  "water_source": "2",
+  "status": "success",
+  "water_n_concentration": "1",
+  "water_source": "1",
   "weather": 
     [
     {

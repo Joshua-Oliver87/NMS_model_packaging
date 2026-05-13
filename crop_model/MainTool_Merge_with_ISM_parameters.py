@@ -1320,6 +1320,16 @@ def run_single_simulation(data_entry: dict):
         if DOY in dSoilInitCells:
             SamplingSoilUpdate(DOY, Run_First_Doy, Run_Last_Doy, dSoilInitCells[DOY],
                                pSoilState, pSoilModelLayer, pSoilHorizen, pSoilFlux)
+            # InitSoilState inside SamplingSoilUpdate wipes all pSoilState arrays,
+            # including N that WaterAndNTransport already deposited from fertilizer
+            # events between first_doy and this sampling_doy.  Re-apply those amounts
+            # so the soil N after sampling still reflects what was applied in the field.
+            for _fert_doy in range(Run_First_Doy, DOY):
+                _no3 = pCS_Fertilization.Nitrate_Fertilization_Rate[_fert_doy]
+                _nh4 = pCS_Fertilization.Ammonium_Fertilization_Rate[_fert_doy]
+                if _no3 > 0 or _nh4 > 0:
+                    pSoilState.Nitrate_N_Content[DOY][2] += _no3
+                    pSoilState.Ammonium_N_Content[DOY][2] += _nh4
 
         #Crop_Number = ReadInputs.CropOrder(1)
         InitialSoilProfile(DOY,pBalance,pSoilState,pSoilModelLayer)
